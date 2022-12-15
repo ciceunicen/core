@@ -1,9 +1,9 @@
 package com.project.entities;
 
-import jakarta.persistence.*;
 import lombok.Data;
-
-import java.lang.reflect.Type;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Project")
@@ -18,21 +18,49 @@ public class Project{
     private String description;
     @Column
     private String stage;
-    @Column
-    private String assitanceType;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    private List<Assitance> assitanceType;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinColumn(name = "id_ProjectManager")
     private ProjectManager projectManager;
 
-    public Project(String title, String description, String stage, String assitanceType, ProjectManager projectManager) {
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    private List<File> files;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    private List<Need> needs;
+
+    @Column
+    private Long administrador;
+
+    public Project(String title, String description, String stage, List<String> assitanceType, ProjectManager projectManager,List<String> files,List<String> needs, Long administrador) {
         this.title = title;
         this.description = description;
         this.stage = stage;
-        this.assitanceType = assitanceType;
         this.projectManager = projectManager;
+        this.files = new ArrayList<>();
+        this.assitanceType = new ArrayList<>();
+        this.needs = new ArrayList<>();
+
+        for (String file : files) {
+            this.files.add(new File(file));
+        }
+        for (String s : assitanceType) {
+            this.assitanceType.add(new Assitance(s));
+        }
+
+        for (String need : needs){
+            this.needs.add(new Need(need));
+        }
+
+        this.administrador = administrador;
     }
 
     public Project() {
-
     }
 }

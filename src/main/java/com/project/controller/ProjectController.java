@@ -20,6 +20,11 @@ public class ProjectController {
         this.mapper = new Mapper();
     }
 
+    /**
+     * inserta un nuevo proyecto a la base de datos
+     * @param project son los datos de un proyecto a cargar
+     * @return retorna un dto del archivo cargado a la base de datos
+     */
     @PostMapping()
     public DTOProjectInsert addProject(@RequestBody DTOProjectInsert project){
         ProjectService.addProject(mapper.toProject(project));
