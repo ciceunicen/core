@@ -1,14 +1,17 @@
 package com.project.entities;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "ProjectManager")
 @Data
-public class ProjectManager {
+public class ProjectManager implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_ProjectManager;
@@ -25,7 +28,8 @@ public class ProjectManager {
     @Column
     private String medioConocimientoCice;
 
-    @OneToMany(mappedBy="projectManager")
+    @OneToMany(mappedBy="projectManager",cascade = {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Project> projects;
 
 

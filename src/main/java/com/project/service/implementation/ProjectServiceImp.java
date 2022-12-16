@@ -12,7 +12,8 @@ public class ProjectServiceImp implements ProjectService {
     private ProjectRepository projectRepository;
 
     @Override
-    public Project addProject(Project project) {
+    public Project addProject(Project project, Long id_ProjectManager) {
+        project.setProjectManager(projectRepository.getProjectManager(id_ProjectManager));
         return projectRepository.save(project);
     }
 }

@@ -3,12 +3,13 @@ package com.project.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "need")
 @Data
 
-public class Need {
+public class Need implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Need;
