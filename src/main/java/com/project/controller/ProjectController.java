@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
+import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +27,7 @@ public class ProjectController {
      * @return retorna un dto del archivo cargado a la base de datos
      */
     @PostMapping()
-    public DTOProjectInsert addProject(@RequestBody DTOProjectInsert project){
-        ProjectService.addProject(mapper.toProject(project));
-        return project;
+    public Project addProject(@RequestBody DTOProjectInsert project){
+        return ProjectService.addProject(mapper.toProject(project),project.getId_ProjectManager());
     }
 }

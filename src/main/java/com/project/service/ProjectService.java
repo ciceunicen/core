@@ -7,5 +7,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ProjectService {
 
-    public Project addProject(Project project);
+    public Project addProject(Project project,Long id_ProjectManager);
 }

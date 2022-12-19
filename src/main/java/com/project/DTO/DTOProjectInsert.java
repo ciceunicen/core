@@ -10,14 +10,9 @@ import java.util.List;
  * datos para insertar en la base de datos que llegan desde front-end
  *
  */
-public class DTOProjectInsert implements Serializable {
-    //nombre, apellido y datos de contacto del responsable del proyecto
-    private String name;
-    private String surname;
-    private String email;
-    private String phone;
-    private String linkUnicen;
-    private String medioConocimientoCice;
+public class DTOProjectInsert{
+    //id responsable del proyecto
+    private Long id_ProjectManager;
 
     //Datos del proyecto
     private String title;

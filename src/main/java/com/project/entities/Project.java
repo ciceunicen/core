@@ -1,14 +1,16 @@
 package com.project.entities;
 
 import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Project")
 @Data
-public class Project{
+public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Project;
@@ -23,7 +25,7 @@ public class Project{
     @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
     private List<Assitance> assitanceType;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+    @ManyToOne(cascade= {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch=FetchType.LAZY)
     @JoinColumn(name = "id_ProjectManager")
     private ProjectManager projectManager;
 
@@ -38,11 +40,10 @@ public class Project{
     @Column
     private Long administrador;
 
-    public Project(String title, String description, String stage, List<String> assitanceType, ProjectManager projectManager,List<String> files,List<String> needs, Long administrador) {
+    public Project(String title, String description, String stage, List<String> assitanceType, List<String> files,List<String> needs, Long administrador) {
         this.title = title;
         this.description = description;
         this.stage = stage;
-        this.projectManager = projectManager;
         this.files = new ArrayList<>();
         this.assitanceType = new ArrayList<>();
         this.needs = new ArrayList<>();
