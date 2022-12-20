@@ -3,6 +3,8 @@ package com.project.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +17,18 @@ public class Project implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Project;
     @Column
+    @NotEmpty
     private String title;
     @Column
+    @NotEmpty
     private String description;
     @Column
+    @NotEmpty
     private String stage;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    @NotEmpty
     private List<Assitance> assitanceType;
 
     @ManyToOne(cascade= {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch=FetchType.LAZY)
@@ -35,6 +41,7 @@ public class Project implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    @NotEmpty
     private List<Need> needs;
 
     @Column

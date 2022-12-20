@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import javax.validation.Valid;
 @RestController
 @RequestMapping("Project")
 public class ProjectController {
@@ -27,7 +27,7 @@ public class ProjectController {
      * @return retorna un dto del archivo cargado a la base de datos
      */
     @PostMapping()
-    public Project addProject(@RequestBody DTOProjectInsert project){
+    public Project addProject(@Valid @RequestBody DTOProjectInsert project){
         return ProjectService.addProject(mapper.toProject(project),project.getId_ProjectManager());
     }
 }
