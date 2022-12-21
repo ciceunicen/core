@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("ProjectManager")
+@RequestMapping("projectmanagers")
 public class ProjectManagerController {
     @Autowired
     private ProjectManagerServiceImp projectManagerServiceImp;
 
 
-    @GetMapping(value = "/getProjectManager/{id_ProjectManager}")
+    @GetMapping(value = "/{id_ProjectManager}")
     public ProjectManager getProjectManager(@PathVariable(value = "id_ProjectManager") Long id_ProjectManager) {
         return projectManagerServiceImp.getProjectManager(id_ProjectManager);
     }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 @RestController
-@RequestMapping("Project")
+@RequestMapping("projects")
 public class ProjectController {
     @Autowired
     private ProjectServiceImp ProjectService;
