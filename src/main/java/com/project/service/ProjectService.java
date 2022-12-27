@@ -3,6 +3,7 @@ package com.project.service;
 import com.project.DTO.DTOProjectInsert;
 import com.project.entities.Project;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 //paginación
@@ -17,5 +18,7 @@ public interface ProjectService {
     public Optional<Project> getProjectById(Long id);
     
     public Page<Project> getAll(Pageable pageable);
+
+    public Page<Project> getAllByFilters(List<String> filters, Pageable pageable);
 
 }

@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class loadDatabase {
     @Bean
-    CommandLineRunner initDatabaseCarrera(@Qualifier("projectManagerRepository") ProjectManagerRepository repository) {
+    CommandLineRunner initDatabaseProjectManager(@Qualifier("projectManagerRepository") ProjectManagerRepository projectManagerRepository) {
         return args -> {
-            log.info("Preloading " + repository.save(new ProjectManager("Julio","Perez","julio@gmail.com","2494111213","No docente","Sitio web CICE")));
+            log.info("Preloading " + projectManagerRepository.save(new ProjectManager("Julio","Perez","julio@gmail.com","2494111213","No docente","Sitio web CICE")));
         };
     }
 }
