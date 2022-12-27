@@ -5,6 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public class Project implements Serializable {
 
     @ManyToOne(cascade= {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch=FetchType.LAZY)
     @JoinColumn(name = "id_ProjectManager")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProjectManager projectManager;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
