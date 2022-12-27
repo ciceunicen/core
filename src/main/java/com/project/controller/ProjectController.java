@@ -4,6 +4,9 @@ import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
 import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +14,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+//paginación
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+//ordenamientos
+import org.springframework.data.domain.Sort;
+
 
 import java.util.Optional;
 
 import javax.validation.Valid;
+/**
+ * 
+ * @author Colaborativo
+ *
+ */
 @RestController
 @RequestMapping("projects")
 public class ProjectController {
@@ -40,5 +55,23 @@ public class ProjectController {
     public Optional<Project> getProjectById(@PathVariable ("id_project") Long id){
         return ProjectService.getProjectById(id);
     }
+     /**
+      * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
+      * @param page es un Integer que representa la página a la que apunta. 
+      * @return retorna Page<Project> una lista de proyectos limitado.
+      */
+     @GetMapping("/page/{page}")
+     public Page<Project> getAllProjects(@PathVariable ("page") Integer page){
+    	 //Seteo el indice page, ya que PageRequest toma desde 0 (cero).
+    	 //Si le mandan 1 lo setoe para que apunte a 0.
+    	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
+    	 Integer indexPage = page - 1;
+    	 //cantidad de objetos por página
+    	 Integer cantProjects = 10;
+    	 //Atributo por el cual se ordena
+    	 String sortAttribute = "title";
+    	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+         return ProjectService.getAll(pageable);
+     }
     
 }
