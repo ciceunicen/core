@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.DTO.DTOProjectFilter;
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
 import com.project.entities.Project;
@@ -72,12 +73,13 @@ public class ProjectController {
     	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
     	 Integer indexPage = page - 1;
     	 //cantidad de objetos por página
-    	 Integer cantProjects = 10;
+    	 Integer cantProjects = 25;
     	 //Atributo por el cual se ordena
     	 String sortAttribute = "title";
     	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAll(pageable);
      }
+
 
     
    
