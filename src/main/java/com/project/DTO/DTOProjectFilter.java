@@ -9,7 +9,5 @@ import java.util.List;
  */
 @Data
 public class DTOProjectFilter {
-
     private List<String> filters;
-    private int page;
 }

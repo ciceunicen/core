@@ -68,7 +68,7 @@ public class ProjectController {
     	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
     	 Integer indexPage = page - 1;
     	 //cantidad de objetos por página
-    	 Integer cantProjects = 10;
+    	 Integer cantProjects = 25;
     	 //Atributo por el cual se ordena
     	 String sortAttribute = "title";
     	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
@@ -78,12 +78,13 @@ public class ProjectController {
     /**
      * Obtiene todos los proyectos que cumplen con ciertos filtros, estos los devuelve de forma paginada
      * @param filter es un DTO donde llegan los filtros a aplicar y la pagina a la que apunta.
+     * @param page es un Integer que representa la página a la que apunta.
      * @return retorna Page<Project> una lista de proyectos limitados.
      */
-     @GetMapping("/filters")
-    public Page<Project> getAllProjectsByFiler(@Valid @RequestBody DTOProjectFilter filter){
-         Integer indexPage = filter.getPage() - 1;
-         Integer cantProjects = 10;
+     @GetMapping("/filters/page/{page}")
+    public Page<Project> getAllProjectsByFiler(@PathVariable ("page") Integer page,@Valid @RequestBody DTOProjectFilter filter){
+         Integer indexPage = page - 1;
+         Integer cantProjects = 25;
          String sortAttribute = "title";
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(filter.getFilters(),pageable);
