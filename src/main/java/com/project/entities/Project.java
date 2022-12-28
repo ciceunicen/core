@@ -72,6 +72,28 @@ public class Project implements Serializable {
         this.administrador = administrador;
     }
 
+    public Project(String title, String description, String stage, String[] assitanceType, String[] files,String[] needs, Long administrador) {
+        this.title = title;
+        this.description = description;
+        this.stage = stage;
+        this.files = new ArrayList<>();
+        this.assitanceType = new ArrayList<>();
+        this.needs = new ArrayList<>();
+
+        for (String file : files) {
+            this.files.add(new File(file));
+        }
+        for (String s : assitanceType) {
+            this.assitanceType.add(new Assitance(s));
+        }
+
+        for (String need : needs){
+            this.needs.add(new Need(need));
+        }
+
+        this.administrador = administrador;
+    }
+
     public Project() {
     }
 }
