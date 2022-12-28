@@ -1,8 +1,6 @@
 package com.project.DTO;
 
 import lombok.Data;
-
-import java.io.Serializable;
 import java.util.List;
 
 @Data
