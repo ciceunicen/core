@@ -21,7 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 //ordenamientos
 import org.springframework.data.domain.Sort;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -52,9 +53,19 @@ public class ProjectController {
         return ProjectService.addProject(mapper.toProject(project),project.getId_ProjectManager());
     }
 
-     @GetMapping("/{id_project}")
-    public Optional<Project> getProjectById(@PathVariable ("id_project") Long id){
-        return ProjectService.getProjectById(id);
+    /**
+     * obtiene un proyecto por id
+     * @param id es el id del proyecto a buscar
+     * @return retorna un proyecto específico, en caso de no encontrarlo retorna error 404
+     */
+    @GetMapping("/{id_project}")
+    public ResponseEntity<?> getProjectById(@PathVariable ("id_project") Long id) {
+        Optional <Project>p= ProjectService.getProjectById(id);
+        if(!p.isEmpty()) {
+            return new ResponseEntity<>(p, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+        }
     }
      /**
       * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
