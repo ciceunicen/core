@@ -5,9 +5,10 @@ import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
 import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +21,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 //ordenamientos
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+/**
+ * 
+ * @author Colaborativo
+ *
+ */
 @RestController
 @RequestMapping("projects")
 public class ProjectController {
@@ -60,7 +67,6 @@ public class ProjectController {
             return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
     }
-
      /**
       * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
       * @param page es un Integer que representa la página a la que apunta. 
@@ -80,8 +86,21 @@ public class ProjectController {
          return ProjectService.getAll(pageable);
      }
 
+    /**
+     * Obtiene todos los proyectos que cumplen con ciertos filtros, estos los devuelve de forma paginada
+     * @param filter es un DTO donde llegan los filtros a aplicar y la pagina a la que apunta.
+     * @param page es un Integer que representa la página a la que apunta.
+     * @return retorna Page<Project> una lista de proyectos limitados.
+     */
+     @GetMapping("/filters/page/{page}")
+    public Page<Project> getAllProjectsByFiler(@PathVariable ("page") Integer page,@Valid @RequestBody DTOProjectFilter filter){
+         Integer indexPage = page - 1;
+         Integer cantProjects = 25;
+         String sortAttribute = "title";
+         Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+         return ProjectService.getAllByFilters(filter.getFilters(),pageable);
 
+
+     }
     
-   
-     
 }
