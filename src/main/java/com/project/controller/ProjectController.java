@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 //ordenamientos
 import org.springframework.data.domain.Sort;
 
-
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -61,24 +60,26 @@ public class ProjectController {
         }
     }
 
-    
-   
-        /**
+     /**
       * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
       * @param page es un Integer que representa la página a la que apunta. 
       * @return retorna Page<Project> una lista de proyectos limitado.
       */
-      @GetMapping("/page/{page}")
-      public Page<Project> getAllProjects(@PathVariable ("page") Integer page){
-          //Seteo el indice page, ya que PageRequest toma desde 0 (cero).
-          //Si le mandan 1 lo setoe para que apunte a 0.
-          //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
-          Integer indexPage = page - 1;
-          //cantidad de objetos por página
-          Integer cantProjects = 10;
-          //Atributo por el cual se ordena
-          String sortAttribute = "title";
-          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
-          return ProjectService.getAll(pageable);
-      }
+     @GetMapping("/page/{page}")
+     public Page<Project> getAllProjects(@PathVariable ("page") Integer page){
+    	 //Seteo el indice page, ya que PageRequest toma desde 0 (cero).
+    	 //Si le mandan 1 lo setoe para que apunte a 0.
+    	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
+    	 Integer indexPage = page - 1;
+    	 //cantidad de objetos por página
+    	 Integer cantProjects = 10;
+    	 //Atributo por el cual se ordena
+    	 String sortAttribute = "title";
+    	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+         return ProjectService.getAll(pageable);
+     }
+
+    
+   
+     
 }
