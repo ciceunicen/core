@@ -1,6 +1,5 @@
 package com.project.service;
 
-import com.project.DTO.DTOProjectInsert;
 import com.project.entities.Project;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 @Component
 public interface ProjectService {
 
-    public Project addProject(Project project,Long id_ProjectManager);
+    public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs,Long id_ProjectManager);
 
     public Optional<Project> getProjectById(Long id);
     
