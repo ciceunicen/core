@@ -1,6 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.entities.Project;
+import com.project.repository.ProjectManagerRepository;
 import com.project.repository.ProjectRepository;
 import com.project.service.ProjectService;
 
@@ -21,10 +22,12 @@ import org.springframework.data.domain.Pageable;
 public class ProjectServiceImp implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectManagerRepository projectManagerRepository;
 
     @Override
     public Project addProject(Project project, Long id_ProjectManager) {
-        project.setProjectManager(projectRepository.getProjectManager(id_ProjectManager));
+        project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
         return projectRepository.save(project);
     }
 

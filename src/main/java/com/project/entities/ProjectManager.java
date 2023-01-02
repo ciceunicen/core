@@ -4,6 +4,8 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "ProjectManager")
 @Data
-public class ProjectManager implements Serializable {
+public class ProjectManager{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_ProjectManager;
@@ -28,7 +30,8 @@ public class ProjectManager implements Serializable {
     @Column
     private String medioConocimientoCice;
 
-    @OneToMany(mappedBy="projectManager",cascade = {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="projectManager",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JsonIgnore
     private List<Project> projects;
 

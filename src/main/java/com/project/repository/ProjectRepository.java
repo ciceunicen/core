@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project,Long> {
+
     @Query("select pm from ProjectManager pm where pm.id_ProjectManager= :id")
     public ProjectManager getProjectManager(Long id);
 

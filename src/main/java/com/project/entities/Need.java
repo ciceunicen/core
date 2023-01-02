@@ -15,7 +15,9 @@ public class Need implements Serializable {
     private Long id_Need;
     @Column
     private String needType;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_Project")
+    private Project project;
     public Need(String needType) {
         this.needType = needType;
     }
