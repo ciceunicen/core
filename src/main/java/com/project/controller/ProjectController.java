@@ -79,7 +79,7 @@ public class ProjectController {
     	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
     	 Integer indexPage = page - 1;
     	 //cantidad de objetos por página
-    	 Integer cantProjects = 25;
+    	 Integer cantProjects = 15;
     	 //Atributo por el cual se ordena
     	 String sortAttribute = "title";
     	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
@@ -95,7 +95,7 @@ public class ProjectController {
      @GetMapping("/filters/page/{page}")
     public Page<Project> getAllProjectsByFiler(@PathVariable ("page") Integer page,@Valid @RequestBody DTOProjectFilter filter){
          Integer indexPage = page - 1;
-         Integer cantProjects = 25;
+         Integer cantProjects = 15;
          String sortAttribute = "title";
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(filter.getFilters(),pageable);
