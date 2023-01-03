@@ -4,10 +4,12 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -30,7 +32,7 @@ public class ProjectManager{
     @Column
     private String medioConocimientoCice;
 
-    @OneToMany(mappedBy="projectManager",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="projectManager",cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
     @JsonIgnore
     private List<Project> projects;
@@ -47,5 +49,18 @@ public class ProjectManager{
 
     public ProjectManager() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectManager{" +
+                "id_ProjectManager=" + id_ProjectManager +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", linkUnicen='" + linkUnicen + '\'' +
+                ", medioConocimientoCice='" + medioConocimientoCice + '\'' +
+                '}';
     }
 }

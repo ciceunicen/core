@@ -3,15 +3,15 @@ package com.project.entities;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "Project")
 @Data
-public class Project{
+public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Project;
@@ -21,7 +21,6 @@ public class Project{
     @Column
     @NotEmpty
     private String description;
-
 
     @ManyToOne
     @JoinColumn(name = "id_ProjectManager")
@@ -48,10 +47,9 @@ public class Project{
     )
     private List<Need> needs = new ArrayList<>();
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.MERGE)//one-to-one
     @JoinColumn(name="id_Stage")
-    @NotFound(action = NotFoundAction.IGNORE)
-    private Stage stage = null;
+    private Stage stage ;
 
 
 
@@ -94,18 +92,4 @@ public class Project{
         this.assitances.add(assitance);
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id_Project=" + id_Project +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", projectManager=" + projectManager +
-                ", files=" + files +
-                ", assitances=" + assitances +
-                ", needs=" + needs +
-                ", stage=" + stage +
-                ", administrador=" + administrador +
-                '}';
-    }
 }

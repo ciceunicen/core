@@ -83,7 +83,10 @@ public class loadDatabase {
             Project p4= new Project("Alpispa","Sustituye los envoltorios de plástico por material natural",new String[]{"foto7","foto8"},1l);
             //PROYECTO,ID DEL ESTADIO 5, ID DE LAS ASISTENCIAS 3 ,ID DE LAS NECESIDADES 4,ID PROJECT MANAGER
             log.info("Preloading " + projectServiceImp.addProject(p1,2L,new Long[]{3L},new Long[]{1L,3L},1L));
-            //log.info("Preloading " + projectServiceImp.addProject(p2,3L,new Long[]{3L,2L},new Long[]{2L,3L},1L));
+            log.info("Preloading " + projectServiceImp.addProject(p2,3L,new Long[]{3L,2L},new Long[]{2L,3L},1L));
+            log.info("Preloading " + projectServiceImp.addProject(p3,4L,new Long[]{1L,2L},new Long[]{4L,1L},1L));
+            log.info("Preloading " + projectServiceImp.addProject(p4,2L,new Long[]{1L},new Long[]{2L},1L));
+
 
         };
     }
