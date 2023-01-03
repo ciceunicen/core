@@ -1,6 +1,5 @@
 package com.project.controller;
 
-import com.project.DTO.DTOProjectFilter;
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
 import com.project.entities.Project;
@@ -9,12 +8,7 @@ import com.project.service.implementation.ProjectServiceImp;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 //paginación
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,9 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+
 /**
  * 
  * @author Colaborativo
@@ -88,19 +84,17 @@ public class ProjectController {
 
     /**
      * Obtiene todos los proyectos que cumplen con ciertos filtros, estos los devuelve de forma paginada
-     * @param filter es un DTO donde llegan los filtros a aplicar y la pagina a la que apunta.
+     * @param datos es un array donde llegan los filtros a aplicar.
      * @param page es un Integer que representa la página a la que apunta.
      * @return retorna Page<Project> una lista de proyectos limitados.
      */
-     @GetMapping("/filters/page/{page}")
-    public Page<Project> getAllProjectsByFiler(@PathVariable ("page") Integer page,@Valid @RequestBody DTOProjectFilter filter){
+     @GetMapping(value = "/filters/page/{page}",params="filters")
+    public Page<Project> getAllProjectsByFiler(@PathVariable("page") Integer page,@RequestParam(value = "filters") List<String> datos ){
          Integer indexPage = page - 1;
          Integer cantProjects = 15;
          String sortAttribute = "title";
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
-         return ProjectService.getAllByFilters(filter.getFilters(),pageable);
-
-
+         return ProjectService.getAllByFilters(datos,pageable);
      }
     
 }
