@@ -15,10 +15,10 @@ public class DTOProjectInsert{
     //Datos del proyecto
     private String title;
     private String description;
-    private String stage;
-    private List<String> assitanceType;
+    private Long stage;
+    private Long[] assitanceType;
     private List<String> files;
-    private List<String> needs;
+    private Long[] needs;
     private Long id_Admin;
 
 }

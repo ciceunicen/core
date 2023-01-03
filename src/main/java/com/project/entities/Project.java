@@ -1,15 +1,12 @@
 package com.project.entities;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "Project")
@@ -24,71 +21,60 @@ public class Project implements Serializable {
     @Column
     @NotEmpty
     private String description;
-    @Column
-    @NotEmpty
-    private String stage;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
-    @NotEmpty
-    private List<Assitance> assitanceType;
-
-    @ManyToOne(cascade= {CascadeType.DETACH,CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE},fetch=FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_ProjectManager")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @NotFound(action = NotFoundAction.IGNORE)
     private ProjectManager projectManager;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
     private List<File> files;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
-    @NotEmpty
-    private List<Need> needs;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "rel_Project_Assitance",
+            joinColumns = @JoinColumn(name = "id_Project"),
+            inverseJoinColumns = @JoinColumn(name="id_Assitance")
+    )
+    private List<Assitance> assitances = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "rel_Project_Need",
+            joinColumns = @JoinColumn(name = "id_Project"),
+            inverseJoinColumns = @JoinColumn(name="id_Need")
+    )
+    private List<Need> needs = new ArrayList<>();
+
+    @OneToOne(cascade=CascadeType.MERGE)//one-to-one
+    @JoinColumn(name="id_Stage")
+    private Stage stage ;
+
+
+
 
     @Column
     private Long administrador;
 
-    public Project(String title, String description, String stage, List<String> assitanceType, List<String> files,List<String> needs, Long administrador) {
+    public Project(String title, String description, List<String> files, Long administrador) {
         this.title = title;
         this.description = description;
-        this.stage = stage;
         this.files = new ArrayList<>();
-        this.assitanceType = new ArrayList<>();
-        this.needs = new ArrayList<>();
 
         for (String file : files) {
             this.files.add(new File(file));
         }
-        for (String s : assitanceType) {
-            this.assitanceType.add(new Assitance(s));
-        }
-
-        for (String need : needs){
-            this.needs.add(new Need(need));
-        }
-
         this.administrador = administrador;
     }
 
-    public Project(String title, String description, String stage, String[] assitanceType, String[] files,String[] needs, Long administrador) {
+    public Project(String title, String description, String[] files, Long administrador) {
         this.title = title;
         this.description = description;
-        this.stage = stage;
         this.files = new ArrayList<>();
-        this.assitanceType = new ArrayList<>();
-        this.needs = new ArrayList<>();
 
         for (String file : files) {
             this.files.add(new File(file));
-        }
-        for (String s : assitanceType) {
-            this.assitanceType.add(new Assitance(s));
-        }
-
-        for (String need : needs){
-            this.needs.add(new Need(need));
         }
 
         this.administrador = administrador;
@@ -96,4 +82,14 @@ public class Project implements Serializable {
 
     public Project() {
     }
+
+
+    public void addNeed(Need need) {
+        needs.add(need);
+    }
+
+    public void addAssitance(Assitance assitance){
+        this.assitances.add(assitance);
+    }
+
 }

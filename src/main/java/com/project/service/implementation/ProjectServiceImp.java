@@ -1,7 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.entities.Project;
-import com.project.repository.ProjectRepository;
+import com.project.repository.*;
 import com.project.service.ProjectService;
 
 import java.util.List;
@@ -21,10 +21,26 @@ import org.springframework.data.domain.Pageable;
 public class ProjectServiceImp implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectManagerRepository projectManagerRepository;
+    @Autowired
+    private NeedRepository needRepository;
+    @Autowired
+    private AssitanceRepository assitanceRepository;
+    @Autowired
+    private StageRepository stageRepository;
 
     @Override
-    public Project addProject(Project project, Long id_ProjectManager) {
-        project.setProjectManager(projectRepository.getProjectManager(id_ProjectManager));
+    public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs, Long id_ProjectManager) {
+        project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
+
+        for (Long id:id_needs) {
+            project.addNeed(needRepository.getNeed(id));
+        }
+        for (Long id:id_assitances) {
+            project.addAssitance(assitanceRepository.getAssitance(id));
+        }
+        project.setStage(stageRepository.getStage(id_stage));
         return projectRepository.save(project);
     }
 

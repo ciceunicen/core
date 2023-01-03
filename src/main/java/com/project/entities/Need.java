@@ -8,7 +8,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "need")
 @Data
-
 public class Need implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,11 +15,10 @@ public class Need implements Serializable {
     @Column
     private String needType;
 
+
     public Need(String needType) {
         this.needType = needType;
     }
-
-
 
     public Need() {
 
