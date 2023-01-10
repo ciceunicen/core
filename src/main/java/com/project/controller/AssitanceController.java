@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  *
  */
 @RestController
-@RequestMapping("assistance")
+@RequestMapping("assistances")
 public class AssitanceController {
 	
 	@Autowired
