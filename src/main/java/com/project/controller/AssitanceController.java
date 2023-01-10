@@ -2,11 +2,15 @@ package com.project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.DTO.DTOAssistance;
 import com.project.entities.Assitance;
 import com.project.service.implementation.AssitanceServiceImp;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 /**
@@ -15,7 +19,7 @@ import com.project.service.implementation.AssitanceServiceImp;
  *
  */
 @RestController
-@RequestMapping("assitances")
+@RequestMapping("assistance")
 public class AssitanceController {
 	
 	@Autowired
@@ -33,6 +37,14 @@ public class AssitanceController {
     public Iterable<Assitance> getAllAssitances(){
         return assitanceService.getAllAssitances();
     }
+	
+	/*
+	 * Agrega asistencia a la base de datos
+	 */
+	@PostMapping()
+	public DTOAssistance postAssistance(@RequestBody Assitance assitance) {
+		return assitanceService.postAssistance(assitance);
+	}
 	
 
 }
