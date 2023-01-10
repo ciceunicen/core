@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 import com.project.repository.*;
 import com.project.service.ProjectService;
@@ -29,6 +30,8 @@ public class ProjectServiceImp implements ProjectService {
     private AssitanceRepository assitanceRepository;
     @Autowired
     private StageRepository stageRepository;
+    @Autowired
+   private DeletedProjectRepository deletedProjetcRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs, Long id_ProjectManager) {
@@ -68,4 +71,23 @@ public class ProjectServiceImp implements ProjectService {
     public Page<Project> getAllByFilters(List<String> filters,Pageable pageable) {
         return projectRepository.findAll(filters,pageable);
     }
+    
+    /**
+     * Realiza eliminado lógico de la base de datos, chequea que el proyecto exist y que ya no haya sido eliminado.
+     * @param id_project es el ID del proyecto a eliminar
+     * @param id_admin es el ID del administrador que realiza esta eliminación
+     * @return retorna el proyecto elminado o null si ya se encuentra eliminado.
+     */
+    @Override
+	public Project deleteProject(Long id_project, Long id_admin) {
+    	Optional <Project> project = this.getProjectById(id_project);
+    	Boolean isRemoved = (deletedProjetcRepository.getDeletedProjectByIdProject(id_project) != null);
+    	if(!project.isEmpty() && !isRemoved) {
+    		DeletedProject deleteProject = new DeletedProject();
+    		deleteProject.setProject(project.get());
+    		deleteProject.setId_admin(id_admin);
+    		return deletedProjetcRepository.save(deleteProject).getProject();
+    	}
+		return null;
+	}
 }

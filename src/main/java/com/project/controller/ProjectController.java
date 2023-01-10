@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
+import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
 
@@ -96,5 +97,18 @@ public class ProjectController {
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(datos,pageable);
      }
-    
+     /**
+      * Elimina de forma lógica un projecto dado. No se elimina el registro del proyecto en la base de datos, solo se crea un registro en latabla de proyectos eliminados que apunta al proyecto dado.
+      * @param id_project de tipo Long, es el ID del proyecto a tratar.
+      * @param id_admin de tipo Long es el ID del administrador/a que realizó el borrado del proyecto dado.
+      * @return DeletedProject Objeto que representa el registro de la tabla de proyectos eliminados.
+      */
+    @DeleteMapping("/idProject/{id_project}/idAdmin/{id_admin}")
+    public ResponseEntity<?> deleteProject(@PathVariable("id_project") Long id_project, @PathVariable("id_admin") Long id_admin) {
+    	 Project response = ProjectService.deleteProject(id_project, id_admin);
+         if(response != null) {
+             return new ResponseEntity<>(response, HttpStatus.OK);
+         }
+         return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    }
 }

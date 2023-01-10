@@ -20,4 +20,6 @@ public interface ProjectService {
 
     public Page<Project> getAllByFilters(List<String> filters, Pageable pageable);
 
+	public Project deleteProject(Long id_project, Long id_admin);
+
 }
