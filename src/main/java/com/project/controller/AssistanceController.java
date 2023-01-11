@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.entities.Assistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.DTO.DTOAssistance;
-import com.project.entities.Assitance;
-import com.project.service.implementation.AssitanceServiceImp;
+import com.project.service.implementation.AssistanceServiceImp;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -20,30 +20,30 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @RestController
 @RequestMapping("assistances")
-public class AssitanceController {
+public class AssistanceController {
 	
 	@Autowired
-    private AssitanceServiceImp assitanceService;
+    private AssistanceServiceImp assistanceService;
 
-	public AssitanceController() {
+	public AssistanceController() {
 		super();
 	}
 	
 	/*
 	 * Obtiene todos las asistencias guardadas en la base de datos 
-     * @return Iterable<Assitance>.
+     * @return Iterable<Assistance>.
      */
 	@GetMapping()
-    public Iterable<Assitance> getAllAssitances(){
-        return assitanceService.getAllAssitances();
+    public Iterable<Assistance> getAllAssitances(){
+        return assistanceService.getAllAssistances();
     }
 	
 	/*
 	 * Agrega asistencia a la base de datos
 	 */
 	@PostMapping()
-	public DTOAssistance postAssistance(@RequestBody Assitance assitance) {
-		return assitanceService.postAssistance(assitance);
+	public Assistance postAssistance(@RequestBody DTOAssistance assistance) {
+		return assistanceService.postAssistance(assistance);
 	}
 	
 

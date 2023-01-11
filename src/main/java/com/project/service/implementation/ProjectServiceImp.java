@@ -27,7 +27,7 @@ public class ProjectServiceImp implements ProjectService {
     @Autowired
     private NeedRepository needRepository;
     @Autowired
-    private AssitanceRepository assitanceRepository;
+    private AssistanceRepository assistanceRepository;
     @Autowired
     private StageRepository stageRepository;
     @Autowired
@@ -41,7 +41,7 @@ public class ProjectServiceImp implements ProjectService {
             project.addNeed(needRepository.getNeed(id));
         }
         for (Long id:id_assitances) {
-            project.addAssitance(assitanceRepository.getAssitance(id));
+            project.addAssistance(assistanceRepository.getAssistance(id));
         }
         project.setStage(stageRepository.getStage(id_stage));
         return projectRepository.save(project);
@@ -58,7 +58,7 @@ public class ProjectServiceImp implements ProjectService {
      */
 	@Override
 	public Page<Project> getAll(Pageable pageable) {
-		return projectRepository.findAll(pageable);
+		return projectRepository.getAll(pageable);
 	}
 
     /**
@@ -90,4 +90,16 @@ public class ProjectServiceImp implements ProjectService {
     	}
 		return null;
 	}
+
+    /**
+     * Consulta a deletedProjetcRepository por todos los proyectos eliminados, estos paginados.
+     * @param pageable es un objeto de tipo Pageable, que indica el indice de página y la cantidad de objetos por página.
+     * @return retorna Page<DeletedProject> una lista de proyectos eliminados, esta lista se encuentra limitada.
+     */
+    @Override
+    public Page<DeletedProject> getAllRemoved(Pageable pageable) {
+        return deletedProjetcRepository.findAll(pageable);
+    }
+
+
 }

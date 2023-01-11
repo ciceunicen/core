@@ -12,5 +12,5 @@ public interface NeedService {
 
 	public Iterable<Need> getAllNeeds();
 
-	public DTONeed postNeed(Need needs);
+	public Need postNeed(DTONeed needs);
 }

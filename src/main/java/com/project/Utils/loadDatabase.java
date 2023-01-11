@@ -25,10 +25,10 @@ public class loadDatabase {
     }
 
     //Auto carga la tabla necesidades
-    Need n1 = new Need("Capacitación");
-    Need n2 = new Need("Asistencia Técnica");
-    Need n3 = new Need("Networking");
-    Need n4 = new Need("Financiamiento");
+    Need n1 = new Need("Capacitación",true);
+    Need n2 = new Need("Asistencia Técnica",true);
+    Need n3 = new Need("Networking",true);
+    Need n4 = new Need("Financiamiento",true);
     @Bean
     CommandLineRunner initDatabaseNeed(@Qualifier("needRepository") NeedRepository needRepository) {
         return args -> {
@@ -40,15 +40,15 @@ public class loadDatabase {
     }
 
     //Auto carga la tabla asistencia
-    Assitance a1= new Assitance("Técnica");
-    Assitance a2= new Assitance("Aplicación de lineas de financiamiento");
-    Assitance a3= new Assitance("Presentación a convocatoria");
+    Assistance a1= new Assistance("Técnica",true);
+    Assistance a2= new Assistance("Aplicación de lineas de financiamiento",true);
+    Assistance a3= new Assistance("Presentación a convocatoria",true);
     @Bean
-    CommandLineRunner initDatabaseAssistance(@Qualifier("assitanceRepository") AssitanceRepository assitanceRepository) {
+    CommandLineRunner initDatabaseAssistance(@Qualifier("assistanceRepository") AssistanceRepository assistanceRepository) {
         return args -> {
-            log.info("Preloading " + assitanceRepository.save(a1));
-            log.info("Preloading " + assitanceRepository.save(a2));
-            log.info("Preloading " + assitanceRepository.save(a3));
+            log.info("Preloading " + assistanceRepository.save(a1));
+            log.info("Preloading " + assistanceRepository.save(a2));
+            log.info("Preloading " + assistanceRepository.save(a3));
         };
     }
 

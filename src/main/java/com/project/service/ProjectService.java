@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public interface ProjectService {
     public Page<Project> getAllByFilters(List<String> filters, Pageable pageable);
 
 	public Project deleteProject(Long id_project, Long id_admin);
+
+    public Page<DeletedProject> getAllRemoved(Pageable pageable);
 
 }

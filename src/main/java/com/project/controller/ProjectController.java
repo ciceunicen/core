@@ -47,7 +47,7 @@ public class ProjectController {
      */
     @PostMapping()
     public Project addProject(@Valid @RequestBody DTOProjectInsert project){
-        return ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssitanceType(),project.getNeeds(),project.getId_ProjectManager());
+        return ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
     }
 
     /**
@@ -110,5 +110,19 @@ public class ProjectController {
              return new ResponseEntity<>(response, HttpStatus.OK);
          }
          return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Obtiene todos los proyectos eliminados, estos los devuelve de forma paginada.
+     * @param page es un Integer que representa la página a la que apunta.
+     * @return retorna Page<DeletedProject> una lista de proyectos eliminados limitada.
+     */
+    @GetMapping("removed/page/{page}")
+    public Page<DeletedProject> getAllProjectsRemoved(@PathVariable ("page") Integer page){
+        Integer indexPage = page - 1;
+        Integer cantProjects = 15;
+        String sortAttribute = "project.title";
+        Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
+        return ProjectService.getAllRemoved(pageable);
     }
 }

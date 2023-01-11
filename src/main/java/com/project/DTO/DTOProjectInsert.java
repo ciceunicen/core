@@ -16,7 +16,7 @@ public class DTOProjectInsert{
     private String title;
     private String description;
     private Long stage;
-    private Long[] assitanceType;
+    private Long[] assistanceType;
     private List<String> files;
     private Long[] needs;
     private Long id_Admin;
