@@ -2,7 +2,6 @@ package com.project.controller;
 
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
-import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
 
@@ -47,7 +46,7 @@ public class ProjectController {
      */
     @PostMapping()
     public Project addProject(@Valid @RequestBody DTOProjectInsert project){
-        return ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssitanceType(),project.getNeeds(),project.getId_ProjectManager());
+        return ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
     }
 
     /**

@@ -37,7 +37,7 @@ public class Project implements Serializable {
             joinColumns = @JoinColumn(name = "id_Project"),
             inverseJoinColumns = @JoinColumn(name="id_Assitance")
     )
-    private List<Assitance> assitances = new ArrayList<>();
+    private List<Assistance> assistances = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
@@ -88,8 +88,8 @@ public class Project implements Serializable {
         needs.add(need);
     }
 
-    public void addAssitance(Assitance assitance){
-        this.assitances.add(assitance);
+    public void addAssistance(Assistance assistance){
+        this.assistances.add(assistance);
     }
 
 }

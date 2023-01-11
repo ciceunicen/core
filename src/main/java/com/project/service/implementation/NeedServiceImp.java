@@ -20,12 +20,9 @@ public class NeedServiceImp implements NeedService{
 	}
 
 	@Override
-	public DTONeed postNeed(Need needs) {
-		DTONeed dto=new DTONeed();
-		dto.setId_Need(needs.getId_Need());
-		dto.setNeedType(needs.getNeedType());
-		needRepository.save(needs);
-		return dto;
+	public Need postNeed(DTONeed need) {
+		Need need1= new Need(need.getNeedType());
+		return needRepository.save(need1);
 	}
 
 }

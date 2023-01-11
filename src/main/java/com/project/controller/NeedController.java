@@ -49,7 +49,7 @@ public class NeedController {
 	 * Realiza un post de una necesidad a la base de datos
 	 */
 	@PostMapping()
-	public DTONeed postNeeds(@RequestBody Need need) {
+	public Need postNeeds(@RequestBody DTONeed need) {
 		return needService.postNeed(need);
 	}
 	

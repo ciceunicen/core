@@ -6,28 +6,27 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "need")
+@Table(name = "assistance")
 @Data
-public class Need implements Serializable {
+public class Assistance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_Need;
+    private Long id_Assistance;
     @Column
-    private String needType;
+    private String type;
     @Column(name = "is_default")
     private boolean isDefault=false;
 
-
-    public Need(String needType) {
-        this.needType = needType;
+    public Assistance(String type) {
+        this.type = type;
     }
 
-    public Need(String needType, boolean is_default) {
-        this.needType = needType;
+    public Assistance(String type, boolean is_default) {
+        this.type = type;
         this.isDefault = is_default;
     }
 
-    public Need() {
+    public Assistance() {
 
     }
 }

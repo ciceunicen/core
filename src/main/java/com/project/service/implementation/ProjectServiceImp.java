@@ -27,7 +27,7 @@ public class ProjectServiceImp implements ProjectService {
     @Autowired
     private NeedRepository needRepository;
     @Autowired
-    private AssitanceRepository assitanceRepository;
+    private AssistanceRepository assistanceRepository;
     @Autowired
     private StageRepository stageRepository;
     @Autowired
@@ -41,7 +41,7 @@ public class ProjectServiceImp implements ProjectService {
             project.addNeed(needRepository.getNeed(id));
         }
         for (Long id:id_assitances) {
-            project.addAssitance(assitanceRepository.getAssitance(id));
+            project.addAssistance(assistanceRepository.getAssistance(id));
         }
         project.setStage(stageRepository.getStage(id_stage));
         return projectRepository.save(project);
