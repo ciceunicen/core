@@ -17,4 +17,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     public Page<Project> findAll(List<String> values, Pageable pageable);
 
     //select p from project p where p.title like %?1% SENTENCIA PARA UN FUTURO BUSCADOR POR TEXTO
+
+    @Query("select p from Project p where not exists(select dp from DeletedProject dp where dp.project.id_Project=p.id_Project)")
+    public Page<Project> getAll(Pageable pageable);
 }
