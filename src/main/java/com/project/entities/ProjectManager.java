@@ -10,12 +10,13 @@ import lombok.ToString;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "ProjectManager")
 @Data
-public class ProjectManager{
+public class ProjectManager implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_ProjectManager;
