@@ -101,5 +101,7 @@ public class ProjectServiceImp implements ProjectService {
         return deletedProjetcRepository.findAll(pageable);
     }
 
-
+    public Project save(Project p){
+       return projectRepository.save(p);
+    }
 }

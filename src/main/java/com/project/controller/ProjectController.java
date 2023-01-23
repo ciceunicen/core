@@ -125,4 +125,21 @@ public class ProjectController {
         Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
         return ProjectService.getAllRemoved(pageable);
     }
+
+    @PutMapping("/{id_project}")
+    Project updateProject(@PathVariable ("id_project") Long id, @RequestBody Project project){
+        return  ProjectService.getProjectById(id)
+                .map(updateProject -> {
+                    updateProject.setTitle(project.getTitle());
+                    updateProject.setDescription(project.getDescription());
+                    updateProject.setNeeds(project.getNeeds());
+                    updateProject.setAssistances(project.getAssistances());
+                    updateProject.setStage(project.getStage());
+                    updateProject.setFiles(project.getFiles());
+                    return ProjectService.save(updateProject);
+                })
+                .orElseGet(()->{
+                    return ProjectService.save(project);
+                });
+    }
 }
