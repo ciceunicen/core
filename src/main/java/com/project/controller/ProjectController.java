@@ -125,4 +125,27 @@ public class ProjectController {
         Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
         return ProjectService.getAllRemoved(pageable);
     }
+
+    /**
+     * Sobreescribe todo el proyecto en la base de datos
+     * @param id es el id del proyecto a buscar
+     * @param project son los datos de un proyecto a modificar
+     * @return un projecto modificado
+     */
+    @PutMapping("/{id_project}")
+    Project updateProject(@PathVariable ("id_project") Long id, @RequestBody Project project){
+        return  ProjectService.getProjectById(id)
+                .map(updateProject -> {
+                    updateProject.setTitle(project.getTitle());
+                    updateProject.setDescription(project.getDescription());
+                    updateProject.setNeeds(project.getNeeds());
+                    updateProject.setAssistances(project.getAssistances());
+                    updateProject.setStage(project.getStage());
+                    updateProject.setFiles(project.getFiles());
+                    return ProjectService.save(updateProject);
+                })
+                .orElseGet(()->{
+                    return ProjectService.save(project);
+                });
+    }
 }
