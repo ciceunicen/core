@@ -17,10 +17,12 @@ import org.springframework.context.annotation.Configuration;
 public class loadDatabase {
     //Auto carga la tabla Project manager
     ProjectManager pm = new ProjectManager("Julio","Perez","julio@gmail.com","2494111213","No docente","Sitio web CICE");
+    ProjectManager pm1 = new ProjectManager("Roberto","Mbappe","segundo@gmail.com","3213213321","docente","Amigo");
     @Bean
     CommandLineRunner initDatabaseProjectManager(@Qualifier("projectManagerRepository") ProjectManagerRepository projectManagerRepository) {
         return args -> {
             log.info("Preloading " + projectManagerRepository.save(pm));
+            log.info("Preloading " + projectManagerRepository.save(pm1));
         };
     }
 
