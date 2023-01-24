@@ -1,5 +1,6 @@
 package com.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class AdministrationRecords implements Serializable {
     private Long id_admin;
     @Column
     private String action;
-    @Column
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm",locale = "es_AR", timezone = "GMT-3")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     public AdministrationRecords() {
