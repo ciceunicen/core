@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 
@@ -25,4 +26,5 @@ public interface ProjectService {
 
     public Page<DeletedProject> getAllRemoved(Pageable pageable);
 
+    Page<AdministrationRecords> getProjectHistory(Pageable pageable, Long id);
 }

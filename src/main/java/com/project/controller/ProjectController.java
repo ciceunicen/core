@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.DTO.DTOProjectInsert;
 import com.project.Mapper.Mapper;
+import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 import com.project.service.implementation.ProjectServiceImp;
@@ -147,5 +148,20 @@ public class ProjectController {
                 .orElseGet(()->{
                     return ProjectService.save(project);
                 });
+    }
+
+    /**
+     * Obtiene el historial de un proyecto en particular, este se devuelve de forma paginada.
+     * @param page es un Integer que representa la página a la que apunta.
+     * @param id es el id del proyecto que se quiere obtener su historial
+     * @return retorna Page<AdministrationRecords> una lista de el historial del proyecto limitada.
+     */
+    @GetMapping("/{id_project}/administrationRecords/page/{page}")
+    public Page<AdministrationRecords> getProjectHistory(@PathVariable ("id_project") Long id, @PathVariable ("page") Integer page){
+        Integer indexPage = page - 1;
+        Integer cantProjects = 15;
+        String sortAttribute = "project.title";
+        Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
+        return ProjectService.getProjectHistory(pageable,id);
     }
 }
