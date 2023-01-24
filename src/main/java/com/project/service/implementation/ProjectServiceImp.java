@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
 import com.project.entities.Project;
 import com.project.repository.*;
@@ -31,7 +32,9 @@ public class ProjectServiceImp implements ProjectService {
     @Autowired
     private StageRepository stageRepository;
     @Autowired
-   private DeletedProjectRepository deletedProjetcRepository;
+    private DeletedProjectRepository deletedProjetcRepository;
+    @Autowired
+    private AdministrationRecordsRepository administrationRecordsRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs, Long id_ProjectManager) {
@@ -44,7 +47,10 @@ public class ProjectServiceImp implements ProjectService {
             project.addAssistance(assistanceRepository.getAssistance(id));
         }
         project.setStage(stageRepository.getStage(id_stage));
-        return projectRepository.save(project);
+        project = projectRepository.save(project);
+        AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
+        administrationRecordsRepository.save(ar);
+        return project;
     }
 
     @Override
@@ -101,7 +107,26 @@ public class ProjectServiceImp implements ProjectService {
         return deletedProjetcRepository.findAll(pageable);
     }
 
+    /**
+     * guarda un proyecto editado
+     * @param p es un proyecto modificado
+     * @return retorna el proyecto cargado
+     */
     public Project save(Project p){
-       return projectRepository.save(p);
+        p=projectRepository.save(p);
+        AdministrationRecords ar=new AdministrationRecords(p,"Modificación de proyecto");
+        administrationRecordsRepository.save(ar);
+        return p;
+    }
+
+    /**
+     * Consulta a administrationRecordsRepository por todo el historial de un proyecto, este historial se retorna paginado.
+     * @param pageable es un objeto de tipo Pageable, que indica el indice de página y la cantidad de objetos por página.
+     * @param id es el id del proyecto que se quiere consultar el historial
+     * @return retorna Page<AdministrationRecords> una lista de el historial del proyecto, esta lista se encuentra limitada.
+     */
+    @Override
+    public Page<AdministrationRecords> getProjectHistory(Pageable pageable, Long id) {
+        return administrationRecordsRepository.getProjectHistory(pageable,id);
     }
 }

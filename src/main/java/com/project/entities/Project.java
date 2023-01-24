@@ -51,11 +51,9 @@ public class Project implements Serializable {
     @JoinColumn(name="id_Stage")
     private Stage stage ;
 
-
-
-
     @Column
     private Long administrador;
+
 
     public Project(String title, String description, List<String> files, Long administrador) {
         this.title = title;
