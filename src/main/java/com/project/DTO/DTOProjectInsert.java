@@ -1,5 +1,6 @@
 package com.project.DTO;
 
+import com.project.entities.File;
 import lombok.Data;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class DTOProjectInsert{
     private String description;
     private Long stage;
     private Long[] assistanceType;
-    private List<String> files;
+    private List<File> files;
     private Long[] needs;
     private Long id_Admin;
 

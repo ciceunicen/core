@@ -14,9 +14,12 @@ public class File implements Serializable {
     private Long id_File;
     @Lob
     private String file;
+    @Column
+    private String type;
 
-    public File(String file) {
+    public File(String file,String type) {
         this.file = file;
+        this.type = type;
     }
 
     public File() {
