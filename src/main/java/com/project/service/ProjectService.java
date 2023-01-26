@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 @Component
 public interface ProjectService {
 
-    public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs,Long id_ProjectManager);
+    public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs,Long id_ProjectManager);
 
     public Optional<Project> getProjectById(Long id);
     

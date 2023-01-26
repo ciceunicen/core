@@ -16,6 +16,6 @@ public interface ProjectManagerRepository extends JpaRepository<ProjectManager,L
     @Query("SELECT pm from ProjectManager pm")
     Page<ProjectManager> getAll(Pageable pageable);
 
-    @Query("select pm.projects from ProjectManager pm where pm.id_ProjectManager= :id_projectManager")
+    @Query("select p from Project p where p.projectManager.id_ProjectManager= :id_projectManager")
     Page<Project> getAllProjects(Pageable pageable, Long id_projectManager);
 }

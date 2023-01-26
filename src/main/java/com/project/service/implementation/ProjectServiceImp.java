@@ -37,7 +37,7 @@ public class ProjectServiceImp implements ProjectService {
     private AdministrationRecordsRepository administrationRecordsRepository;
 
     @Override
-    public Project addProject(Project project,Long id_stage,Long[] id_assitances,Long[] id_needs, Long id_ProjectManager) {
+    public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
         project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
 
         for (Long id:id_needs) {
