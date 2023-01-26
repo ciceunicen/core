@@ -79,10 +79,10 @@ public class loadDatabase {
     @Bean
     CommandLineRunner innitDatabaseProject(@Qualifier("projectServiceImp") ProjectServiceImp projectServiceImp){
         return args -> {
-            Project p1 = new Project("Carmen Dauta","Diseño de ropa",new String[]{"foto1","foto2"},1l);
-            Project p2= new Project("Islands BMX","Tienda de bicicletas y material especializado en el BMX",new String[]{"foto3","foto4"},1l);
-            Project p3= new Project("Kainomi Solutions","Esta empresa que se dedica a la computación cuántica",new String[]{"foto5","foto6"},1l);
-            Project p4= new Project("Alpispa","Sustituye los envoltorios de plástico por material natural",new String[]{"foto7","foto8"},1l);
+            Project p1 = new Project("Carmen Dauta","Diseño de ropa",new File[]{new File("foto1","image/png"),new File("foto2","image/png")},1l);
+            Project p2= new Project("Islands BMX","Tienda de bicicletas y material especializado en el BMX",new File[]{new File("foto3","image/png"),new File("foto4","image/png")},1l);
+            Project p3= new Project("Kainomi Solutions","Esta empresa que se dedica a la computación cuántica",new File[]{new File("foto5","image/png"),new File("foto6","image/png")},1l);
+            Project p4= new Project("Alpispa","Sustituye los envoltorios de plástico por material natural",new File[]{new File("foto7","image/png"),new File("foto8","image/png")},1l);
             //PROYECTO,ID DEL ESTADIO 5, ID DE LAS ASISTENCIAS 3 ,ID DE LAS NECESIDADES 4,ID PROJECT MANAGER
             log.info("Preloading " + projectServiceImp.addProject(p1,2L,new Long[]{3L},new Long[]{1L,3L},1L));
             log.info("Preloading " + projectServiceImp.addProject(p2,3L,new Long[]{3L,2L},new Long[]{2L,3L},1L));

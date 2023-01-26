@@ -55,24 +55,24 @@ public class Project implements Serializable {
     private Long administrador;
 
 
-    public Project(String title, String description, List<String> files, Long administrador) {
+    public Project(String title, String description, List<File> files, Long administrador) {
         this.title = title;
         this.description = description;
         this.files = new ArrayList<>();
 
-        for (String file : files) {
-            this.files.add(new File(file));
+        for (File file : files) {
+            this.files.add(new File(file.getFile(),file.getType()));
         }
         this.administrador = administrador;
     }
 
-    public Project(String title, String description, String[] files, Long administrador) {
+    public Project(String title, String description, File[] files, Long administrador) {
         this.title = title;
         this.description = description;
         this.files = new ArrayList<>();
 
-        for (String file : files) {
-            this.files.add(new File(file));
+        for (File file : files) {
+            this.files.add(new File(file.getFile(),file.getType()));
         }
 
         this.administrador = administrador;
