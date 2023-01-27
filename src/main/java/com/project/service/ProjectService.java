@@ -27,4 +27,6 @@ public interface ProjectService {
     public Page<DeletedProject> getAllRemoved(Pageable pageable);
 
     Page<AdministrationRecords> getProjectHistory(Pageable pageable, Long id);
+
+    public Project getProject(Long id);
 }

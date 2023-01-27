@@ -16,4 +16,8 @@ public class StageServiceImp implements StageService {
 		return stageRepository.findAll();
 	}
 
+	@Override
+	public Stage getStage(Long id) {
+		return stageRepository.getStage(id);
+	}
 }

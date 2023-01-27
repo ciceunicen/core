@@ -13,4 +13,6 @@ public interface AssistanceService {
 
 	public Assistance postAssistance(DTOAssistance assistance);
 
+	public Assistance getAssistance(Long id);
+
 }

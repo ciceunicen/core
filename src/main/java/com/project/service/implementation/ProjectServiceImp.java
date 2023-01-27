@@ -129,4 +129,9 @@ public class ProjectServiceImp implements ProjectService {
     public Page<AdministrationRecords> getProjectHistory(Pageable pageable, Long id) {
         return administrationRecordsRepository.getProjectHistory(pageable,id);
     }
+
+    @Override
+    public Project getProject(Long id){
+        return projectRepository.getProject(id);
+    }
 }

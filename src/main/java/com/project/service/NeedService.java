@@ -13,4 +13,6 @@ public interface NeedService {
 	public Iterable<Need> getAllNeeds();
 
 	public Need postNeed(DTONeed needs);
+
+	public Need getNeed(Long id);
 }

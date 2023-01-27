@@ -1,12 +1,10 @@
 package com.project.controller;
 
 import com.project.DTO.DTOProjectInsert;
+import com.project.DTO.DTOProjectUpdate;
 import com.project.Mapper.Mapper;
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Project;
-import com.project.service.implementation.ProjectServiceImp;
-
+import com.project.entities.*;
+import com.project.service.implementation.*;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +34,16 @@ import javax.validation.Valid;
 public class ProjectController {
     @Autowired
     private ProjectServiceImp ProjectService;
+    @Autowired
+    private StageServiceImp stageServiceImp;
+    @Autowired
+    private AssistanceServiceImp assistanceServiceImp;
+    @Autowired
+    private NeedServiceImp needServiceImp;
+    @Autowired
+    private FileServiceImp fileServiceImp;
+    @Autowired
+    private ProjectManagerServiceImp projectManagerServiceImp;
     private Mapper mapper;
 
     public ProjectController() {
@@ -134,20 +143,37 @@ public class ProjectController {
      * @return un projecto modificado
      */
     @PutMapping("/{id_project}")
-    Project updateProject(@PathVariable ("id_project") Long id, @RequestBody Project project){
-        return  ProjectService.getProjectById(id)
-                .map(updateProject -> {
-                    updateProject.setTitle(project.getTitle());
-                    updateProject.setDescription(project.getDescription());
-                    updateProject.setNeeds(project.getNeeds());
-                    updateProject.setAssistances(project.getAssistances());
-                    updateProject.setStage(project.getStage());
-                    updateProject.setFiles(project.getFiles());
-                    return ProjectService.save(updateProject);
-                })
-                .orElseGet(()->{
-                    return ProjectService.save(project);
-                });
+    public ResponseEntity<?> updateProject(@PathVariable ("id_project") Long id, @RequestBody DTOProjectUpdate project){
+        Project updateProject=ProjectService.getProject(id);
+        if (updateProject!=null){
+            updateProject.setTitle(project.getTitle());
+            updateProject.setDescription(project.getDescription());
+            List<Need> needs = new ArrayList<>();
+            for (Long idNeed:project.getNeeds()) {
+                needs.add(needServiceImp.getNeed(idNeed));
+            }
+            updateProject.setNeeds(needs);
+            List<Assistance> assistances = new ArrayList<>();
+            for (Long idAssistance:project.getAssistances()) {
+                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
+            }
+            updateProject.setAssistances(assistances);
+            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+            List<File> files = new ArrayList<>();
+            for (Long idFiles:project.getFiles()) {
+                files.add(fileServiceImp.getFile(idFiles));
+            }
+            if (project.getNewFiles().size()>0){
+                for (File file:project.getNewFiles()) {
+                    files.add(fileServiceImp.addFile(file));
+                }
+            }
+            updateProject.setFiles(files);
+            Project response = ProjectService.save(updateProject);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
