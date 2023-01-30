@@ -69,7 +69,7 @@ public class ProjectManagerController {
         //cantidad de objetos por página
         Integer cantProjects = 15;
         //Atributo por el cual se ordena
-        String sortAttribute = "surname";
+        String sortAttribute = "title";
         Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
         return projectManagerServiceImp.getAllProjects(pageable,id_ProjectManager);
     }

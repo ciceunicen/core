@@ -8,4 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface StageService {
 	public Iterable<Stage> getAllStages();
+
+	public Stage getStage(Long id);
 }

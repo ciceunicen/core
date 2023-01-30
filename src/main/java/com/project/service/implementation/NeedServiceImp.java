@@ -25,4 +25,8 @@ public class NeedServiceImp implements NeedService{
 		return needRepository.save(need1);
 	}
 
+	@Override
+	public Need getNeed(Long id) {
+		return needRepository.getNeed(id);
+	}
 }

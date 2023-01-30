@@ -24,5 +24,8 @@ public class AssistanceServiceImp implements AssistanceService {
 		return assistanceRepository.save(assistance1);
 	}
 
-
+	@Override
+	public Assistance getAssistance(Long id) {
+		return assistanceRepository.getAssistance(id);
+	}
 }

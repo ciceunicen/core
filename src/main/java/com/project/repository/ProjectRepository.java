@@ -21,4 +21,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     @Query("select p from Project p where not exists(select dp from DeletedProject dp where dp.project.id_Project=p.id_Project)")
     public Page<Project> getAll(Pageable pageable);
+
+    @Query("select p from Project p where p.id_Project=:id")
+    public Project getProject(Long id);
 }
