@@ -66,7 +66,7 @@ public class Project implements Serializable {
         this.administrador = administrador;
     }
 
-    public Project(String title, String description, File[] files, Long administrador) {
+    public Project(String title, String description, Long administrador) {
         this.title = title;
         this.description = description;
         this.files = new ArrayList<>();

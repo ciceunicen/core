@@ -110,7 +110,7 @@ public class loadDatabase {
                 for (Object valor:listAssistances) {
                     assistances.add((Long) valor);
                 }
-                p = new Project(proyecto.get("title").toString(),proyecto.get("description").toString(),new File[]{new File(proyecto.get("files").toString(),"image/png")}, (Long) proyecto.get("administrador"));
+                p = new Project(proyecto.get("title").toString(),proyecto.get("description").toString(), (Long) proyecto.get("administrador"));
                 log.info("Preloading " + projectServiceImp.addProject(p, (Long) proyecto.get("stage"), assistances,needs, (Long) proyecto.get("id_ProjectManager")));
             }
         };
