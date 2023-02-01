@@ -190,4 +190,14 @@ public class ProjectController {
         Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
         return ProjectService.getProjectHistory(pageable,id);
     }
+
+    @DeleteMapping("/removeFiles/idProject/{id_project}")
+    public ResponseEntity<?> deleteFile(@PathVariable("id_project") Long id_project) {
+        List<File> response = fileServiceImp.deleteFilesByProject(id_project);
+        if(response != null) {
+            fileServiceImp.deleteFilesByProject(id_project);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    }
 }
