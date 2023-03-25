@@ -67,7 +67,6 @@ public class loadDatabase {
         };
     }
 
-
     //Auto carga la tabla estadios
     Stage s1 = new Stage("Idea negocio");
     Stage s2 = new Stage("Puesta en marcha - Iniciación");
@@ -115,5 +114,8 @@ public class loadDatabase {
             }
         };
     }
+
+    
+    
 }
 
