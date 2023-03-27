@@ -38,19 +38,21 @@ public class User implements Serializable{
 	@JoinColumn(name="id_role")
 	private Role rol;
 
-	public User(Long id, @NotEmpty String email, @NotEmpty String password, @NotEmpty String name,
-			@NotEmpty String surname, Role rol) {
+	public User(@NotEmpty String email, @NotEmpty String password, @NotEmpty String name,
+			@NotEmpty String surname) {
 		super();
-		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.surname = surname;
-		this.rol = rol;
 	}
+	
 	
 	public User() {
 		
+	}
+	public void addRole(Role r) {
+		this.rol=r;
 	}
 
 }

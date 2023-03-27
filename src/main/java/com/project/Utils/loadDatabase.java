@@ -114,8 +114,23 @@ public class loadDatabase {
             }
         };
     }
-
-    
+   User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
+   Role r= new Role("admin");
+    @Bean
+    CommandLineRunner initDatabaseRole(@Qualifier("roleRepository") RoleRepository roleRepository) {
+        return args -> {
+            log.info("Preloading " + roleRepository.save(r));
+         
+        };
+    }
+    @Bean
+    CommandLineRunner initDatabaseUser(@Qualifier("userRepository") UserRepository userRepository) {
+        return args -> {
+            log.info("Preloading " + userRepository.save(user1));
+            user1.addRole(r);
+            log.info("Preloading " + userRepository.save(user1));
+        };
+    }
     
 }
 
