@@ -16,10 +16,7 @@ public class UserController {
 
 	@Autowired UserServiceImp userService;
 	
-	@GetMapping()
-	public void pantallaInicial() {
-		System.out.println("holis");
-	}
+	
 	
 	@PostMapping()
 	public User postUser(@RequestBody User user) {
