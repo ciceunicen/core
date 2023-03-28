@@ -67,7 +67,6 @@ public class loadDatabase {
         };
     }
 
-
     //Auto carga la tabla estadios
     Stage s1 = new Stage("Idea negocio");
     Stage s2 = new Stage("Puesta en marcha - Iniciación");
@@ -115,5 +114,32 @@ public class loadDatabase {
             }
         };
     }
+   User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
+   User user2= new User("felipe", "hhhd","juan", "cortes");
+   User  user3 = new User("ahsdhasdb", "hhhhhhhhd","juhhhan", "cortes");
+   Role r= new Role("admin");
+   Role r1= new Role(1);
+    @Bean
+    CommandLineRunner initDatabaseRole(@Qualifier("roleRepository") RoleRepository roleRepository) {
+        return args -> {
+            log.info("Preloading " + roleRepository.save(r));
+         
+        };
+    }
+    @Bean
+    CommandLineRunner initDatabaseUser(@Qualifier("userRepository") UserRepository userRepository) {
+        return args -> {
+            log.info("Preloading " + userRepository.save(user1));
+            log.info("Preloading " + userRepository.save(user2));
+            
+            user1.addRole(r1);
+            user2.addRole(r1);
+            log.info("Preloading " + userRepository.save(user1));
+            log.info("Preloading " + userRepository.save(user2));
+            log.info("verificandoo "+user1.getRol().toString());
+            log.info("Verificando rol descripto " + r1.toString());
+        };
+    }
+    
 }
 
