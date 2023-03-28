@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -21,20 +21,20 @@ public class User implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(unique=true, length=45)
     @NotEmpty
 	private String email;
-	@Column
+	@Column(length = 20)
     @NotEmpty
 	private String password;
-	@Column
+	@Column(length = 20)
     @NotEmpty
 	private String name;
-	@Column
+	@Column(length = 20)
     @NotEmpty
 	private String surname;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="id_role")
 	private Role rol;
 

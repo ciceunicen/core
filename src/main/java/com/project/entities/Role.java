@@ -30,4 +30,12 @@ public class Role implements Serializable{
 	}
 	public Role() {	
 	} 
+	public Role( int id) {
+		this.id=id;
+	}
+	@Override
+	public String toString() {
+		return "Role type=" + type + "]";
+	}
+	
 }
