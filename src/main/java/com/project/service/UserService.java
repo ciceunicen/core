@@ -9,4 +9,6 @@ public interface UserService {
 	
 	public User postUser(User u);
 
+	public User makeAdmin(User u);
+
 }
