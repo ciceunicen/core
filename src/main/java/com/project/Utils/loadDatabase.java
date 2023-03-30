@@ -143,5 +143,23 @@ public class loadDatabase {
         };
     }
     
+    
+  //Auto carga la tabla Entrepreneur 
+   
+   /*Entrepreneur e2 = new Entrepreneur(user2, 1255523, 20102050, 24);
+   Entrepreneur e3 = new Entrepreneur(user3, 5555555, 25152555, 55);*/
+   @Bean
+   CommandLineRunner initDatabaseEntrepreneur(@Qualifier("entrepreneurRepository") EntrepreneurRepository entrepreneurRepository, 
+		   @Qualifier("userRepository") UserRepository userRepository) {
+       return args -> {
+    	   /*
+    	   Entrepreneur e1 = new Entrepreneur(user1, 1232154, 20202020, 2);
+           log.info("Preloading " + entrepreneurRepository.save(e1));
+           log.info("Preloading " + entrepreneurRepository.save(e2));
+           log.info("Preloading " + entrepreneurRepository.save(e3));*/
+       };
+   }
+
+   
 }
 
