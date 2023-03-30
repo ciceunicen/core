@@ -29,17 +29,17 @@ public class UserServiceImp implements UserService {
 
 	/**
 	 * Hace administrador a un usuario dado
-	 * @param u el usuario al que se le modifica el rol
+	 * @param id el usuario al que se le modifica el rol
 	 * @return el usuario modificado
 	 */
 	@Override
-	public User makeAdmin(User u) {
+	public User changeRole(Long id, Role role) {
 
-		User user = userRepo.findById(u.getId()).get();//Busca el el udsuario por el id
-		Role r = roleRepository.findById(1).get();//Busca el rol de admin para asignar
+		User user = userRepo.findById(id).get();//Busca el el udsuario por el id
+		Role r = roleRepository.findById(role.getId()).get();//Busca el rol de admin para asignar
 
 		user.addRole(r);//asigna el nuevo rol al usuario
 
-		return user;
+		return userRepo.save(user);//persiste los datos en la base de datos
 	}
 }

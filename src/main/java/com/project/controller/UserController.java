@@ -26,9 +26,9 @@ public class UserController {
 	 * @param id es el id del usuario que va a actualizar
 	 * @return retorna el usuario actualizado
 	 */
-	@PutMapping("/{id}")
-	public User updateRole(@PathVariable Long id, @RequestBody User user){
+	@PutMapping("/{id}/rol")
+	public User updateRole(@PathVariable Long id, @RequestBody Role role){
 
-		return userService.makeAdmin(user);
+		return userService.changeRole(id,role);
 	}
 }
