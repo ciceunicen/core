@@ -118,7 +118,7 @@ public class loadDatabase {
     }
    User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
    User user2= new User("felipe", "hhhd","juan", "cortes");
-   User  user3 = new User("ahsdhasdb", "hhhhhhhhd","juhhhan", "cortes");
+   User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");
    Role r= new Role("admin");
    Role r1= new Role(1);
     @Bean
@@ -138,6 +138,7 @@ public class loadDatabase {
             user2.addRole(r1);
             log.info("Preloading " + userRepository.save(user1));
             log.info("Preloading " + userRepository.save(user2));
+            log.info("Preloading " + userRepository.save(user3));
             log.info("verificandoo "+user1.getRol().toString());
             log.info("Verificando rol descripto " + r1.toString());
         };
