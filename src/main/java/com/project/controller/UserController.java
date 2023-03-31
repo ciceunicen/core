@@ -24,24 +24,20 @@ public class UserController {
 		 return userService.postUser(user);
 	}
 	
-	@GetMapping("/")
+	@GetMapping()
     public Iterable<User> getUsers(){
         return userService.findAll();
     }
 	
 	@GetMapping("/{ID}")
-    public Iterable<User> getUser(@PathVariable Integer ID){
+    public User getUser(@PathVariable Long ID){
         return userService.findById(ID);
     }
 	
-	@PostMapping("/")
-    public User save(@RequestBody UserDto user){
-        return userService.save(user);
-    }
-	
 	@PutMapping("/{ID}")
-    public User update(@RequestBody UserDto user, @PathVariable Integer ID){
-        return userService.update(user, ID);
+    public User update(@RequestBody User user, @PathVariable Long ID){
+		//TODO: implementar el metodo para actualizar por id
+        return user;
     }
 
 }

@@ -20,4 +20,12 @@ public class UserServiceImp implements UserService {
 		u.setPassword(encodedPassword);*/
 		return userRepo.save(u);
 	}
+	
+	public User findById(Long id) {
+		return userRepo.findById(id).get();
+	}
+	
+	public Iterable<User> findAll() {
+		return userRepo.findAll();
+	}
 }
