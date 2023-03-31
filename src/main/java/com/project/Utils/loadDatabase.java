@@ -118,7 +118,7 @@ public class loadDatabase {
     }
    User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
    User user2= new User("felipe", "hhhd","juan", "cortes");
-   User  user3 = new User("ahsdhasdb", "hhhhhhhhd","juhhhan", "cortes");
+   User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");
    Role r= new Role("admin");
    Role r1= new Role(1);
     @Bean
@@ -128,6 +128,24 @@ public class loadDatabase {
          
         };
     }
+    
+    //Auto carga la tabla Entrepreneur 
+    
+    /*Entrepreneur e2 = new Entrepreneur(user2, 1255523, 20102050, 24);
+    Entrepreneur e3 = new Entrepreneur(user3, 5555555, 25152555, 55);*/
+    @Bean
+    CommandLineRunner initDatabaseEntrepreneur(@Qualifier("entrepreneurRepository") EntrepreneurRepository entrepreneurRepository, 
+ 		   @Qualifier("userRepository") UserRepository userRepository) {
+        return args -> {
+     	   	Entrepreneur e1 = new Entrepreneur(user1, 1232154, 20202020, 2);
+     	   	Entrepreneur e2 = new Entrepreneur(user2, 1122166, 28190420, 3);
+     	   	Entrepreneur e3 = new Entrepreneur(user3, 9252254, 55555555, 10);
+            log.info("Preloading " + entrepreneurRepository.save(e1));
+            log.info("Preloading " + entrepreneurRepository.save(e2));
+            log.info("Preloading " + entrepreneurRepository.save(e3));
+        };
+    }
+    
     @Bean
     CommandLineRunner initDatabaseUser(@Qualifier("userRepository") UserRepository userRepository) {
         return args -> {
@@ -138,10 +156,13 @@ public class loadDatabase {
             user2.addRole(r1);
             log.info("Preloading " + userRepository.save(user1));
             log.info("Preloading " + userRepository.save(user2));
+            log.info("Preloading " + userRepository.save(user3));
             log.info("verificandoo "+user1.getRol().toString());
             log.info("Verificando rol descripto " + r1.toString());
         };
     }
     
+
+   
 }
 
