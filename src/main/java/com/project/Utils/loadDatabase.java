@@ -121,11 +121,16 @@ public class loadDatabase {
    User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");
    Role r= new Role("admin");
    Role r1= new Role(1);
+
+   Role r2= new Role(2,"emprendedor");
+   Role r3 = new Role(3,"visitante");
+
     @Bean
     CommandLineRunner initDatabaseRole(@Qualifier("roleRepository") RoleRepository roleRepository) {
         return args -> {
             log.info("Preloading " + roleRepository.save(r));
-         
+            log.info("Preloading " + roleRepository.save(r2));
+            log.info("Preloading " + roleRepository.save(r3));
         };
     }
     
