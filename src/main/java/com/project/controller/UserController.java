@@ -5,7 +5,6 @@ import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import com.project.entities.User;
 import com.project.service.implementation.UserServiceImp;
 
@@ -13,13 +12,32 @@ import com.project.service.implementation.UserServiceImp;
 @RequestMapping("usuarios")
 public class UserController {
 
-	@Autowired UserServiceImp userService;
+	
+	@Autowired 
+	UserServiceImp userService;
+
 	
 	@PostMapping()
 	public User postUser(@RequestBody User user) {
 		
 		 return userService.postUser(user);
 	}
+	
+	@GetMapping()
+    public Iterable<User> getUsers(){
+        return userService.findAll();
+    }
+	
+	@GetMapping("/{ID}")
+    public User getUser(@PathVariable Long ID){
+        return userService.findById(ID);
+    }
+	
+	@PutMapping("/{ID}")
+    public User update(@RequestBody User user, @PathVariable Long ID){
+		//TODO: implementar el metodo para actualizar por id
+        return user;
+    }
 
 	/**
 	 * Actualiza el rol de un usuario a Administrador
@@ -31,4 +49,5 @@ public class UserController {
 
 		return userService.changeRole(id,role);
 	}
+
 }

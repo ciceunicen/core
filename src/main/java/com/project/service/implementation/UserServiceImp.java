@@ -26,6 +26,13 @@ public class UserServiceImp implements UserService {
 		u.setPassword(encodedPassword);*/
 		return userRepo.save(u);
 	}
+	
+	public User findById(Long id) {
+		return userRepo.findById(id).get();
+	}
+	
+	public Iterable<User> findAll() {
+		return userRepo.findAll();
 
 	/**
 	 * Hace administrador a un usuario dado
@@ -41,5 +48,6 @@ public class UserServiceImp implements UserService {
 		user.addRole(r);//asigna el nuevo rol al usuario
 
 		return userRepo.save(user);//persiste los datos en la base de datos
+
 	}
 }
