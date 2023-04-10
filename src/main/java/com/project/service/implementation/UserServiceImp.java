@@ -3,6 +3,7 @@ package com.project.service.implementation;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.User;
@@ -21,9 +22,9 @@ public class UserServiceImp implements UserService {
 	@Override
 	public User postUser(User u) {
 		
-		/*BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(u.getPassword());
-		u.setPassword(encodedPassword);*/
+		u.setPassword(encodedPassword);
 		return userRepo.save(u);
 	}
 
