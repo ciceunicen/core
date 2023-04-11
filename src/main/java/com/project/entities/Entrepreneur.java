@@ -33,7 +33,6 @@ public class Entrepreneur implements Serializable{
     @NotEmpty
 	private String name;
 	@Column(length = 20)
-    @NotEmpty
 	private String surname;
 	@Column(unique=true, length=45)
     @NotEmpty
@@ -42,8 +41,8 @@ public class Entrepreneur implements Serializable{
 	private Long cuil_cuit;
 	@Column (name = "phone", length=15)
 	private int phone;
-	@Column(name="howknowcice", length=60)
-	private String howknowcice;
+	@Column(name="howimeetcice", length=60)
+	private String howimeetcice;
 	@Builder.Default
 	@Column(name="ispf")
 	private boolean ispf=true;
@@ -58,14 +57,14 @@ public class Entrepreneur implements Serializable{
 
 
 
-	public Entrepreneur( String name, String surname, String email, Long cuilCuit, int phone, String howknowcice,
+	public Entrepreneur( String name, String surname, String email, Long cuilCuit, int phone, String howimeetcice,
 			boolean isPF, int id_User) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
 		this.cuil_cuit = cuilCuit;
 		this.phone = phone;
-		this.howknowcice = howknowcice;
+		this.howimeetcice= howimeetcice;
 		this.ispf = isPF;
 		this.id_user = id_User;
 	}
@@ -75,7 +74,7 @@ public class Entrepreneur implements Serializable{
 	@Override
 	public String toString() {
 		return "Entrepreneur [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", cuilCuit="
-				+ cuil_cuit + ", phone=" + phone + ", howknowcice=" + howknowcice + ", isPF=" + ispf + ", id_User="
+				+ cuil_cuit + ", phone=" + phone + ", howknowcice=" + howimeetcice + ", isPF=" + ispf + ", id_User="
 				+ id_user + "]";
 	}
 

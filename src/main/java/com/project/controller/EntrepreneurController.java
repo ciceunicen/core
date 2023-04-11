@@ -16,7 +16,6 @@ public class EntrepreneurController {
 	
 	@PostMapping()
 	public Entrepreneur postEntrepreneur(@RequestBody Entrepreneur e) {
-		System.out.println( e.getCuil_cuit()+"crontralador");
 		return entrepreneurService.postEntrepeneur(e);
 	}
 	

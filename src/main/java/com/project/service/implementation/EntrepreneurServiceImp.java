@@ -12,8 +12,6 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private EntrepreneurRepository entrepreneurRepository;
 	@Override
 	public Entrepreneur postEntrepeneur(Entrepreneur e) {
-		// TODO Auto-generated method stub
-		System.out.println(e.getCuil_cuit());
 		return entrepreneurRepository.save(e);
 	}
 
