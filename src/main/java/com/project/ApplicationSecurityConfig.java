@@ -1,14 +1,28 @@
 package com.project;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity
-public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
+import com.project.jwt.JwtTokenFilter;
+import com.project.repository.UserRepository;
 
-	
+@Configuration
+public class ApplicationSecurityConfig{
+
+	@Autowired private UserRepository userRepo;
+	@Autowired private JwtTokenFilter jwtTokenFilter;
 
 	@Bean
     public UserDetailsService userDetailsService() {
