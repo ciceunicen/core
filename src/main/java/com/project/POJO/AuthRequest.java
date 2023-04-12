@@ -5,12 +5,14 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import lombok.Data;
 
+@Data
 public class AuthRequest {
 
 	@NotNull @Email @Length(min = 5, max = 50)
     private String email;
      
-    @NotNull @Length(min = 5, max = 10)
+    @NotNull @Length(min = 8, max = 20)
     private String password;
 }
