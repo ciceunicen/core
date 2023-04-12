@@ -34,7 +34,8 @@ public class UserServiceImp implements UserService {
 	
 	public Iterable<User> findAll() {
 		return userRepo.findAll();
-
+	}
+	
 	/**
 	 * Hace administrador a un usuario dado
 	 * @param id el usuario al que se le modifica el rol
