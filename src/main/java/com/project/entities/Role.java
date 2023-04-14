@@ -33,6 +33,11 @@ public class Role implements Serializable{
 	public Role( int id) {
 		this.id=id;
 	}
+
+	public Role(int id, String type){
+		this.id = id;
+		this.type = type;
+	}
 	@Override
 	public String toString() {
 		return "Role type=" + type + "]";

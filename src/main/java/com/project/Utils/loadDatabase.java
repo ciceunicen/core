@@ -118,11 +118,13 @@ public class loadDatabase {
     }
    /*User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
    User user2= new User("felipe", "hhhd","juan", "cortes");
+
    User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");*/
    Role r= new Role("SuperAdmin");
    Role r1= new Role("Admin");
    Role r2= new Role("Emprendedor");
    Role r3= new Role("Defecto");
+   
     @Bean
     CommandLineRunner initDatabaseRole(@Qualifier("roleRepository") RoleRepository roleRepository) {
         return args -> {
