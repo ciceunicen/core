@@ -11,10 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 @Entity
@@ -27,6 +30,7 @@ public class User implements Serializable,UserDetails{
 	private Long id;
 	@Column(unique=true, length=45)
     @NotEmpty
+    @Email
 	private String email;
 	@Column
     @NotEmpty
