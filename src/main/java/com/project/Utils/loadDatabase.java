@@ -116,19 +116,20 @@ public class loadDatabase {
             }
         };
     }
-   User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
+   /*User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
    User user2= new User("felipe", "hhhd","juan", "cortes");
-   User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");
-   Role r= new Role("admin");
-   Role r1= new Role(1);
 
-   Role r2= new Role(2,"emprendedor");
-   Role r3 = new Role(3,"visitante");
-
+   User  user3 = new User("lig", "hhhhhhhhd","juhhhan", "cortes");*/
+   Role r= new Role("SuperAdmin");
+   Role r1= new Role("Admin");
+   Role r2= new Role("Emprendedor");
+   Role r3= new Role("Defecto");
+   
     @Bean
     CommandLineRunner initDatabaseRole(@Qualifier("roleRepository") RoleRepository roleRepository) {
         return args -> {
             log.info("Preloading " + roleRepository.save(r));
+            log.info("Preloading " + roleRepository.save(r1));
             log.info("Preloading " + roleRepository.save(r2));
             log.info("Preloading " + roleRepository.save(r3));
         };
@@ -136,7 +137,7 @@ public class loadDatabase {
     
     //Auto carga la tabla Entrepreneur 
     
-    Entrepreneur e1 = new Entrepreneur("jj","kkk","kkk@gmm",20363046845L,1234566,"web",true,3);
+    /*Entrepreneur e1 = new Entrepreneur("jj","kkk","kkk@gmm",20363046845L,1234566,"web",true,3);
     
     @Bean
     CommandLineRunner initDatabaseEntrepreneur(@Qualifier("entrepreneurRepository") EntrepreneurRepository entrepreneurRepository, 
@@ -144,11 +145,11 @@ public class loadDatabase {
         return args -> {
      	   
         	log.info("Preloading " + entrepreneurRepository.save(e1));
-        	/*log.info("Preloading " + entrepreneurRepository.save(e3));*/
+        	log.info("Preloading " + entrepreneurRepository.save(e3));
         };
-    }
+    }*/
     
-    @Bean
+   /* @Bean
     CommandLineRunner initDatabaseUser(@Qualifier("userRepository") UserRepository userRepository) {
         return args -> {
             log.info("Preloading " + userRepository.save(user1));
@@ -162,7 +163,7 @@ public class loadDatabase {
             log.info("verificandoo "+user1.getRol().toString());
             log.info("Verificando rol descripto " + r1.toString());
         };
-    }
+    }*/
     
 
    

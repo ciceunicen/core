@@ -3,6 +3,9 @@ package com.project.controller;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
@@ -18,7 +21,7 @@ public class UserController {
 
 	
 	@PostMapping()
-	public User postUser(@RequestBody User user) {
+	public User postUser(@RequestBody @Valid User user) {
 		
 		 return userService.postUser(user);
 	}
