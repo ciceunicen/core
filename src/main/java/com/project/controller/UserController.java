@@ -1,12 +1,13 @@
 package com.project.controller;
 
 import com.project.entities.Role;
-import com.project.repository.RoleRepository;
-import com.project.repository.UserRepository;
+
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
 import com.project.service.implementation.UserServiceImp;
@@ -21,24 +22,22 @@ public class UserController {
 
 	
 	@PostMapping()
-	public User postUser(@RequestBody @Valid User user) {
-		
-		 return userService.postUser(user);
+	public ResponseEntity<User> postUser(@RequestBody @Valid User user) {	
+		 return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(user));
 	}
 	
 	@GetMapping()
-    public Iterable<User> getUsers(){
-        return userService.findAll();
+    public ResponseEntity<Iterable<User>>getUsers(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 	
 	@GetMapping("/{ID}")
-    public User getUser(@PathVariable Long ID){
-        return userService.findById(ID);
+    public ResponseEntity<User> getUser(@PathVariable Long ID){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
     }
 	
 	@PutMapping("/{ID}")
     public User update(@RequestBody User user, @PathVariable Long ID){
-		//TODO: implementar el metodo para actualizar por id
         return user;
     }
 
@@ -48,9 +47,8 @@ public class UserController {
 	 * @return retorna el usuario actualizado
 	 */
 	@PutMapping("/{id}/rol")
-	public User updateRole(@PathVariable Long id, @RequestBody Role role){
-
-		return userService.changeRole(id,role);
+	public ResponseEntity< User> updateRole(@PathVariable Long id, @RequestBody Role role){
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.changeRole(id,role));
 	}
 
 }
