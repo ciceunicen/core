@@ -7,5 +7,7 @@ import com.project.entities.Role;
 
 @Repository
 public interface RoleRepository  extends JpaRepository<Role,Integer>{
+	
+	Role findByType (String type);
 
 }
