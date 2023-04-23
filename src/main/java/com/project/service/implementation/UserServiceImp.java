@@ -38,6 +38,11 @@ public class UserServiceImp implements UserService {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(u.getPassword());
 		u.setPassword(encodedPassword);
+		Role r = roleRepository.findByType("Defecto");
+		if(r!= null) {
+			u.setRol(r);
+		}
+		
 		return userRepo.save(u);
 		}
 	}
