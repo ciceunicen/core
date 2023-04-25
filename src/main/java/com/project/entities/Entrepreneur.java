@@ -47,7 +47,7 @@ public class Entrepreneur implements Serializable{
 	@Column(name="ispf")
 	private boolean ispf=true;
 	@Column(name="id_user")
-	private int id_user;
+	private Long id_user;
 	
 	
 	
@@ -58,7 +58,7 @@ public class Entrepreneur implements Serializable{
 
 
 	public Entrepreneur( String name, String surname, String email, Long cuilCuit, int phone, String howimeetcice,
-			boolean isPF, int id_User) {
+			boolean isPF, Long id_User) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
