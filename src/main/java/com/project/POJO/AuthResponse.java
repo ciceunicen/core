@@ -1,25 +1,20 @@
 package com.project.POJO;
 
 import com.project.entities.Role;
+import com.project.entities.User;
 
 import lombok.Data;
 
 @Data
 public class AuthResponse {
 
-	private String email;
-    private String rolType;
-    private String name;
-    private String surname;
+    private Object usuario;
     private String accessToken;
  
     public AuthResponse() { }
      
-    public AuthResponse(String email, String rolType, String name, String surname, String accessToken) {
-        this.email = email;
-        this.rolType = rolType;
-        this.name = name;
-        this.surname = surname;
+    public AuthResponse(Object usuario, String accessToken) {
+        this.usuario = usuario;
         this.accessToken = accessToken;
     }
 }
