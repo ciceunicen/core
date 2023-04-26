@@ -8,16 +8,18 @@ import lombok.Data;
 public class AuthResponse {
 
 	private String email;
-    private Integer rolID;
     private String rolType;
+    private String name;
+    private String surname;
     private String accessToken;
  
     public AuthResponse() { }
      
-    public AuthResponse(String email, Role rol, String accessToken) {
+    public AuthResponse(String email, String rolType, String name, String surname, String accessToken) {
         this.email = email;
-        this.rolID = rol.getId();
-        this.rolType = rol.getType();
+        this.rolType = rolType;
+        this.name = name;
+        this.surname = surname;
         this.accessToken = accessToken;
     }
 }
