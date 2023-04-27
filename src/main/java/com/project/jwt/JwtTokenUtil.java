@@ -22,7 +22,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Component
 public class JwtTokenUtil {
 
-	private static final long EXPIRE_DURATION = 5 * 60 * 1000; // 5 minutos
+	private static final long EXPIRE_DURATION = 25 * 60 * 1000; // 25 minutos
 	private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
     
     @Value("${app.jwt.secret}")
