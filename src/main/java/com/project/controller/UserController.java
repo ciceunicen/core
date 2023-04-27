@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entities.Role;
 
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -27,8 +28,8 @@ public class UserController {
 	}
 	
 	@GetMapping()
-    public ResponseEntity<Iterable<User>>getUsers(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
+    public ResponseEntity<Iterable<User>>getUsers(@RequestParam(required = false) List<String> rolIds){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(rolIds));
     }
 	
 	@GetMapping("/{ID}")
