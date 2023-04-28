@@ -2,6 +2,9 @@ package com.project.service.implementation;
 
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,8 +57,13 @@ public class UserServiceImp implements UserService {
 		return userRepo.findById(id).get();
 	}
 	
-	public Iterable<User> findAll() {
-		return userRepo.findAll();
+	public Iterable<User> findAll(List<String> rolIds) {
+		if(rolIds!=null) {
+			return userRepo.findByRolIds(rolIds);
+		}else {
+			return userRepo.findAll();
+		}
+		
 	}
 
 	/**
