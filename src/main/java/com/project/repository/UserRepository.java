@@ -18,5 +18,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 	@Query(value="Select * from User u where u.id_role in (:ids) ",nativeQuery = true)
 	Iterable<User> findByRolIds(List<String> ids);
+
+	boolean existsByEmail(String email); 
 	
 	}

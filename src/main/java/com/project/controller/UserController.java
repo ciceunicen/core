@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
+import com.project.repository.UserRepository;
 import com.project.service.implementation.UserServiceImp;
 
 @RestController
@@ -20,6 +21,9 @@ public class UserController {
 	
 	@Autowired 
 	UserServiceImp userService;
+
+	@Autowired
+    private UserRepository userRepository;
 
 	
 	@PostMapping()
@@ -36,6 +40,11 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable Long ID){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
     }
+
+	@GetMapping("/auth/email/{email}")
+	public boolean existsUserByEmail(@PathVariable String email) {
+		return userRepository.existsByEmail(email);
+	}
 	
 	@PutMapping("/{ID}")
     public User update(@RequestBody User user, @PathVariable Long ID){

@@ -57,6 +57,7 @@ public class ApplicationSecurityConfig{
         http.authorizeRequests()
         .antMatchers(HttpMethod.POST,"/usuarios").permitAll()
         .antMatchers("/auth/login").permitAll()
+        .antMatchers(HttpMethod.GET, "/usuarios/auth/email/{email}").permitAll()
         .anyRequest().authenticated();
          
             http.exceptionHandling()
