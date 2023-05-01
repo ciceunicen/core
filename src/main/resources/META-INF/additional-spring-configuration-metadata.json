@@ -2,6 +2,6 @@
   {
     "name": "app.dbload.loaddbonrun",
     "type": "java.lang.String",
-    "description": "A description for 'app.dbload.loaddbonrun'"
+    "description": "Determina si se deben cargar datos de prueba o no"
   }
 ]}
