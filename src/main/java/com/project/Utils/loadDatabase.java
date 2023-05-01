@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +27,10 @@ import java.util.List;
  */
 @Configuration
 @Slf4j
+@ConditionalOnProperty(
+		value="app.dbload.loaddbonrun",
+		havingValue="true",
+		matchIfMissing=false)
 public class loadDatabase {
     //Auto carga la tabla Project manager
     ProjectManager pm;
