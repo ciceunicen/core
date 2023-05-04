@@ -54,15 +54,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-    @PostMapping("/password")
-    public ResponseEntity<?> sendEmail(@RequestBody DTOEmail dto){
-    	Optional<User> userOpt=userService.findEmail(dto.getMailTo());
+    @PostMapping("/password/sendEmail")
+    public void sendEmail(@RequestBody DTOEmail dto){
     	
-    	//comprobamos si ese usuario no existe
-    	if(!userOpt.isPresent()) {
-    		return new ResponseEntity("No existe ningun",HttpStatus.NOT_FOUND);
-    	}else {
-    	User user=userOpt.get();
+    	User user=userService.findEmail(dto.getMailTo()).get();
     	dto.setMailFrom(emailFrom);
     	dto.setMailTo(user.getEmail());
 		dto.setSubject("Cambio de contraseña");
@@ -73,14 +68,12 @@ public class AuthController {
 		user.setTokenPassword(tokenPassword);
 		userService.saveUser(user);
     	emailService.sendEmail(dto);
-		return new ResponseEntity("Correo ennviado con exito",HttpStatus.OK);
-    	}
+		
+
 	}
+    
     @PostMapping("/resetPassword")
     public ResponseEntity<?> changePassword(@Valid @RequestBody DTOChangePassword  dto, BindingResult bindingResult){
-    	/*if(bindingResult.hasErrors()) {
-    		return new ResponseEntity("Campos incorrectos",HttpStatus.BAD_REQUEST);
-    	}*/
     	if(!dto.getPassword().equals(dto.getConfirmPassword())) {
     		 return new ResponseEntity("Las contraseñas no coinciden",HttpStatus.BAD_REQUEST);
     	}
@@ -96,5 +89,17 @@ public class AuthController {
     		return new ResponseEntity("Contraseña actualizada",HttpStatus.OK);
     		
     	}
+    }
+    @PostMapping("/password")
+    public ResponseEntity<?> existMail(@RequestBody DTOEmail dto){
+    	Optional<User> userOpt=userService.findEmail(dto.getMailTo());
+    	if(!userOpt.isPresent()) {
+    		System.out.println("entro not found");
+    		return new ResponseEntity("No existe ningun usuario con esas credenciales",HttpStatus.NOT_FOUND);
+    	}else {
+    		System.out.println(" el ok");
+    		return new ResponseEntity("Correo ennviado con exito",HttpStatus.OK);
+    	}
+    	
     }
 }

@@ -56,7 +56,7 @@ public class ApplicationSecurityConfig{
          
         http.authorizeRequests()
         .antMatchers(HttpMethod.POST,"/usuarios").permitAll()
-        .antMatchers(HttpMethod.POST,"/auth/password").permitAll()
+        .antMatchers(HttpMethod.POST,"/auth/password/**").permitAll()
         .antMatchers(HttpMethod.POST,"/auth/resetPassword").permitAll()
         .antMatchers("/auth/login").permitAll()
         .anyRequest().authenticated();
