@@ -41,6 +41,7 @@ public class User implements Serializable,UserDetails{
 	@Column(length = 20)
     @NotEmpty
 	private String surname;
+	private String tokenPassword;
 	
 	@ManyToOne
 	@JoinColumn(name="id_role")
@@ -62,8 +63,12 @@ public class User implements Serializable,UserDetails{
 	public void addRole(Role r) {
 		this.rol=r;
 	}
-
-
+	public String getTokenPassword() {
+		return tokenPassword;
+	}
+	public void setTokenPassword(String tokenPassword) {
+		this.tokenPassword=tokenPassword;
+	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub

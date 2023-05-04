@@ -11,5 +11,6 @@ public interface UserService {
 	public User postUser(User u);
 
 	public User changeRole(Long id, Role role);
+	
 
 }

@@ -3,7 +3,11 @@ package com.project.service.implementation;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 
+
+import java.util.Optional;
+
 import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -81,5 +85,15 @@ public class UserServiceImp implements UserService {
 
 		return userRepo.save(user);//persiste los datos en la base de datos
 
+	}
+	
+	public Optional<User> findEmail(String email){
+		return userRepo.findByEmail(email);
+	}
+	public void saveUser(User user) {
+		 userRepo.save(user);
+	}
+	public Optional<User> findByTokenPassword(String tokenPaasword){
+		return userRepo.findByTokenPassword(tokenPaasword);
 	}
 }
