@@ -3,7 +3,11 @@ package com.project.service.implementation;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 
+
 import java.util.Optional;
+
+import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +45,11 @@ public class UserServiceImp implements UserService {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(u.getPassword());
 		u.setPassword(encodedPassword);
+		Role r = roleRepository.findByType("Defecto");
+		if(r!= null) {
+			u.setRol(r);
+		}
+		
 		return userRepo.save(u);
 		}
 	}
@@ -52,8 +61,13 @@ public class UserServiceImp implements UserService {
 		return userRepo.findById(id).get();
 	}
 	
-	public Iterable<User> findAll() {
-		return userRepo.findAll();
+	public Iterable<User> findAll(List<String> rolIds) {
+		if(rolIds!=null) {
+			return userRepo.findByRolIds(rolIds);
+		}else {
+			return userRepo.findAll();
+		}
+		
 	}
 
 	/**
