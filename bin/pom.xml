@@ -22,15 +22,6 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
-   			 <groupId>org.springframework.boot</groupId>
-    		 <artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-    		<groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt</artifactId>
-		    <version>0.9.1</version>
-		</dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>3.0.0</version>
@@ -59,32 +50,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-    		<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-mail</artifactId>
-    	</dependency>
-    	<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-
-        <dependency>
-        	<groupId>org.springframework.boot</groupId>
-        	<artifactId>spring-boot-configuration-processor</artifactId>
-        	<optional>true</optional>
         </dependency>
     </dependencies>
     <build>

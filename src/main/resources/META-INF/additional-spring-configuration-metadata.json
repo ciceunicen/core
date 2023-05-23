@@ -1,0 +1,7 @@
+{"properties": [
+  {
+    "name": "app.dbload.loaddbonrun",
+    "type": "java.lang.String",
+    "description": "Determina si se deben cargar datos de prueba o no"
+  }
+]}
