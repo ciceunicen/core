@@ -22,8 +22,6 @@ import com.project.repository.UserRepository;
 import com.project.service.UserService;
 
 
-
-
 @Service
 public class UserServiceImp implements UserService {
 
@@ -42,15 +40,16 @@ public class UserServiceImp implements UserService {
 			throw new UnprocessableContentException("La contraseña es del largo equivocado(menor a 8 o mayor a 20 caracteres)");
 		}
 		else {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		String encodedPassword = passwordEncoder.encode(u.getPassword());
-		u.setPassword(encodedPassword);
-		Role r = roleRepository.findByType("Defecto");
-		if(r!= null) {
-			u.setRol(r);
-		}
-		
-		return userRepo.save(u);
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String encodedPassword = passwordEncoder.encode(u.getPassword());
+			u.setPassword(encodedPassword);
+
+			Role r = roleRepository.findByType("Defecto");
+
+			if(r!= null) {
+				u.setRole(r);
+			}
+			return userRepo.save(u);
 		}
 	}
 	
@@ -90,10 +89,13 @@ public class UserServiceImp implements UserService {
 	public Optional<User> findEmail(String email){
 		return userRepo.findByEmail(email);
 	}
+
 	public void saveUser(User user) {
 		 userRepo.save(user);
 	}
-	public Optional<User> findByTokenPassword(String tokenPaasword){
-		return userRepo.findByTokenPassword(tokenPaasword);
+
+	public Optional<User> findByTokenPassword(String tokenPassword){
+		return userRepo.findByTokenPassword(tokenPassword);
 	}
+
 }

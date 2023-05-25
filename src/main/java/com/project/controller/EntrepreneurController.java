@@ -1,6 +1,8 @@
 package com.project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +14,13 @@ import com.project.service.implementation.EntrepreneurServiceImp;
 @RestController
 @RequestMapping("emprendedores")
 public class EntrepreneurController {
-	@Autowired EntrepreneurServiceImp entrepreneurService;
+
+	@Autowired
+	EntrepreneurServiceImp entrepreneurService;
 	
 	@PostMapping()
-	public Entrepreneur postEntrepreneur(@RequestBody Entrepreneur e) {
-		return entrepreneurService.postEntrepeneur(e);
+	public ResponseEntity<Entrepreneur> postEntrepreneur(@RequestBody Entrepreneur e) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepeneur(e));
 	}
-	
+
 }

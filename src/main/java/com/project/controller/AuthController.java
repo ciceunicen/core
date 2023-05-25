@@ -48,9 +48,8 @@ public class AuthController {
             String accessToken = jwtUtil.generateAccessToken(user);
             Object UsuarioResponse = new Object() {
                 public String email = user.getEmail();
-                public String rolType = user.getRol().getType();
-                public String name = user.getName();
-                public String surname = user.getSurname();
+                public String rolType = user.getRole().getType();
+                public String username = user.getUsername();
             };
 
             AuthResponse response = new AuthResponse(UsuarioResponse, accessToken);
@@ -61,22 +60,20 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
     @PostMapping("/password/sendEmail")
-    public void sendEmail(@RequestBody DTOEmail dto){
-    	
-    	User user=userService.findEmail(dto.getMailTo()).get();
+    public void sendEmail(@RequestBody DTOEmail dto) {
+    	User user = userService.findEmail(dto.getMailTo()).get();
     	dto.setMailFrom(emailFrom);
     	dto.setMailTo(user.getEmail());
 		dto.setSubject("Cambio de contraseña");
-		dto.setName(user.getName());
+		dto.setName(user.getUsername());
 		UUID uuid= UUID.randomUUID();
 		String tokenPassword= uuid.toString();
 		dto.setTokenPassword(tokenPassword);
 		user.setTokenPassword(tokenPassword);
 		userService.saveUser(user);
     	emailService.sendEmail(dto);
-		
-
 	}
     
     @PostMapping("/resetPassword")
@@ -86,7 +83,7 @@ public class AuthController {
     	}
     	Optional<User> userOpt=userService.findByTokenPassword(dto.getTokenPassword());
     	if(!userOpt.isPresent()) {
-    		return new ResponseEntity("No existe ningun usuario con ese token",HttpStatus.NOT_FOUND);
+    		return new ResponseEntity("No existe ningún usuario con ese token",HttpStatus.NOT_FOUND);
     	}else {
     		User user=userOpt.get();
     		String newPassword = passwordEncoder.encode(dto.getPassword());
@@ -94,19 +91,17 @@ public class AuthController {
     		user.setTokenPassword(null);
     		userService.saveUser(user);
     		return new ResponseEntity("Contraseña actualizada",HttpStatus.OK);
-    		
     	}
     }
+
     @PostMapping("/password")
     public ResponseEntity<?> existMail(@RequestBody DTOEmail dto){
     	Optional<User> userOpt=userService.findEmail(dto.getMailTo());
     	if(!userOpt.isPresent()) {
-    		System.out.println("entro not found");
     		return new ResponseEntity("No existe ningun usuario con esas credenciales",HttpStatus.NOT_FOUND);
     	}else {
-    		System.out.println(" el ok");
-    		return new ResponseEntity("Correo ennviado con exito",HttpStatus.OK);
+    		return new ResponseEntity("Correo enviado con éxito",HttpStatus.OK);
     	}
-    	
     }
+
 }

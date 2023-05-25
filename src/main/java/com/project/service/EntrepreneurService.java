@@ -6,5 +6,7 @@ import com.project.entities.Entrepreneur;
 
 @Component
 public interface EntrepreneurService {
+
 	public Entrepreneur postEntrepeneur(Entrepreneur e);
+
 }

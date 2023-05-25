@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class DTOEmail {
 
-
-
 	private String mailFrom;
 	private String mailTo;
 	private String subject;
@@ -63,6 +61,7 @@ public class DTOEmail {
 	public void setTokenPassword(String tokenPassword) {
 		this.tokenPassword = tokenPassword;
 	}
+
 	@Override
 	public String toString() {
 		return "DTOEmail [mailFrom=" + mailFrom + ", mailTo=" + mailTo + ", subject=" + subject + ", name=" + name

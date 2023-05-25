@@ -35,53 +35,51 @@ public class User implements Serializable,UserDetails{
 	@Column
     @NotEmpty
 	private String password;
-	@Column(length = 20)
-    @NotEmpty
-	private String name;
-	@Column(length = 20)
-    @NotEmpty
-	private String surname;
-	private String tokenPassword;
-	
+	@Column(length = 40)
+	@NotEmpty
+	private String username;
 	@ManyToOne
 	@JoinColumn(name="id_role")
-	private Role rol;
+	private Role role;
+	private String tokenPassword;
 
-	public User(@NotEmpty String email, @NotEmpty String password, @NotEmpty String name,
-			@NotEmpty String surname) {
+	public User(@NotEmpty String email, @NotEmpty String password) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.name = name;
-		this.surname = surname;
+		this.username = email;
 	}
-	
-	
-	public User() {
-		
-	}
+
+	public User() { }
+
 	public void addRole(Role r) {
-		this.rol=r;
+		this.role=r;
 	}
+
 	public String getTokenPassword() {
 		return tokenPassword;
 	}
+
 	public void setTokenPassword(String tokenPassword) {
 		this.tokenPassword=tokenPassword;
 	}
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+
+	public String getEmail() {
+		return this.email;
 	}
 
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return this.getEmail();
+		return this.username;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public boolean isAccountNonExpired() {
