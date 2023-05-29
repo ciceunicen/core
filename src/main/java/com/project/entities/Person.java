@@ -27,7 +27,7 @@ public abstract class Person implements Serializable {
     @Column(nullable = true, length=45, unique=true)
     private String email;
 
-    private Long id_user;		//Está guardando el id del usuario que registró al emprendedor
+    private Long id_user;		//Está guardando el id del usuario que registró al emprendedor, una vez que esta activo guarda el id del usuario responsable del cambio
 
     public Person(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email, @NotEmpty Long id_user) {
         this.dni = dni;
