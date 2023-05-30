@@ -76,11 +76,8 @@ public class UserServiceImp implements UserService {
 	 */
 	@Override
 	public User changeRole(Long id, Role role) {
-		System.out.println("role = " + role.getType());
 		User user = userRepo.findById(id).get();//Busca el el udsuario por el id
-		System.out.println("user = " + user);
 		Role r = roleRepository.findById(role.getId()).get();//Busca el rol de admin para asignar
-		System.out.println("Role id: "+r);
 
 		user.addRole(r);//asigna el nuevo rol al usuario
 

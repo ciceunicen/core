@@ -25,6 +25,19 @@ public class EntrepreneurController {
 
 	@PutMapping("/{ID}/validado")
 	public ResponseEntity<?> validateEntrepeneur(@PathVariable Long ID){
-		return entrepreneurService.setActive(ID);
+		if (entrepreneurService.setActive(ID)) {
+			return new ResponseEntity("Emprendedor validado con exito",HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity("No tiene permisos de administrador",HttpStatus.UNAUTHORIZED);
+		}
+	}
+	@PutMapping("/editar/{ID}")
+	public ResponseEntity<Entrepreneur> editEntreprenur(@RequestBody Entrepreneur e,@PathVariable Long ID) {
+		if (entrepreneurService.existeID(ID)) {
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.editEntreprenur(ID, e));
+		} else {
+			return new ResponseEntity("No existe el emprendedor con el ID: " + ID, HttpStatus.OK);
+		}
 	}
 }

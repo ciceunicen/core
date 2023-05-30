@@ -10,5 +10,9 @@ public interface EntrepreneurService {
 
 	public Entrepreneur postEntrepeneur(Entrepreneur e);
 
-    public ResponseEntity<?> setActive(Long id);
+    public boolean setActive(Long id);
+
+    Entrepreneur editEntreprenur(Long id,Entrepreneur e);
+
+    boolean existeID(Long id);
 }
