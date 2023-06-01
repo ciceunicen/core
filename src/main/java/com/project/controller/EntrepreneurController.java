@@ -1,20 +1,15 @@
 package com.project.controller;
 
-import com.project.entities.File;
 import com.project.entities.User;
-import com.project.repository.EntrepreneurRepository;
-import com.project.repository.UserRepository;
+import com.project.service.EntrepreneurService;
+import com.project.service.UserService;
 import org.hibernate.hql.internal.classic.AbstractParameterInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import com.project.entities.Entrepreneur;
-import com.project.service.implementation.EntrepreneurServiceImp;
-
-import java.util.List;
 import java.util.Optional;
 
 
@@ -23,13 +18,10 @@ import java.util.Optional;
 public class EntrepreneurController {
 
 	@Autowired
-	private EntrepreneurServiceImp entrepreneurService;
+	private EntrepreneurService entrepreneurService;
 
-	//Acá debería haber servicios, no repositorios...
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private EntrepreneurRepository entrepreneurRepository;
+	private UserService userService;
 
 	/**
 	 * Obtiene todos los emprendedores
@@ -79,7 +71,7 @@ public class EntrepreneurController {
 		 */
 		if (entrepreneurService.existeID(ID)) {
 			User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			User usuario = userRepository.findById(u.getId()).get();
+			User usuario = userService.findById(u.getId());
 			/**
 			 * Si es un usuario defecto o emprendedor SOLO puede modificar su perfil sino se arroja msj y un UNAUTHORIZED
 			 */

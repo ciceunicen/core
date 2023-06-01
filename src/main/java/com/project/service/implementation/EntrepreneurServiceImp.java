@@ -42,21 +42,22 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	public boolean setActive(Long id){
 		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User usuario = userRepository.findById(u.getId()).get();
-		Entrepreneur e= entrepreneurRepository.getById(id);
+		Entrepreneur e= entrepreneurRepository.findById(id).get();
 		if (usuario.getRole().getType().toLowerCase().equals("admin")||usuario.getRole().getType().toLowerCase().equals("superadmin")){
 			e.setIs_active(!e.getIs_active());
-			if (e.getIs_active()){
-				Role r = roleRepository.findByType("Emprendedor");
-				User userAux = userRepository.getById(e.getId_user());
-				userAux.addRole(r);
-				userRepository.save(userAux);
-			}else{
-				Role r = roleRepository.findByType("Defecto");
-				User userAux = userRepository.getById(e.getId_user());
-				userAux.addRole(r);
-				userRepository.save(userAux);
+			if (e.getId_user()!=null) {
+				if (e.getIs_active()) {
+					Role r = roleRepository.findByType("Emprendedor");
+					User userAux = userRepository.findById(e.getId_user()).get();
+					userAux.addRole(r);
+					userRepository.save(userAux);
+				} else {
+					Role r = roleRepository.findByType("Defecto");
+					User userAux = userRepository.findById(e.getId_user()).get();
+					userAux.addRole(r);
+					userRepository.save(userAux);
+				}
 			}
-
 			entrepreneurRepository.save(e);
 			return true;
 		}
