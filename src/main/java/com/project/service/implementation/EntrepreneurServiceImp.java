@@ -123,13 +123,10 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	public boolean existeID(Long id) {
 		return entrepreneurRepository.existsById(id);
 	}
+	
 
-
-	public Entrepreneur findById(Long id) {
-		if(!entrepreneurRepository.existsById(id)) {
-			throw new NotFoundException("No existe emprendedor con id: " +id);
-		}
-		return entrepreneurRepository.findById(id).get();
+	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
+		return entrepreneurRepository.findById(id);
 	}
 
 
