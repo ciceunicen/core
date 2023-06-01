@@ -15,4 +15,6 @@ public interface EntrepreneurService {
     Entrepreneur editEntreprenur(Long id,Entrepreneur e);
 
     boolean existeID(Long id);
+
+    Iterable<Entrepreneur> getEntrepreneurs();
 }
