@@ -1,13 +1,9 @@
 package com.project.service.implementation;
 
-import com.project.entities.Project;
 import com.project.entities.Role;
-import com.project.exception.NotFoundException;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +12,6 @@ import com.project.entities.User;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,8 +44,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		User usuario = userRepository.findById(u.getId()).get();
 		Entrepreneur e= entrepreneurRepository.getById(id);
 		if (usuario.getRole().getType().toLowerCase().equals("admin")||usuario.getRole().getType().toLowerCase().equals("superadmin")){
-			e.setActive(!e.getActive());
-			if (e.getActive()){
+			e.setIs_active(!e.getIs_active());
+			if (e.getIs_active()){
 				Role r = roleRepository.findByType("Emprendedor");
 				User userAux = userRepository.getById(e.getId_user());
 				userAux.addRole(r);
@@ -91,7 +86,7 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		 */
 		Entrepreneur edit = entrepreneurRepository.findById(id).get();
 		if (usuario.getRole().getType().toLowerCase().equals("emprendedor")) {
-			if (edit.getActive()) {
+			if (edit.getIs_active()) {
 				edit.setEmail(e.getEmail());
 				edit.setPhone(e.getPhone());
 				edit.setLocation(e.getLocation());
@@ -134,6 +129,12 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	@Override
 	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
 		return entrepreneurRepository.findById(id);
+	}
+
+	@Override
+	public Optional<Entrepreneur> deleteEntrepreneur(Long id) {
+		entrepreneurRepository.deleteEntrepreneur(id);
+		return this.getEntrepreneurById(id);
 	}
 
 
