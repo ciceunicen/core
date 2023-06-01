@@ -78,6 +78,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
  
         userDetails.setId(Long.parseLong(jwtSubject[0]));
         userDetails.setEmail(jwtSubject[1]);
+//        userDetails.setRole(jwtSubject[4]);
  
         return userDetails;
     }

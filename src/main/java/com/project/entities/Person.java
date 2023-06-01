@@ -25,16 +25,19 @@ public abstract class Person implements Serializable {
     @NotEmpty
     private String surname;
     @Column(nullable = true, length=45, unique=true)
-    private String email;
+    private String email;  // Email de contacto =! al del UserLogin
 
-    private Long id_user;		//Está guardando el id del usuario que registró al emprendedor, una vez que esta activo guarda el id del usuario responsable del cambio
+    private Long id_user;	//Este campo guarda el ID con el cual se esta logeando al sistema    <------
+                            //Si el usuario es un usaurio Defecto se le setea el ID sino se deja en NULL por si es un administrador del CICE
 
-    public Person(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email, @NotEmpty Long id_user) {
+
+    //private Long cice_id_active;  //Este campo va en EMPRENDEDOR .. por q si en un futuro esta la entidad AdministradorCICE rompe
+
+    public Person(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email) {
         this.dni = dni;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.id_user = id_user;
     }
 
     public Person() {}

@@ -31,9 +31,9 @@ public class Entrepreneur extends Person {
 
 	public Entrepreneur() {	}
 
-	public Entrepreneur(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email, Long id_user,
+	public Entrepreneur(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email,
 						@NotEmpty Long cuilCuit, @NotEmpty Long phone, String howimetcice, boolean isPF) {
-		super(dni, name, surname, email, id_user);
+		super(dni, name, surname, email);
 		this.cuil_cuit = cuilCuit;
 		this.phone = phone;
 		this.howimetcice= howimetcice;
