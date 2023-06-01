@@ -66,7 +66,6 @@ public class UserServiceImp implements UserService {
 		}else {
 			return userRepo.findAll();
 		}
-		
 	}
 
 	/**

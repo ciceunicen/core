@@ -32,19 +32,22 @@ public class Entrepreneur extends Person {
 	public Entrepreneur() {	}
 
 	public Entrepreneur(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email,
-						@NotEmpty Long cuilCuit, @NotEmpty Long phone, String howimetcice, boolean isPF) {
+						@NotEmpty Long cuilCuit, @NotEmpty Long phone, @NotEmpty String location, String howimetcice,
+						boolean isPF) {
 		super(dni, name, surname, email);
 		this.cuil_cuit = cuilCuit;
 		this.phone = phone;
+		this.location = location;
 		this.howimetcice= howimetcice;
 		this.ispf = isPF;
 	}
 
 	@Override
 	public String toString() {
-		return "Entrepreneur [id=" + this.getId() + ", name=" + this.getName() + ", surname=" + this.getSurname() +
-				", email=" + this.getEmail() + ", cuilCuit=" + cuil_cuit + ", phone=" + phone + ", howimetcice=" +
-				howimetcice + ", isPF=" + ispf + ", id_User=" + this.getId_user() + "]";
+		return "Entrepreneur [id=" + this.getId() + ", dni=" + this.getDni() + ", name=" + this.getName() +
+				", surname=" + this.getSurname() + ", email=" + this.getEmail() + ", cuilCuit=" + cuil_cuit +
+				", phone=" + phone + ", location=" + location +  ", howimetcice=" + howimetcice +
+				", isPF=" + ispf + ", id_User=" + this.getId_user() + "]";
 	}
 
 }

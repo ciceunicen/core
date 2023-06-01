@@ -27,6 +27,7 @@ public abstract class Person implements Serializable {
     @Column(nullable = true, length=45, unique=true)
     private String email;  // Email de contacto =! al del UserLogin
 
+    @Column(nullable = true, unique=true)
     private Long id_user;	//Este campo guarda el ID con el cual se esta logeando al sistema    <------
                             //Si el usuario es un usaurio Defecto se le setea el ID sino se deja en NULL por si es un administrador del CICE
 

@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.entities.Project;
 import com.project.entities.Role;
 import com.project.exception.NotFoundException;
 import com.project.repository.RoleRepository;
@@ -15,10 +16,12 @@ import com.project.entities.User;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EntrepreneurServiceImp  implements EntrepreneurService{
+
 	@Autowired
 	private EntrepreneurRepository entrepreneurRepository;
 	@Autowired
@@ -29,8 +32,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	@Override
 	public Entrepreneur postEntrepeneur(Entrepreneur e) {
 		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usuario = userRepository.findById(u.getId()).get();
-		if (usuario.getRole().getType().toLowerCase().equals("defecto")){
+		User user = userRepository.findById(u.getId()).get();
+		if (user.getRole().getType().toLowerCase().equals("defecto")){
 			e.setId_user(u.getId());
 		}
 		return entrepreneurRepository.save(e);
@@ -41,7 +44,6 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	 * @param id ID del Emprendedor para cambiarle su estado
 	 * @return True si se modifico (por q tenia permisos) y False si no tiene pernmisos.
 	 */
-
 	public boolean setActive(Long id){
 		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User usuario = userRepository.findById(u.getId()).get();
@@ -124,6 +126,11 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		return entrepreneurRepository.existsById(id);
 	}
 
+	@Override
+	public Iterable<Entrepreneur> getEntrepreneurs() {
+		return entrepreneurRepository.findAll();
+  }
+  
 	@Override
 	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
 		return entrepreneurRepository.findById(id);

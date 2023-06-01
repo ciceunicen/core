@@ -15,16 +15,29 @@ import com.project.service.implementation.EntrepreneurServiceImp;
 
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("emprendedores")
 public class EntrepreneurController {
 
 	@Autowired
-	EntrepreneurServiceImp entrepreneurService;
+	private EntrepreneurServiceImp entrepreneurService;
+
+	//Acá debería haber servicios, no repositorios...
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private EntrepreneurRepository entrepreneurRepository;
+
+	/**
+	 * Obtiene todos los emprendedores
+	 * @return 200 Ok, emprendedores
+	 */
+	@GetMapping()
+	@ResponseStatus(HttpStatus.OK)
+	public Iterable<Entrepreneur> getEntrepreneurs() {
+		return entrepreneurService.getEntrepreneurs();
+	}
 
 	/**
 	 * Obtiene un entrepreneur pod id
@@ -41,8 +54,9 @@ public class EntrepreneurController {
 
 
 	@PostMapping()
-	public ResponseEntity<Entrepreneur> postEntrepreneur(@RequestBody Entrepreneur e) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepeneur(e));
+	@ResponseStatus(HttpStatus.CREATED)
+	public Entrepreneur postEntrepreneur(@RequestBody Entrepreneur e) {
+		return entrepreneurService.postEntrepeneur(e);
 	}
 
 	@PutMapping("/{ID}/validado")
@@ -54,7 +68,8 @@ public class EntrepreneurController {
 			return new ResponseEntity("No tiene permisos de administrador",HttpStatus.UNAUTHORIZED);
 		}
 	}
-	@PutMapping("/editar/{ID}")
+
+	@PutMapping("/{ID}")
 	public ResponseEntity<Entrepreneur> editEntreprenur(@RequestBody Entrepreneur e,@PathVariable Long ID) {
 		/**
 		 * Valido si existe el ID que quiere modificar
@@ -81,4 +96,5 @@ public class EntrepreneurController {
 			return new ResponseEntity("No existe el emprendedor con el ID: " + ID, HttpStatus.OK);
 		}
 	}
+
 }
