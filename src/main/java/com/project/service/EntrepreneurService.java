@@ -22,4 +22,6 @@ public interface EntrepreneurService {
 
     Optional<Entrepreneur> getEntrepreneurById(Long id);
 
+    Optional<Entrepreneur> deleteEntrepreneur(Long id);
+
 }

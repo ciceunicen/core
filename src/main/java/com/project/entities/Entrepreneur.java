@@ -14,8 +14,8 @@ import lombok.Data;
 public class Entrepreneur extends Person {
 
 	@Builder.Default
-	@Column
-	private Boolean active = false;
+	@Column(name = "active")
+	private Boolean is_active = false;
 	@Column(name = "cuil_cuit", length = 11, nullable = false, unique=true)
 	private Long cuil_cuit;
 	@Column(name = "phone", length=15)
@@ -28,6 +28,10 @@ public class Entrepreneur extends Person {
 	@Builder.Default
 	@Column(name="ispf")
 	private boolean ispf = true;
+
+	@Builder.Default
+	@Column(name="deleted")
+	private boolean is_deleted = false;
 
 	public Entrepreneur() {	}
 

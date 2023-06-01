@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.entities.File;
 import com.project.entities.User;
 import com.project.repository.EntrepreneurRepository;
 import com.project.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.project.entities.Entrepreneur;
 import com.project.service.implementation.EntrepreneurServiceImp;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -47,9 +49,10 @@ public class EntrepreneurController {
 	@GetMapping("/{ID}")
 	public ResponseEntity<?> getEntrepreneur(@PathVariable Long ID) {
 		Optional<Entrepreneur> o =  entrepreneurService.getEntrepreneurById(ID);
-		return (!o.isEmpty())?
-				new ResponseEntity<>(o, HttpStatus.OK) :
-				new ResponseEntity<>("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
+		if(!o.isEmpty()) {
+			return new ResponseEntity<>(o, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
 	}
 
 
@@ -95,6 +98,20 @@ public class EntrepreneurController {
 		} else {
 			return new ResponseEntity("No existe el emprendedor con el ID: " + ID, HttpStatus.OK);
 		}
+	}
+
+	/**
+	 * Borrado logico de un emprendedor, setea is_deleted = true
+	 * @param ID id del emprendedor a borrar
+	 * @return si el emprendedor existe devuelve el emprendedor modificado (estuviera eliminado o no) sino devuelve un NOT_FOUND
+	 */
+	@DeleteMapping("/{ID}")
+	public ResponseEntity<?> deleteEntrepreneur(@PathVariable Long ID) {
+		Optional<Entrepreneur> o =  entrepreneurService.deleteEntrepreneur(ID);
+		if(!o.isEmpty()) {
+			return new ResponseEntity<>(o, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("No existe un emprendedor con el id: "+ ID, HttpStatus.NOT_FOUND);
 	}
 
 }
