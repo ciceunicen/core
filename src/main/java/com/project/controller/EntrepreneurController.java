@@ -25,7 +25,21 @@ public class EntrepreneurController {
 	private UserRepository userRepository;
 	@Autowired
 	private EntrepreneurRepository entrepreneurRepository;
-	
+
+	/**
+	 * Obtiene un entrepreneur pod id
+	 * @param ID id_entrepreneur
+	 * @return 200 Ok, Entrepreneur | 404 Not found
+	 */
+	@GetMapping("/{ID}")
+	public ResponseEntity<?> getEntrepreneur(@PathVariable Long ID) {
+		Optional<Entrepreneur> o =  entrepreneurService.getEntrepreneurById(ID);
+		return (!o.isEmpty())?
+				new ResponseEntity<>(o, HttpStatus.OK) :
+				new ResponseEntity<>("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
+	}
+
+
 	@PostMapping()
 	public ResponseEntity<Entrepreneur> postEntrepreneur(@RequestBody Entrepreneur e) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepeneur(e));
