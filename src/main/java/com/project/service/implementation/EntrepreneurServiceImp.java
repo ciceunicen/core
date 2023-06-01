@@ -126,9 +126,14 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		return entrepreneurRepository.existsById(id);
 	}
 
-
+	@Override
 	public Iterable<Entrepreneur> getEntrepreneurs() {
 		return entrepreneurRepository.findAll();
+  }
+  
+	@Override
+	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
+		return entrepreneurRepository.findById(id);
 	}
 
 

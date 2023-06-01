@@ -1,9 +1,10 @@
 package com.project.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.project.entities.Entrepreneur;
+
+import java.util.Optional;
 
 @Component
 public interface EntrepreneurService {
@@ -16,5 +17,9 @@ public interface EntrepreneurService {
 
     boolean existeID(Long id);
 
+  
     Iterable<Entrepreneur> getEntrepreneurs();
+
+    Optional<Entrepreneur> getEntrepreneurById(Long id);
+
 }
