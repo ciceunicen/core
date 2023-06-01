@@ -123,8 +123,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	public boolean existeID(Long id) {
 		return entrepreneurRepository.existsById(id);
 	}
-	
 
+	@Override
 	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
 		return entrepreneurRepository.findById(id);
 	}
