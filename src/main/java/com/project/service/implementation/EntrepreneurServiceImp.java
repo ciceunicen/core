@@ -43,9 +43,9 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User usuario = userRepository.findById(u.getId()).get();
 		Entrepreneur e= entrepreneurRepository.findById(id).get();
+		if (e.getId_user()!=null) {
 		if (usuario.getRole().getType().toLowerCase().equals("admin")||usuario.getRole().getType().toLowerCase().equals("superadmin")){
 			e.setIs_active(!e.getIs_active());
-			if (e.getId_user()!=null) {
 				if (e.getIs_active()) {
 					Role r = roleRepository.findByType("Emprendedor");
 					User userAux = userRepository.findById(e.getId_user()).get();
