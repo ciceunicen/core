@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssistanceRepository extends JpaRepository<Assistance,Long>{
+
     @Query("SELECT a FROM Assistance a where a.id_Assistance=:id")
     Assistance getAssistance(Long id);
 }
