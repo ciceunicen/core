@@ -32,5 +32,6 @@ public class Action {
         this.deadline = deadline;
     }
 
+    public Action(){}
 
 }
