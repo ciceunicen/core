@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.DTO.DTOAction;
+import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
 import org.springframework.stereotype.Component;
 
@@ -20,4 +21,5 @@ public interface ActionService {
 
     Optional<Action> getActionById(Long id);
 
+    DTOActionUpdate updateAction(Long id, DTOActionUpdate action);
 }
