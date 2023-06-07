@@ -50,4 +50,12 @@ public class ActionServiceImp implements ActionService {
         actionRepository.save(act);
         return action;
     }
+
+    @Override
+    public Action deleteAction(Long id) {
+        Action act = actionRepository.findById(id).get();
+        Action actAux = act;
+        actionRepository.delete(act);
+        return actAux;
+    }
 }
