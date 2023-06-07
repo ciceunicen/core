@@ -22,4 +22,6 @@ public interface ActionService {
     Optional<Action> getActionById(Long id);
 
     DTOActionUpdate updateAction(Long id, DTOActionUpdate action);
+
+    Action deleteAction(Long id);
 }
