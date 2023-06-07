@@ -12,7 +12,11 @@ import javax.swing.text.DateFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import java.util.Iterator;
+
 import java.util.Optional;
+
 
 @Service
 public class ActionServiceImp implements ActionService {
@@ -27,7 +31,12 @@ public class ActionServiceImp implements ActionService {
     }
 
     @Override
+
+    public Iterable<Action> getActions() {
+        return this.actionRepository.findAll();
+
     public Optional<Action> getActionById(Long id) {
         return this.actionRepository.findById(id);
+
     }
 }
