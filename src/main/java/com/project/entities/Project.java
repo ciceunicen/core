@@ -28,7 +28,7 @@ public class Project implements Serializable {
     private ProjectManager projectManager;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_Project",referencedColumnName = "id_Project")
+    @JoinColumn(name = "id_Project", referencedColumnName = "id_Project")
     private List<File> files;
 
     @ManyToMany(cascade = CascadeType.MERGE)

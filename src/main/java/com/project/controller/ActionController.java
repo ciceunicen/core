@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.DTO.DTOAction;
+import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActionUpdate;
 import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.Action;
@@ -28,8 +29,9 @@ public class ActionController {
     private UserService userService;
 
     @PostMapping()
-    public Action postAction(@RequestBody DTOAction a) {
-        return this.actionService.postAction(a);
+    public ResponseEntity<?> postAction(@RequestBody DTOActionInsert a) {
+        DTOAction act = this.actionService.postAction(a);
+        return new ResponseEntity<>(act, HttpStatus.CREATED);
     }
 
 

@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.DTO.DTOAction;
+import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,7 @@ import java.util.Optional;
 @Component
 public interface ActionService {
 
-    Action postAction(DTOAction a);
-
+    DTOAction postAction(DTOActionInsert a);
 
     Iterable<Action> getActions();
 
