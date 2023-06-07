@@ -1,6 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOAction;
+import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
 import com.project.entities.utils.ActionState;
 import com.project.repository.ActionRepository;
@@ -31,12 +32,22 @@ public class ActionServiceImp implements ActionService {
     }
 
     @Override
-
     public Iterable<Action> getActions() {
         return this.actionRepository.findAll();
-
+    }
     public Optional<Action> getActionById(Long id) {
         return this.actionRepository.findById(id);
 
+    }
+
+    @Override
+    public DTOActionUpdate updateAction(Long id, DTOActionUpdate action) {
+        Action act = actionRepository.findById(id).get();
+        act.setTitle(action.getTitle());
+        act.setManager(action.getManager());
+        act.setState(action.getState());
+        act.setDeadline(action.getDeadline());
+        actionRepository.save(act);
+        return action;
     }
 }
