@@ -42,4 +42,8 @@ public class ActivityController {
         }
         return new ResponseEntity<>("No existe la actividad con el id: " + ID,HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<DTOActivity> getActivities(){ return this.activityService.getActivities();}
 }
