@@ -22,7 +22,7 @@ public class ActionServiceImp implements ActionService {
     public DTOAction postAction(DTOActionInsert a) {
         Action aux = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
         aux = this.actionRepository.save(aux);
-        DTOAction dto = new DTOAction(aux.getId(), aux.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+        DTOAction dto = new DTOAction(aux.getId(), aux.getTitle(), aux.getManager(), aux.getState(), aux.getDeadline());
         return dto;
     }
 
