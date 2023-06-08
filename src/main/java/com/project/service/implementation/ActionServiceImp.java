@@ -1,20 +1,13 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOAction;
+import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
-import com.project.entities.utils.ActionState;
 import com.project.repository.ActionRepository;
 import com.project.service.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.DateFormatter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.util.Iterator;
 
 import java.util.Optional;
 
@@ -26,9 +19,11 @@ public class ActionServiceImp implements ActionService {
     private ActionRepository actionRepository;
 
     @Override
-    public Action postAction(DTOAction a) {
-        Action action = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
-        return this.actionRepository.save(action);
+    public DTOAction postAction(DTOActionInsert a) {
+        Action aux = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+        aux = this.actionRepository.save(aux);
+        DTOAction dto = new DTOAction(aux.getId(), aux.getTitle(), aux.getManager(), aux.getState(), aux.getDeadline());
+        return dto;
     }
 
     @Override
