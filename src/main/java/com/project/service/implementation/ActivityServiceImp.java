@@ -13,6 +13,8 @@ import com.project.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class ActivityServiceImp implements ActivityService {
@@ -41,6 +43,17 @@ public class ActivityServiceImp implements ActivityService {
         DTOActivity dto =  new DTOActivity(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(), aux.getFinish_date(), aux.getFiles(), aux.getActions());
         activityRepository.save(aux);
         return dto;
+    }
+
+    @Override
+    public DTOActivity getActivity(Long id) {
+        Optional<Activity> act = activityRepository.findById(id);
+        if (!act.isEmpty()) {
+            Activity aux = act.get();
+            DTOActivity dto =  new DTOActivity(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(), aux.getFinish_date(), aux.getFiles(), aux.getActions());
+            return dto;
+        }
+        return null;
     }
 
 }
