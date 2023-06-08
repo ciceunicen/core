@@ -12,4 +12,6 @@ public interface ActivityService {
     DTOActivity postActivity(DTOActivityInsert a);
 
     DTOActivity postActivityAction(DTOActionInsert a, Long id);
+
+    DTOActivity getActivity(Long id);
 }

@@ -20,8 +20,6 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
-    @Autowired
-    private ActivityRepository activityRepository;
 
     @PostMapping
     public ResponseEntity<?> postActivity(@RequestBody DTOActivityInsert a) {
@@ -36,8 +34,12 @@ public class ActivityController {
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
 
-    //@GetMapping("/{ID}")
-    //public Activity getActivity(@PathVariable Long ID){
-        //return activityRepository.findById(ID).get();
-    //}
+    @GetMapping("/{ID}")
+    public ResponseEntity<?> getActivity(@PathVariable Long ID){
+        DTOActivity dto = this.activityService.getActivity(ID);
+        if (dto != null) {
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("No existe la actividad con el id: " + ID,HttpStatus.NOT_FOUND);
+    }
 }
