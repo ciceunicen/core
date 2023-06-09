@@ -13,6 +13,8 @@ import com.project.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -54,6 +56,17 @@ public class ActivityServiceImp implements ActivityService {
             return dto;
         }
         return null;
+    }
+
+    @Override
+    public Iterable<DTOActivity> getActivities() {
+        List<DTOActivity> listaDTO = new ArrayList<DTOActivity>();
+        Iterable<Activity> actividades = this.activityRepository.findAll();
+        for (Activity act :actividades) {
+            DTOActivity dto =  new DTOActivity(act.getId(), act.getTitle(), act.getDescription(), act.getStart_date(), act.getFinish_date(), act.getFiles(), act.getActions());
+            listaDTO.add(dto);
+        }
+        return listaDTO;
     }
 
 }
