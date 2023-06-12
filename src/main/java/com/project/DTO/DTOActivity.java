@@ -18,14 +18,16 @@ public class DTOActivity {
     private String description;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start_date;
+    private Date finish_date;
     private List<File> files;
     private List<Action> actions;
 
-    public DTOActivity(Long id, String title, String description, Date startDate, Date start_date, List<File> files, List<Action> actions) {
+    public DTOActivity(Long id, String title, String description, Date start_date, Date finish_date, List<File> files, List<Action> actions) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.start_date = start_date;
+        this.finish_date = finish_date;
         this.files = files;
         this.actions = actions;
     }

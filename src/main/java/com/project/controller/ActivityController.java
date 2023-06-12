@@ -71,5 +71,22 @@ public class ActivityController {
         return new ResponseEntity("No existe la actividad a modificar con id " + id, HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/{ID}")
+    public ResponseEntity<DTOActivity> deleteAction(@PathVariable ("ID") Long id){
+        DTOActivity act =  activityService.getActivity(id);
+        if(act != null) {
+            /**
+             * Reviso si tiene permisos para eliminar (Solo un Administrador o un superAdmin puede eliminar)
+             */
+            User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User usuario = userService.findById(u.getId());
+            if (usuario.getRole().getType().toLowerCase().equals("admin") || usuario.getRole().getType().toLowerCase().equals("superadmin")){
+                return ResponseEntity.status(HttpStatus.OK).body(activityService.deleteActivity(id));
+            }
+            return new ResponseEntity("Usted no tiene permisos para eliminar esta actividad",HttpStatus.UNAUTHORIZED);
+
+        }
+        return new ResponseEntity("No existe la actividad  a eliminar con id " + id, HttpStatus.NOT_FOUND);
+    }
 
 }
