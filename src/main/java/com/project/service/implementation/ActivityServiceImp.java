@@ -88,4 +88,12 @@ public class ActivityServiceImp implements ActivityService {
         activityRepository.save(act);
         return activity;
     }
+
+    @Override
+    public DTOActivity deleteActivity(Long id) {
+        Activity act = activityRepository.findById(id).get();
+        DTOActivity actAux = new DTOActivity(act.getId(),act.getTitle(),act.getDescription(),act.getStart_date(),act.getFinish_date(),act.getFiles(),act.getActions());
+        activityRepository.delete(act);
+        return actAux;
+    }
 }

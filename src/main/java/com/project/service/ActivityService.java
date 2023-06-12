@@ -19,4 +19,6 @@ public interface ActivityService {
     Iterable<DTOActivity> getActivities();
 
     DTOActivityUpdate updateActivity(Long id, DTOActivityUpdate act);
+
+    DTOActivity deleteActivity(Long id);
 }
