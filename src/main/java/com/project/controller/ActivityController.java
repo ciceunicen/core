@@ -1,17 +1,20 @@
 package com.project.controller;
 
-import com.project.DTO.DTOAction;
-import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOActivityInsert;
+import com.project.DTO.*;
+import com.project.entities.Action;
 import com.project.entities.Activity;
+import com.project.entities.User;
 import com.project.repository.ActionRepository;
 import com.project.repository.ActivityRepository;
 import com.project.service.ActivityService;
+import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/actividades")
@@ -19,6 +22,9 @@ public class ActivityController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping
@@ -46,4 +52,24 @@ public class ActivityController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Iterable<DTOActivity> getActivities(){ return this.activityService.getActivities();}
+
+    @PutMapping("/{ID}")
+    public ResponseEntity<DTOActivityUpdate> updateAction(@PathVariable ("ID") Long id, @RequestBody DTOActivityUpdate action){
+        DTOActivityUpdate act = activityService.getActivityUpdate(id);
+        if(act != null) {
+            /**
+             * Reviso si tiene permisos para editar (Solo un Administrador o un superAdmin puede editar)
+             */
+            User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User usuario = userService.findById(u.getId());
+            if (usuario.getRole().getType().toLowerCase().equals("admin") || usuario.getRole().getType().toLowerCase().equals("superadmin")){
+                return ResponseEntity.status(HttpStatus.OK).body(activityService.updateActivity(id, act));
+            }
+            return new ResponseEntity("Usted no tiene permisos para modificar esta actividad",HttpStatus.UNAUTHORIZED);
+
+        }
+        return new ResponseEntity("No existe la actividad a modificar con id " + id, HttpStatus.NOT_FOUND);
+    }
+
+
 }

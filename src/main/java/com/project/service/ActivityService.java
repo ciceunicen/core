@@ -1,9 +1,6 @@
 package com.project.service;
 
-import com.project.DTO.DTOAction;
-import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOActivityInsert;
+import com.project.DTO.*;
 import com.project.entities.Entrepreneur;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,5 +14,9 @@ public interface ActivityService {
 
     DTOActivity getActivity(Long id);
 
+    DTOActivityUpdate getActivityUpdate(Long id);
+
     Iterable<DTOActivity> getActivities();
+
+    DTOActivityUpdate updateActivity(Long id, DTOActivityUpdate act);
 }

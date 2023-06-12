@@ -1,9 +1,6 @@
 package com.project.service.implementation;
 
-import com.project.DTO.DTOAction;
-import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOActivityInsert;
+import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Activity;
 import com.project.repository.ActionRepository;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +57,17 @@ public class ActivityServiceImp implements ActivityService {
     }
 
     @Override
+    public DTOActivityUpdate getActivityUpdate(Long id) {
+        Optional<Activity> act = activityRepository.findById(id);
+        if (!act.isEmpty()) {
+            Activity aux = act.get();
+            DTOActivityUpdate dto =  new DTOActivityUpdate (aux.getTitle(), aux.getDescription(), aux.getStart_date(), aux.getFinish_date());
+            return dto;
+        }
+        return null;
+    }
+
+    @Override
     public Iterable<DTOActivity> getActivities() {
         List<DTOActivity> listaDTO = new ArrayList<DTOActivity>();
         Iterable<Activity> actividades = this.activityRepository.findAll();
@@ -69,4 +78,14 @@ public class ActivityServiceImp implements ActivityService {
         return listaDTO;
     }
 
+    @Override
+    public DTOActivityUpdate updateActivity(Long id, DTOActivityUpdate activity) {
+        Activity act = activityRepository.findById(id).get();
+        act.setTitle(activity.getTitle());
+        act.setDescription(activity.getDescription());
+        act.setStart_date(activity.getStart_date());
+        act.setFinish_date(activity.getFinish_date());
+        activityRepository.save(act);
+        return activity;
+    }
 }
