@@ -32,7 +32,6 @@ public class ActionServiceImp implements ActionService {
     }
     public Optional<Action> getActionById(Long id) {
         return this.actionRepository.findById(id);
-
     }
 
     @Override
