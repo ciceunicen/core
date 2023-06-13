@@ -11,16 +11,8 @@ import java.util.*;
 @Entity
 @Table(name = "Project")
 @Data
-public class Project implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_Project;
-    @Column
-    @NotEmpty
-    private String title;
-    @Column
-    @NotEmpty
-    private String description;
+@AttributeOverride(name = "id", column = @Column(name = "id_Project"))
+public class Project extends Entrepreneurship {
 
     @ManyToOne
     @JoinColumn(name = "id_ProjectManager")
@@ -56,8 +48,8 @@ public class Project implements Serializable {
 
 
     public Project(String title, String description, List<File> files, Long administrador) {
-        this.title = title;
-        this.description = description;
+        super(title, description);
+
         this.files = new ArrayList<>();
 
         for (File file : files) {
@@ -67,8 +59,7 @@ public class Project implements Serializable {
     }
 
     public Project(String title, String description, Long administrador) {
-        this.title = title;
-        this.description = description;
+        super(title, description);
         this.files = new ArrayList<>();
 
         for (File file : files) {

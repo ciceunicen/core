@@ -74,9 +74,11 @@ public class ProjectController {
             return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
     }
+
+
      /**
       * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
-      * @param page es un Integer que representa la página a la que apunta. 
+      * @param page es un Integer que representa la página a la que apunta.
       * @return retorna Page<Project> una lista de proyectos limitado.
       */
      @GetMapping("/page/{page}")
@@ -131,7 +133,7 @@ public class ProjectController {
     public Page<DeletedProject> getAllProjectsRemoved(@PathVariable ("page") Integer page){
         Integer indexPage = page - 1;
         Integer cantProjects = 15;
-        String sortAttribute = "project.title";
+        String sortAttribute = "title";
         Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
         return ProjectService.getAllRemoved(pageable);
     }
