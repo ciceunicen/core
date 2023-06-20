@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,6 @@ public class AuthController {
              
             User user = (User) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(user);
-			System.out.println("TOKEN: "+accessToken);
             Object UsuarioResponse = new Object() {
                 public String email = user.getEmail();
                 public String rolType = user.getRole().getType();

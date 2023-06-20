@@ -21,13 +21,14 @@ public class Role implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name="id_role")
 	private int id;
-	
 	@Column
 	@NotEmpty
 	private String type;
+
 	public Role( @NotEmpty String type) {
 		this.type = type;
 	}
+
 	public Role() {	
 	} 
 	public Role( int id) {
@@ -38,6 +39,7 @@ public class Role implements Serializable{
 		this.id = id;
 		this.type = type;
 	}
+
 	@Override
 	public String toString() {
 		return "Role type=" + type + "]";

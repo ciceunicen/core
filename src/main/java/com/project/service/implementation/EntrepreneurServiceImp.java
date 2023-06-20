@@ -24,12 +24,11 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	@Autowired
 	private RoleRepository roleRepository;
 
+
 	@Override
-	public Entrepreneur postEntrepeneur(Entrepreneur e) {
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = userRepository.findById(u.getId()).get();
-		if (user.getRole().getType().toLowerCase().equals("defecto")){
-			e.setId_user(u.getId());
+	public Entrepreneur postEntrepreneur(Entrepreneur e, Long currentUser_id) {
+		if (currentUser_id != null){
+			e.setId_user(currentUser_id);
 		}
 		return entrepreneurRepository.save(e);
 	}
@@ -37,33 +36,27 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	/**
 	 * Este metodo permite "activar/desactivar" un Emprendedor, si esta desactivado se activa y viceversa.
 	 * @param id ID del Emprendedor para cambiarle su estado
-	 * @return True si se modifico (por q tenia permisos) y False si no tiene pernmisos.
+	 * @return True si se modifico y False si no existe.
 	 */
 	public boolean setActive(Long id){
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usuario = userRepository.findById(u.getId()).get();
 		Entrepreneur e= entrepreneurRepository.findById(id).get();
-		if (e.getId_user()!=null) {
-		if (usuario.getRole().getType().toLowerCase().equals("admin")||usuario.getRole().getType().toLowerCase().equals("superadmin")){
+		if (e.getId_user() != null) {
 			e.setIs_active(!e.getIs_active());
-				if (e.getIs_active()) {
-					Role r = roleRepository.findByType("Emprendedor");
-					User userAux = userRepository.findById(e.getId_user()).get();
-					userAux.addRole(r);
-					userRepository.save(userAux);
-				} else {
-					Role r = roleRepository.findByType("Defecto");
-					User userAux = userRepository.findById(e.getId_user()).get();
-					userAux.addRole(r);
-					userRepository.save(userAux);
-				}
+			if (e.getIs_active()) {
+				Role r = roleRepository.findByType("Emprendedor");
+				User userAux = userRepository.findById(e.getId_user()).get();
+				userAux.addRole(r);
+				userRepository.save(userAux);
+			} else {
+				Role r = roleRepository.findByType("Defecto");
+				User userAux = userRepository.findById(e.getId_user()).get();
+				userAux.addRole(r);
+				userRepository.save(userAux);
 			}
 			entrepreneurRepository.save(e);
 			return true;
 		}
-		else {
-			return false;
-		}
+		else return false;
 	}
 
 	/**
@@ -73,48 +66,33 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	 * @return Retorna el Emprendedor con sus modificaciones TAL cual quedo en la DB.
 	 */
 	@Override
-	public Entrepreneur editEntreprenur(Long id,Entrepreneur e) {
-		/**
-		 * Si esta dentro de este metodo es por q es un admin o superAdmin modificando un Emprendedor (cualquiera sea),
-		 * o es un Emprendedor o Defecto modificando SOLO su perfil.
-		 */
-
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usuario = userRepository.findById(u.getId()).get();
-		/**
-		 Si tiene permisos de Emprendedor, solo puede modificar los datos de contacto si se encuentra activo,
-		 si no esta activo NO es un Emprendedor, entonces asumimos q es un Defecto,Admin o superAdmin y puede modificar todo.
-		 */
+	public Entrepreneur editEntrepreneur(Long id, Entrepreneur e, boolean restricted) {
 		Entrepreneur edit = entrepreneurRepository.findById(id).get();
-		if (usuario.getRole().getType().toLowerCase().equals("emprendedor")) {
-			if (edit.getIs_active()) {
-				edit.setEmail(e.getEmail());
-				edit.setPhone(e.getPhone());
-				edit.setLocation(e.getLocation());
-				return entrepreneurRepository.save(edit);
-			}
+		if (edit.getIs_active() && restricted) {
+			/**
+			 * Si el perfil está activo y la acción restringida (usuario defecto o emprendedor modificando su propio perfil)
+			 */
+			edit.setEmail(e.getEmail());
+			edit.setPhone(e.getPhone());
+			edit.setLocation(e.getLocation());
+			return entrepreneurRepository.save(edit);
+		} else {
+			/**
+			 * Si el perfil no está activo o la acción no está restringida (usuario defecto o emprendedor modificando su propio perfil)
+			 */
+			edit.setEmail(e.getEmail());
+			edit.setPhone(e.getPhone());
+			edit.setLocation(e.getLocation());
+			edit.setDni(e.getDni());
+			edit.setHowimetcice(e.getHowimetcice());
+			edit.setCuil_cuit(e.getCuil_cuit());
+			edit.setName(e.getName());
+			edit.setSurname(e.getSurname());
+			/**
+			 * NUNCA se permite modificar ID, campo active, o ispf
+			 */
+			return entrepreneurRepository.save(edit);
 		}
-		/**
-		 * Si no salio por el if de getActivo (true) es por que es un admin o superAdmnin o es un Defecto que puede
-		 * modificar sus datos por que no esta activo (y no es Emprendedor aun). Entonces se trata estos casos como iguales.
-		 *
-		 * Si tiene permisos de admin o superAdmin o si es Defecto y esta modificando su perfil por no estar activo aun,
-		 * en este caso puede modificar todos los datos de un Emprendedor.
-		 */
-
-		edit.setEmail(e.getEmail());
-		edit.setPhone(e.getPhone());
-		edit.setLocation(e.getLocation());
-		edit.setDni(e.getDni());
-		edit.setHowimetcice(e.getHowimetcice());
-		edit.setCuil_cuit(e.getCuil_cuit());
-		edit.setName(e.getName());
-		edit.setSurname(e.getSurname());
-		/**
-		 * No dejamos que modifique los ID, ni el campo active, ni el ispf
-		 */
-		return entrepreneurRepository.save(edit);
-
 	}
 
 	@Override

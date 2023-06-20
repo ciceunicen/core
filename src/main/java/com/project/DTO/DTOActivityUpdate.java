@@ -1,12 +1,9 @@
 package com.project.DTO;
 
-import com.project.entities.Action;
-import com.project.entities.File;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 public class DTOActivityUpdate {

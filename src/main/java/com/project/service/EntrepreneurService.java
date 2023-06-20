@@ -9,15 +9,14 @@ import java.util.Optional;
 @Component
 public interface EntrepreneurService {
 
-	public Entrepreneur postEntrepeneur(Entrepreneur e);
+	Entrepreneur postEntrepreneur(Entrepreneur e, Long currentUser_id);
 
-    public boolean setActive(Long id);
+    boolean setActive(Long id);
 
-    Entrepreneur editEntreprenur(Long id,Entrepreneur e);
+    Entrepreneur editEntrepreneur(Long id,Entrepreneur e, boolean restricted);
 
     boolean existeID(Long id);
 
-  
     Iterable<Entrepreneur> getEntrepreneurs();
 
     Optional<Entrepreneur> getEntrepreneurById(Long id);

@@ -1,13 +1,9 @@
 package com.project.controller;
 
-import com.project.entities.User;
 import com.project.service.EntrepreneurService;
-import com.project.service.UserService;
-import org.hibernate.hql.internal.classic.AbstractParameterInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.Entrepreneur;
 import java.util.Optional;
@@ -19,9 +15,8 @@ public class EntrepreneurController {
 
 	@Autowired
 	private EntrepreneurService entrepreneurService;
-
 	@Autowired
-	private UserService userService;
+	private RoleAuthController roleAuthController;
 
 	/**
 	 * Obtiene todos los emprendedores
@@ -47,63 +42,88 @@ public class EntrepreneurController {
 		return new ResponseEntity<>("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
 	}
 
-
+	/**
+	 * Si el usuario haciendo el posteo es un usuario defecto, se asocia su id de usuario al emprendedor
+	 * En otro caso (admin, superadmin, emprendedor) se deja en null
+	 * @param e nuevo emprendedor
+	 * @return nuevo emprendedor y confirmación de creación
+	 */
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public Entrepreneur postEntrepreneur(@RequestBody Entrepreneur e) {
-		return entrepreneurService.postEntrepeneur(e);
+		if (roleAuthController.hasPermission(4)) {
+			return entrepreneurService.postEntrepreneur(e, roleAuthController.getCurrentUserId());
+		} else {
+			return entrepreneurService.postEntrepreneur(e, null);
+		}
 	}
 
 	@PutMapping("/{ID}/validado")
-	public ResponseEntity<?> validateEntrepeneur(@PathVariable Long ID){
-		if (entrepreneurService.setActive(ID)) {
-			return new ResponseEntity("Emprendedor validado con exito",HttpStatus.OK);
+	public ResponseEntity<?> validateEntrepreneur(@PathVariable Long ID){
+		if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+			if (entrepreneurService.setActive(ID)) {
+				return new ResponseEntity("Operación realizada con exito",HttpStatus.OK);
+			}
+			else return new ResponseEntity("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
 		}
-		else {
-			return new ResponseEntity("No tiene permisos de administrador",HttpStatus.UNAUTHORIZED);
-		}
+		else return new ResponseEntity("No tiene permisos para realizar esta acción",HttpStatus.UNAUTHORIZED);
 	}
 
 	@PutMapping("/{ID}")
-	public ResponseEntity<Entrepreneur> editEntreprenur(@RequestBody Entrepreneur e,@PathVariable Long ID) {
+	public ResponseEntity<Entrepreneur> editEntrepreneur(@RequestBody Entrepreneur e, @PathVariable Long ID) {
+		Optional<Entrepreneur> o =  entrepreneurService.getEntrepreneurById(ID);
 		/**
 		 * Valido si existe el ID que quiere modificar
 		 */
-		if (entrepreneurService.existeID(ID)) {
-			User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			User usuario = userService.findById(u.getId());
+		if (o.isPresent()) {
 			/**
-			 * Si es un usuario defecto o emprendedor SOLO puede modificar su perfil sino se arroja msj y un UNAUTHORIZED
+			 * Si es un usuario defecto o emprendedor SOLO puede modificar su propio perfil
+			 * Si es admin o superAdmin, puede modificar cualquier perfil
+			 * Si no, se arroja msj y un UNAUTHORIZED
 			 */
-			if (usuario.getRole().getType().toLowerCase().equals("defecto") || usuario.getRole().getType().toLowerCase().equals("emprendedor")){
-				if (usuario.getId() == ID){
-					return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.editEntreprenur(ID, e));
-				}else{
-					return new ResponseEntity("Usted no tiene permisos para modificar este perfil",HttpStatus.UNAUTHORIZED);
+			if (roleAuthController.hasPermission(4) || roleAuthController.hasPermission(3)) {
+				if (roleAuthController.checkCurrentContextUserId(o.get().getId_user())) {
+					return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.editEntrepreneur(ID, e, true));
 				}
 			}
-			/**
-			 * Si esta aca es por q es admin o superAdmin y no necesito chequear a quien modifica.
-			 */
-			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.editEntreprenur(ID, e));
+			if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+				return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.editEntrepreneur(ID, e, false));
+			}
+			else return new ResponseEntity("No tiene permisos para modificar este perfil",HttpStatus.UNAUTHORIZED);
 
 		} else {
-			return new ResponseEntity("No existe el emprendedor con el ID: " + ID, HttpStatus.OK);
+			return new ResponseEntity("No existe el emprendedor con ID: " + ID, HttpStatus.OK);
 		}
 	}
 
 	/**
 	 * Borrado logico de un emprendedor, setea is_deleted = true
+	 *
+	 * Admin o superadmin SIEMPRE pueden borrar cualquier emprendedor
+	 * El usuario defecto sólo puede borrar su propio perfil mientras NO esté activo
+	 * Un emprendedr no puede borrar un perfil (que sea emprendedor implica que su perfil está activo)
+	 *
 	 * @param ID id del emprendedor a borrar
 	 * @return si el emprendedor existe devuelve el emprendedor modificado (estuviera eliminado o no) sino devuelve un NOT_FOUND
 	 */
 	@DeleteMapping("/{ID}")
 	public ResponseEntity<?> deleteEntrepreneur(@PathVariable Long ID) {
-		Optional<Entrepreneur> o =  entrepreneurService.deleteEntrepreneur(ID);
-		if(!o.isEmpty()) {
-			return new ResponseEntity<>(o, HttpStatus.OK);
+		Optional<Entrepreneur> o =  entrepreneurService.getEntrepreneurById(ID);
+		if(o.isPresent()) {
+			if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+				return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.deleteEntrepreneur(ID).get());
+			}
+			if (roleAuthController.hasPermission(4)) {
+				if (!o.get().getIs_active()) {
+					if (roleAuthController.checkCurrentContextUserId(o.get().getId_user())) {
+						return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.deleteEntrepreneur(ID).get());
+					}
+				}
+			}
+			return new ResponseEntity("No tiene permisos para eliminar este perfil", HttpStatus.UNAUTHORIZED);
+		} else {
+			return new ResponseEntity<>("No existe emprendedor con id: " + ID, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>("No existe un emprendedor con el id: "+ ID, HttpStatus.NOT_FOUND);
 	}
 
 }
