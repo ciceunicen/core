@@ -122,7 +122,10 @@ public class EntrepreneurController {
 		DTOEntrepreneur dto =  entrepreneurService.getEntrepreneurById(ID);
 		if(dto != null) {
 			if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-				return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.deleteEntrepreneur(ID));
+				if (dto.getIs_active()) {
+					this.validateEntrepreneur(ID);
+					return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.deleteEntrepreneur(ID));
+				}
 			}
 			if (roleAuthController.hasPermission(4)) {
 				if (!dto.getIs_active()) {
