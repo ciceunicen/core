@@ -1,26 +1,23 @@
 package com.project.service;
 
+import com.project.DTO.DTOEntrepreneur;
+import com.project.DTO.DTOEntrepreneurInsert;
+import com.project.DTO.DTOEntrepreneurUpdate;
 import org.springframework.stereotype.Component;
-
-import com.project.entities.Entrepreneur;
-
-import java.util.Optional;
 
 @Component
 public interface EntrepreneurService {
 
-	Entrepreneur postEntrepreneur(Entrepreneur e, Long currentUser_id);
+	DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id);
 
     boolean setActive(Long id);
 
-    Entrepreneur editEntrepreneur(Long id,Entrepreneur e, boolean restricted);
+    DTOEntrepreneur editEntrepreneur(Long id, DTOEntrepreneurUpdate e, boolean restricted);
 
-    boolean existeID(Long id);
+    Iterable<DTOEntrepreneur> getEntrepreneurs();
 
-    Iterable<Entrepreneur> getEntrepreneurs();
+    DTOEntrepreneur getEntrepreneurById(Long id);
 
-    Optional<Entrepreneur> getEntrepreneurById(Long id);
-
-    Optional<Entrepreneur> deleteEntrepreneur(Long id);
+    DTOEntrepreneur deleteEntrepreneur(Long id);
 
 }
