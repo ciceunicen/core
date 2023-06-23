@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.project.entities.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,10 +76,10 @@ public class JwtTokenFilter extends OncePerRequestFilter{
     private UserDetails getUserDetails(String token) {
         User userDetails = new User();
         String[] jwtSubject = jwtUtil.getSubject(token).split(",");
- 
+
         userDetails.setId(Long.parseLong(jwtSubject[0]));
         userDetails.setEmail(jwtSubject[1]);
-//        userDetails.setRole(jwtSubject[4]);
+        userDetails.setRole(new Role(Integer.parseInt(jwtSubject[2])));
  
         return userDetails;
     }

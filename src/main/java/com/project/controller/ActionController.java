@@ -26,14 +26,7 @@ public class ActionController {
     @Autowired
     private ActionService actionService;
     @Autowired
-    private UserService userService;
-
-    @PostMapping()
-    public ResponseEntity<?> postAction(@RequestBody DTOActionInsert a) {
-        DTOAction act = this.actionService.postAction(a);
-        return new ResponseEntity<>(act, HttpStatus.CREATED);
-    }
-
+    private RoleAuthController roleAuthController;
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
@@ -50,40 +43,37 @@ public class ActionController {
         return new ResponseEntity<>("No existe accion con id " + ID, HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping()
+    public ResponseEntity<?> postAction(@RequestBody DTOActionInsert a) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            DTOAction act = this.actionService.postAction(a);
+            return new ResponseEntity<>(act, HttpStatus.CREATED);
+        }
+        else return new ResponseEntity("No tiene permisos para crear una accion",HttpStatus.UNAUTHORIZED);
+    }
+
     @PutMapping("/{ID}")
     public ResponseEntity<DTOActionUpdate> updateAction(@PathVariable ("ID") Long id, @RequestBody DTOActionUpdate action){
-        Optional<Action> act =  actionService.getActionById(id);
-        if(!act.isEmpty()) {
-            /**
-             * Reviso si tiene permisos para editar (Solo un Administrador o un superAdmin puede editar)
-             */
-            User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User usuario = userService.findById(u.getId());
-            if (usuario.getRole().getType().toLowerCase().equals("admin") || usuario.getRole().getType().toLowerCase().equals("superadmin")){
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Optional<Action> act =  actionService.getActionById(id);
+            if(!act.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(actionService.updateAction(id, action));
             }
-            return new ResponseEntity("Usted no tiene permisos para modificar esta accion",HttpStatus.UNAUTHORIZED);
-
+            else return new ResponseEntity("No existe la accion id " + id, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity("No existe la accion a modificar con id " + id, HttpStatus.NOT_FOUND);
+        else return new ResponseEntity("No tiene permisos para modificar una accion",HttpStatus.UNAUTHORIZED);
     }
 
 
     @DeleteMapping("/{ID}")
     public ResponseEntity<Action> deleteAction(@PathVariable ("ID") Long id){
-        Optional<Action> act =  actionService.getActionById(id);
-        if(!act.isEmpty()) {
-            /**
-             * Reviso si tiene permisos para eliminar (Solo un Administrador o un superAdmin puede eliminar)
-             */
-            User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User usuario = userService.findById(u.getId());
-            if (usuario.getRole().getType().toLowerCase().equals("admin") || usuario.getRole().getType().toLowerCase().equals("superadmin")){
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Optional<Action> act =  actionService.getActionById(id);
+            if(!act.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(actionService.deleteAction(id));
             }
-            return new ResponseEntity("Usted no tiene permisos para eliminar esta accion",HttpStatus.UNAUTHORIZED);
-
+            else return new ResponseEntity("No existe la accion id " + id, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity("No existe la accion a eliminar con id " + id, HttpStatus.NOT_FOUND);
+        else return new ResponseEntity("Noo tiene permisos para eliminar una accion",HttpStatus.UNAUTHORIZED);
     }
 }

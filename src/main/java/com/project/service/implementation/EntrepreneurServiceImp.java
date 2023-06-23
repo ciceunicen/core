@@ -1,10 +1,12 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOEntrepreneur;
+import com.project.DTO.DTOEntrepreneurInsert;
+import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.Entrepreneur;
@@ -12,6 +14,8 @@ import com.project.entities.User;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,116 +28,113 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	@Autowired
 	private RoleRepository roleRepository;
 
+
 	@Override
-	public Entrepreneur postEntrepeneur(Entrepreneur e) {
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = userRepository.findById(u.getId()).get();
-		if (user.getRole().getType().toLowerCase().equals("defecto")){
-			e.setId_user(u.getId());
-		}
-		return entrepreneurRepository.save(e);
+	public DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id) {
+		Entrepreneur aux = new Entrepreneur(e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getCuil_cuit(), e.getPhone(),
+				e.getLocation(), e.getHowimetcice(), e.isIspf());
+
+		if (currentUser_id != null) aux.setId_user(currentUser_id);
+		aux = entrepreneurRepository.save(aux);
+
+		DTOEntrepreneur dto = new DTOEntrepreneur(aux.getId(), aux.getDni(), aux.getName(), aux.getSurname(), aux.getEmail(),
+			aux.getId_user(), aux.getIs_active(), aux.getCuil_cuit(), aux.getPhone(), aux.getLocation(), aux.getHowimetcice(),
+				aux.isIspf(), aux.is_deleted());
+		return dto;
 	}
 
 	/**
 	 * Este metodo permite "activar/desactivar" un Emprendedor, si esta desactivado se activa y viceversa.
 	 * @param id ID del Emprendedor para cambiarle su estado
-	 * @return True si se modifico (por q tenia permisos) y False si no tiene pernmisos.
+	 * @return True si se modifico y False si no existe.
 	 */
 	public boolean setActive(Long id){
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usuario = userRepository.findById(u.getId()).get();
-		Entrepreneur e= entrepreneurRepository.findById(id).get();
-		if (e.getId_user()!=null) {
-		if (usuario.getRole().getType().toLowerCase().equals("admin")||usuario.getRole().getType().toLowerCase().equals("superadmin")){
-			e.setIs_active(!e.getIs_active());
-				if (e.getIs_active()) {
+		Optional<Entrepreneur> e = entrepreneurRepository.findById(id);
+		if (e.isPresent()) {
+			e.get().setIs_active(!e.get().getIs_active());
+			if (e.get().getId_user() != null) {
+				if (e.get().getIs_active()) {
 					Role r = roleRepository.findByType("Emprendedor");
-					User userAux = userRepository.findById(e.getId_user()).get();
+					User userAux = userRepository.findById(e.get().getId_user()).get();
 					userAux.addRole(r);
 					userRepository.save(userAux);
 				} else {
 					Role r = roleRepository.findByType("Defecto");
-					User userAux = userRepository.findById(e.getId_user()).get();
+					User userAux = userRepository.findById(e.get().getId_user()).get();
 					userAux.addRole(r);
 					userRepository.save(userAux);
 				}
 			}
-			entrepreneurRepository.save(e);
+			entrepreneurRepository.save(e.get());
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
 	 * Este metodo permite editar un Emprendedor
 	 * @param id ID del Emprendedor a editar
-	 * @param e Los datos del JSON mapeados a un objeto Emprendedor
-	 * @return Retorna el Emprendedor con sus modificaciones TAL cual quedo en la DB.
+	 * @param e Los datos del JSON mapeados a un objeto DTOEmprendedorUpdate
+	 * @return Retorna un DTOEmprendedor con sus modificaciones TAL cual quedo en la DB.
 	 */
 	@Override
-	public Entrepreneur editEntreprenur(Long id,Entrepreneur e) {
-		/**
-		 * Si esta dentro de este metodo es por q es un admin o superAdmin modificando un Emprendedor (cualquiera sea),
-		 * o es un Emprendedor o Defecto modificando SOLO su perfil.
-		 */
-
-		User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User usuario = userRepository.findById(u.getId()).get();
-		/**
-		 Si tiene permisos de Emprendedor, solo puede modificar los datos de contacto si se encuentra activo,
-		 si no esta activo NO es un Emprendedor, entonces asumimos q es un Defecto,Admin o superAdmin y puede modificar todo.
-		 */
+	public DTOEntrepreneur editEntrepreneur(Long id, DTOEntrepreneurUpdate e, boolean restricted) {
 		Entrepreneur edit = entrepreneurRepository.findById(id).get();
-		if (usuario.getRole().getType().toLowerCase().equals("emprendedor")) {
-			if (edit.getIs_active()) {
-				edit.setEmail(e.getEmail());
-				edit.setPhone(e.getPhone());
-				edit.setLocation(e.getLocation());
-				return entrepreneurRepository.save(edit);
-			}
+		if (edit.getIs_active() && restricted) {
+			/**
+			 * Si el perfil está activo y la acción restringida (usuario defecto o emprendedor modificando su propio perfil)
+			 */
+			edit.setEmail(e.getEmail());
+			edit.setPhone(e.getPhone());
+			edit.setLocation(e.getLocation());
+			entrepreneurRepository.save(edit);
+			return this.getEntrepreneurById(id);
+		} else {
+			/**
+			 * Si el perfil no está activo o la acción no está restringida (usuario defecto o emprendedor modificando su propio perfil)
+			 */
+			edit.setEmail(e.getEmail());
+			edit.setPhone(e.getPhone());
+			edit.setLocation(e.getLocation());
+			edit.setDni(e.getDni());
+			edit.setHowimetcice(e.getHowimetcice());
+			edit.setCuil_cuit(e.getCuil_cuit());
+			edit.setName(e.getName());
+			edit.setSurname(e.getSurname());
+			/**
+			 * NUNCA se permite modificar ID, campo active, o ispf
+			 */
+			entrepreneurRepository.save(edit);
+			return this.getEntrepreneurById(id);
 		}
-		/**
-		 * Si no salio por el if de getActivo (true) es por que es un admin o superAdmnin o es un Defecto que puede
-		 * modificar sus datos por que no esta activo (y no es Emprendedor aun). Entonces se trata estos casos como iguales.
-		 *
-		 * Si tiene permisos de admin o superAdmin o si es Defecto y esta modificando su perfil por no estar activo aun,
-		 * en este caso puede modificar todos los datos de un Emprendedor.
-		 */
-
-		edit.setEmail(e.getEmail());
-		edit.setPhone(e.getPhone());
-		edit.setLocation(e.getLocation());
-		edit.setDni(e.getDni());
-		edit.setHowimetcice(e.getHowimetcice());
-		edit.setCuil_cuit(e.getCuil_cuit());
-		edit.setName(e.getName());
-		edit.setSurname(e.getSurname());
-		/**
-		 * No dejamos que modifique los ID, ni el campo active, ni el ispf
-		 */
-		return entrepreneurRepository.save(edit);
-
 	}
 
 	@Override
-	public boolean existeID(Long id) {
-		return entrepreneurRepository.existsById(id);
-	}
-
-	@Override
-	public Iterable<Entrepreneur> getEntrepreneurs() {
-		return entrepreneurRepository.findAll();
+	public Iterable<DTOEntrepreneur> getEntrepreneurs() {
+		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
+		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findAll();
+		for (Entrepreneur e: entrepreneurs) {
+			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
+					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
+			listaDTO.add(dto);
+		}
+		return listaDTO;
   }
   
 	@Override
-	public Optional<Entrepreneur> getEntrepreneurById(Long id) {
-		return entrepreneurRepository.findById(id);
+	public DTOEntrepreneur getEntrepreneurById(Long id) {
+		Optional<Entrepreneur> o = entrepreneurRepository.findById(id);
+		if (!o.isEmpty()) {
+			Entrepreneur e = o.get();
+			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
+					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
+			return dto;
+		}
+		return null;
 	}
 
 	@Override
-	public Optional<Entrepreneur> deleteEntrepreneur(Long id) {
+	public DTOEntrepreneur deleteEntrepreneur(Long id) {
 		entrepreneurRepository.deleteEntrepreneur(id);
 		return this.getEntrepreneurById(id);
 	}
