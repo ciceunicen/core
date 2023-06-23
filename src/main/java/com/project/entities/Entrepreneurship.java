@@ -38,8 +38,8 @@ public abstract class Entrepreneurship implements Serializable {
         this.title = title;
         this.description = description;
         this.start_date = start_date;
-        this.actions = new ArrayList<Action>();
-        this.files = new ArrayList<File>();
+        this.actions = new ArrayList<>();
+        this.files = new ArrayList<>();
     }
 
     public void addAction (Action a){

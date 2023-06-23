@@ -1,8 +1,7 @@
 package com.project.service;
 
 import com.project.DTO.*;
-import com.project.entities.Entrepreneur;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Component;
 
 @Component

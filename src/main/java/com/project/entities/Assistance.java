@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Table(name = "assistance")
 @Data
 public class Assistance implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_Assistance;

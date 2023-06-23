@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Data
-public class DTOActivityInsert {
+public class DTOActivityInsert extends DTOEntrepreneurshipInsert {
 
     private String title;
     private String description;

@@ -9,5 +9,5 @@ import com.project.entities.Need;
 @Repository
 public interface NeedRepository extends JpaRepository<Need,Long>{
     @Query("select n from Need n where n.id_Need = :id")
-    public Need getNeed(Long id);
+    Need getNeed(Long id);
 }

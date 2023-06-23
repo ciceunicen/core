@@ -1,20 +1,11 @@
 package com.project.controller;
 
 import com.project.DTO.*;
-import com.project.entities.Action;
-import com.project.entities.Activity;
-import com.project.entities.User;
-import com.project.repository.ActionRepository;
-import com.project.repository.ActivityRepository;
 import com.project.service.ActivityService;
-import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/actividades")
