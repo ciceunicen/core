@@ -54,6 +54,12 @@ public class ActivityServiceImp implements ActivityService {
         return null;
     }
 
+    public Activity getActivityEntity(Long id) {
+        Optional<Activity> act = activityRepository.findById(id);
+        if (act.isPresent()) return act.get();
+        return null;
+    }
+
     @Override
     public DTOActivityUpdate getActivityUpdate(Long id) {
         Optional<Activity> act = activityRepository.findById(id);
