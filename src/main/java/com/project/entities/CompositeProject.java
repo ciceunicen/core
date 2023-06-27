@@ -23,5 +23,16 @@ public class CompositeProject extends Entrepreneurship {
     public CompositeProject(){ }
 
     public void addEntrepreneurship(Entrepreneurship e) { this.entrepreneurships.add(e); }
+
+
+    public boolean containsEntrepreneurship(Entrepreneurship e){
+        if (this == e) return true;
+        for (Entrepreneurship aux: entrepreneurships){
+            if  (aux.containsEntrepreneurship(e)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 

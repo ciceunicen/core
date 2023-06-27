@@ -82,8 +82,8 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public boolean containsEntrepreneurship(Long main_project_id, Long sub_project) {
-        return (this.compositeProjectRepository.containsEntrepreneurship(main_project_id, sub_project) != null);
+    public boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject) {
+        return (mainProject.containsEntrepreneurship(subProject));
     }
 
 }

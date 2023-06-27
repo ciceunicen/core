@@ -19,5 +19,5 @@ public interface CompositeProjectService {
 
     DTOCompositeProject addEntrepreneurship(Long main_project_id, Entrepreneurship e);
 
-    boolean containsEntrepreneurship(Long main_project_id, Long sub_project);
+    boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject);
 }

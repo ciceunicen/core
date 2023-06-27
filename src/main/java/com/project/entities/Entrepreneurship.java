@@ -49,4 +49,5 @@ public abstract class Entrepreneurship implements Serializable {
         this.files.add(f);
     }
 
+    public abstract boolean containsEntrepreneurship(Entrepreneurship e);
 }

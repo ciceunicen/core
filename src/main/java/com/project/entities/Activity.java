@@ -21,4 +21,8 @@ public class Activity extends Entrepreneurship {
     }
     public Activity(){}
 
+    public boolean containsEntrepreneurship(Entrepreneurship e){
+        if (this == e) return true;
+        return false;
+    }
 }
