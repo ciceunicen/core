@@ -3,10 +3,13 @@ package com.project.service.implementation;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
+import com.project.entities.Project;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.Entrepreneur;
@@ -137,6 +140,18 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	public DTOEntrepreneur deleteEntrepreneur(Long id) {
 		entrepreneurRepository.deleteEntrepreneur(id);
 		return this.getEntrepreneurById(id);
+	}
+
+	@Override
+	public List<DTOEntrepreneur> getAllByFilters(List<String> filters) {
+		List<DTOEntrepreneur> list = new ArrayList<>();
+		List<Entrepreneur> aux = entrepreneurRepository.findAll(filters);
+		for (Entrepreneur e: aux) {
+			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
+					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
+			list.add(dto);
+		}
+		return list;
 	}
 
 
