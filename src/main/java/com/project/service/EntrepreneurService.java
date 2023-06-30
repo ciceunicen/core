@@ -22,6 +22,6 @@ public interface EntrepreneurService {
 
     DTOEntrepreneur deleteEntrepreneur(Long id);
 
-    List<DTOEntrepreneur> getAllByFilters(List<String> filters);
+    List<DTOEntrepreneur> getAllByFilters(List<String> filters,boolean deleted);
 
 }

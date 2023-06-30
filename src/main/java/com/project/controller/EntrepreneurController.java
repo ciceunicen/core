@@ -51,9 +51,9 @@ public class EntrepreneurController {
 	}
 
 	@GetMapping(value = "/filters", params="filters")
-	public ResponseEntity<List<DTOEntrepreneur>> getAllEntrepreneursByFilter(@RequestParam(value = "filters") List<String> data){
+	public ResponseEntity<List<DTOEntrepreneur>> getAllEntrepreneursByFilter(@RequestParam(value = "filters") List<String> data,@RequestParam(value = "deleted") boolean deleted){
 		if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-			List<DTOEntrepreneur> list = this.entrepreneurService.getAllByFilters(data);
+			List<DTOEntrepreneur> list = this.entrepreneurService.getAllByFilters(data,deleted);
 			return new ResponseEntity(list, HttpStatus.OK);
 		}
 		else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);

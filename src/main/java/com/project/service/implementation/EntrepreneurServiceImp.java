@@ -143,9 +143,9 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	}
 
 	@Override
-	public List<DTOEntrepreneur> getAllByFilters(List<String> filters) {
+	public List<DTOEntrepreneur> getAllByFilters(List<String> filters,boolean deleted) {
 		List<DTOEntrepreneur> list = new ArrayList<>();
-		List<Entrepreneur> aux = entrepreneurRepository.findAll(filters);
+		List<Entrepreneur> aux = entrepreneurRepository.findAll(filters,deleted);
 		for (Entrepreneur e: aux) {
 			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
 					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
