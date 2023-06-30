@@ -5,6 +5,8 @@ import com.project.entities.Entrepreneur;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface ActivityService {
 
@@ -21,4 +23,6 @@ public interface ActivityService {
     DTOActivityUpdate updateActivity(Long id, DTOActivityUpdate act);
 
     DTOActivity deleteActivity(Long id);
+
+    List<DTOActivity> getAllByFilters(List<String> data);
 }
