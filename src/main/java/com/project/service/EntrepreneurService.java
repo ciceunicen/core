@@ -5,6 +5,8 @@ import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface EntrepreneurService {
 
@@ -19,5 +21,7 @@ public interface EntrepreneurService {
     DTOEntrepreneur getEntrepreneurById(Long id);
 
     DTOEntrepreneur deleteEntrepreneur(Long id);
+
+    List<DTOEntrepreneur> getAllByFilters(List<String> filters,boolean deleted);
 
 }

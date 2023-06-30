@@ -3,11 +3,18 @@ package com.project.controller;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
+import com.project.entities.Project;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -41,6 +48,15 @@ public class EntrepreneurController {
 			return new ResponseEntity(dto, HttpStatus.OK);
 		}
 		return new ResponseEntity("No existe emprendedor con id " + ID, HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping(value = "/filters", params="filters")
+	public ResponseEntity<List<DTOEntrepreneur>> getAllEntrepreneursByFilter(@RequestParam(value = "filters") List<String> data,@RequestParam(value = "deleted") boolean deleted){
+		if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+			List<DTOEntrepreneur> list = this.entrepreneurService.getAllByFilters(data,deleted);
+			return new ResponseEntity(list, HttpStatus.OK);
+		}
+		else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);
 	}
 
 	/**
