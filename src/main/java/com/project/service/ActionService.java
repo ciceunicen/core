@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,4 +25,6 @@ public interface ActionService {
     DTOActionUpdate updateAction(Long id, DTOActionUpdate action);
 
     Action deleteAction(Long id);
+
+    List<DTOAction> getAllByFilters(List<String> data);
 }
