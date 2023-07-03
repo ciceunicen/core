@@ -1,9 +1,6 @@
 package com.project.service.implementation;
 
-import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOActivityUpdate;
-import com.project.DTO.DTOCompositeProject;
-import com.project.DTO.DTOCompositeProjectInsert;
+import com.project.DTO.*;
 import com.project.entities.Activity;
 import com.project.entities.CompositeProject;
 import com.project.entities.Entrepreneurship;
@@ -84,6 +81,19 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     @Override
     public boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject) {
         return (mainProject.containsEntrepreneurship(subProject));
+    }
+
+    @Override
+    public DTOCompositeProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto) {
+        CompositeProject cp = this.getCompositeProjectEntity(id);
+        if (cp != null) {
+            if (dto.getTitle() != null) cp.setTitle(dto.getTitle());
+            if (dto.getDescription() != null) cp.setDescription(dto.getDescription());
+            if (dto.getStart_date() != null) cp.setStart_date(dto.getStart_date());
+            this.compositeProjectRepository.save(cp);
+            return this.getCompositeProject(id);
+        }
+        return null;
     }
 
 }

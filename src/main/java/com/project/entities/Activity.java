@@ -19,6 +19,7 @@ public class Activity extends Entrepreneurship {
         this.finish_date = finish_date;
 
     }
+
     public Activity(){}
 
     public boolean containsEntrepreneurship(Entrepreneurship e){
