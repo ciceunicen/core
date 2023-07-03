@@ -9,6 +9,8 @@ import com.project.service.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -51,5 +53,16 @@ public class ActionServiceImp implements ActionService {
         Action actAux = act;
         actionRepository.delete(act);
         return actAux;
+    }
+
+    @Override
+    public List<DTOAction> getAllByFilters(List<String> filters) {
+        List<DTOAction> list = new ArrayList<>();
+        List<Action> aux = actionRepository.findAll(filters);
+        for (Action e: aux) {
+            DTOAction dto = new DTOAction(e.getId(), e.getTitle(), e.getManager(), e.getState(), e.getDeadline());
+            list.add(dto);
+        }
+        return list;
     }
 }
