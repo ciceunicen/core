@@ -6,8 +6,8 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -26,7 +26,7 @@ public abstract class Entrepreneurship implements Serializable {
     @Column
     private String description;
     @Column
-    private Date start_date;
+    private LocalDate start_date;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<File> files;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -34,7 +34,7 @@ public abstract class Entrepreneurship implements Serializable {
 
     public  Entrepreneurship() {}
 
-    public Entrepreneurship(@NotEmpty String title, String description, @NotEmpty Date start_date) {
+    public Entrepreneurship(@NotEmpty String title, String description, @NotEmpty LocalDate start_date) {
         this.title = title;
         this.description = description;
         this.start_date = start_date;

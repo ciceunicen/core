@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -59,7 +60,16 @@ public class ActionController {
         else return new ResponseEntity("Noo tiene permisos para eliminar una accion",HttpStatus.UNAUTHORIZED);
     }
 
-    /**
+    @GetMapping(value = "/filters", params="filters")
+    public ResponseEntity<List<DTOAction>> getAllActionsByFilter(@RequestParam(value = "filters") List<String> data){
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            List<DTOAction> list = this.actionService.getAllByFilters(data);
+            return new ResponseEntity(list, HttpStatus.OK);
+        }
+        else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);
+    }
+
+     /**
      * No es posible crear una acción independiente, fuera del marco de un emprendimiento (actividad o proyecto compuesto).
      * La acción se crea al asociarla a un emprendimiento (ver en ActivityController y CompositeProjectController,
      * métodos postActivityAction y postCompositeProjectAction, respectivamente).

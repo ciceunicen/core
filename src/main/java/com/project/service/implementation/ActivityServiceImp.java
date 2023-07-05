@@ -3,6 +3,7 @@ package com.project.service.implementation;
 import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Activity;
+import com.project.entities.Entrepreneur;
 import com.project.repository.ActionRepository;
 import com.project.repository.ActivityRepository;
 import com.project.service.ActionService;
@@ -102,5 +103,16 @@ public class ActivityServiceImp implements ActivityService {
         DTOActivity actAux = new DTOActivity(act.getId(),act.getTitle(),act.getDescription(),act.getStart_date(),act.getFinish_date(),act.getFiles(),act.getActions());
         activityRepository.delete(act);
         return actAux;
+    }
+
+    @Override
+    public List<DTOActivity> getAllByFilters(List<String> data) {
+        List<DTOActivity> list = new ArrayList<>();
+        List<Activity> aux = activityRepository.findAll(data);
+        for (Activity act: aux) {
+            DTOActivity actAux = new DTOActivity(act.getId(),act.getTitle(),act.getDescription(),act.getStart_date(),act.getFinish_date(),act.getFiles(),act.getActions());
+            list.add(actAux);
+        }
+        return list;
     }
 }
