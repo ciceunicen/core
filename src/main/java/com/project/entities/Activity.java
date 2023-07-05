@@ -17,8 +17,12 @@ public class Activity extends Entrepreneurship {
     public Activity(@NotEmpty String title, String description, @NotEmpty LocalDate start_date, @NotEmpty LocalDate finish_date) {
         super(title, description, start_date);
         this.finish_date = finish_date;
-
     }
+
     public Activity(){}
 
+    public boolean containsEntrepreneurship(Entrepreneurship e){
+        if (this == e) return true;
+        return false;
+    }
 }
