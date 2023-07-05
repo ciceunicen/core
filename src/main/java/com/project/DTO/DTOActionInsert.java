@@ -4,8 +4,8 @@ import com.project.entities.utils.ActionState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +15,6 @@ public class DTOActionInsert {
     private String manager;
     private ActionState state;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date deadline;
+    private LocalDate deadline;
 
 }
