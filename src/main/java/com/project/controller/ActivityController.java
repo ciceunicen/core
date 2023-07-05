@@ -51,7 +51,10 @@ public class ActivityController {
     public ResponseEntity<?> postActivityAction(@RequestBody DTOActionInsert a,@PathVariable Long ID) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             DTOActivity dto = this.activityService.postActivityAction(a, ID);
-            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+            if (dto != null) {
+                return new ResponseEntity<>(dto, HttpStatus.CREATED);
+            }
+            else return new ResponseEntity<>("No existe el recurso a modificar, id " + ID, HttpStatus.NOT_FOUND);
         }
         else return new ResponseEntity("No tiene permisos para agregar una acción a una actividad",HttpStatus.UNAUTHORIZED);
     }

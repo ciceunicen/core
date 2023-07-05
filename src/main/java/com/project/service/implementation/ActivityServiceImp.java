@@ -36,11 +36,14 @@ public class ActivityServiceImp implements ActivityService {
     @Override
     public DTOActivity postActivityAction(DTOActionInsert a, Long id) {
         Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
-        Activity aux = activityRepository.findById(id).get();
-        aux.addAction(act);
-        DTOActivity dto =  new DTOActivity(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(), aux.getFinish_date(), aux.getFiles(), aux.getActions());
-        activityRepository.save(aux);
-        return dto;
+        Activity aux = this.getActivityEntity(id);
+        if (aux != null) {
+            aux.addAction(act);
+            DTOActivity dto = new DTOActivity(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(), aux.getFinish_date(), aux.getFiles(), aux.getActions());
+            activityRepository.save(aux);
+            return dto;
+        }
+        return null;
     }
 
     @Override
