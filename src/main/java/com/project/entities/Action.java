@@ -2,10 +2,9 @@ package com.project.entities;
 
 import com.project.entities.utils.ActionState;
 import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -23,9 +22,9 @@ public class Action {
     @Column
     private ActionState state;
     @Column
-    private Date deadline;
+    private LocalDate deadline;
 
-    public Action(@NotEmpty String title, @NotEmpty String manager, @NotEmpty ActionState state, @NotEmpty Date deadline) {
+    public Action(@NotEmpty String title, @NotEmpty String manager, @NotEmpty ActionState state, @NotEmpty LocalDate deadline) {
         this.title = title;
         this.manager = manager;
         this.state = state;
