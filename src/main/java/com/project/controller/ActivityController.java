@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -68,6 +69,9 @@ public class ActivityController {
         else return new ResponseEntity("No tiene permisos para modificar una actividad",HttpStatus.UNAUTHORIZED);
     }
 
+    /*
+        Borrado fisico de una Actividad
+     */
     @DeleteMapping("/{ID}")
     public ResponseEntity<DTOActivity> deleteActivity(@PathVariable ("ID") Long id){
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
@@ -80,4 +84,12 @@ public class ActivityController {
         else return new ResponseEntity("No tiene permisos para eliminar una actividad",HttpStatus.UNAUTHORIZED);
     }
 
+    @GetMapping(value = "/filters", params="filters")
+    public ResponseEntity<List<DTOActivity>> getAllActivityByFilter(@RequestParam(value = "filters") List<String> data){
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            List<DTOActivity> list = this.activityService.getAllByFilters(data);
+            return new ResponseEntity(list, HttpStatus.OK);
+        }
+        else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);
+    }
 }
