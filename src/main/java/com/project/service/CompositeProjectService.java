@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOCompositeProject;
 import com.project.DTO.DTOCompositeProjectInsert;
 import com.project.DTO.DTOCompositeProjectUpdate;
@@ -23,4 +24,6 @@ public interface CompositeProjectService {
     boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject);
 
     DTOCompositeProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto);
+
+    DTOCompositeProject postCompositeProjectAction(DTOActionInsert a, Long id);
 }

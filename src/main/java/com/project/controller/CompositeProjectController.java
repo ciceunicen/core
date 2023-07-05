@@ -1,15 +1,16 @@
 package com.project.controller;
 
-import com.project.DTO.DTOCompositeProject;
-import com.project.DTO.DTOCompositeProjectInsert;
-import com.project.DTO.DTOCompositeProjectUpdate;
+import com.project.DTO.*;
 import com.project.entities.Entrepreneurship;
 import com.project.service.ActivityService;
 import com.project.service.CompositeProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/emprendimientos")
@@ -87,4 +88,17 @@ public class CompositeProjectController {
         }
         return new ResponseEntity("No tiene permisos para modificar el recurso",HttpStatus.UNAUTHORIZED);
     }
+
+    @PostMapping("{ID}/acciones")
+    public ResponseEntity<?> postCompositeProjectAction(@RequestBody DTOActionInsert a, @PathVariable ("ID") Long id) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            DTOCompositeProject dto = this.compositeProjectService.postCompositeProjectAction(a, id);
+            if (dto != null) {
+                return new ResponseEntity<>(dto, HttpStatus.CREATED);
+            }
+            else return new ResponseEntity<>("No existe el recurso a modificar, id " + id, HttpStatus.NOT_FOUND);
+        }
+        else return new ResponseEntity("No tiene permisos para realizar esta acción",HttpStatus.UNAUTHORIZED);
+    }
+
 }

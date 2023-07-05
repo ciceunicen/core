@@ -1,6 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.DTO.*;
+import com.project.entities.Action;
 import com.project.entities.Activity;
 import com.project.entities.CompositeProject;
 import com.project.entities.Entrepreneurship;
@@ -92,6 +93,20 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
             if (dto.getStart_date() != null) cp.setStart_date(dto.getStart_date());
             this.compositeProjectRepository.save(cp);
             return this.getCompositeProject(id);
+        }
+        return null;
+    }
+
+    @Override
+    public DTOCompositeProject postCompositeProjectAction(DTOActionInsert a, Long id) {
+        Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+        CompositeProject aux = this.getCompositeProjectEntity(id);
+        if (aux != null) {
+            aux.addAction(act);
+            this.compositeProjectRepository.save(aux);
+            DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
         }
         return null;
     }
