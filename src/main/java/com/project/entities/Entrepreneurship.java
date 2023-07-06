@@ -1,6 +1,5 @@
 package com.project.entities;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,9 +17,6 @@ public abstract class Entrepreneurship implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
-    @Builder.Default
-    @Column(name="deleted")
-    private boolean is_deleted = false;
     @Column
     private String title;
     @Column
