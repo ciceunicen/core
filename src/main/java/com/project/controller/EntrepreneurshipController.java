@@ -3,6 +3,7 @@ package com.project.controller;
 
 import com.project.DTO.DTOActivity;
 import com.project.DTO.DTOEntrepreneur;
+import com.project.DTO.DTOEntrepreneurship;
 import com.project.entities.Entrepreneurship;
 import com.project.service.EntrepreneurshipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class EntrepreneurshipController {
     private RoleAuthController roleAuthController;
 
     @GetMapping(value = "/filters", params="filters")
-    public ResponseEntity<List<Entrepreneurship>> getAllEntrepreneurshipsByFilters(@RequestParam(value = "filters") List<String> data){
+    public ResponseEntity<List<DTOEntrepreneurship>> getAllEntrepreneurshipsByFilters(@RequestParam(value = "filters") List<String> data){
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            List<Entrepreneurship> list = this.entrepreneurshipService.getAllByFilters(data);
+            List<DTOEntrepreneurship> list = this.entrepreneurshipService.getAllByFilters(data);
             return new ResponseEntity(list, HttpStatus.OK);
         }
         else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);
