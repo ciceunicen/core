@@ -1,6 +1,7 @@
 package com.project.repository;
 
 import com.project.DTO.DTOEntrepreneurship;
+import com.project.entities.Action;
 import com.project.entities.Entrepreneurship;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface EntrepreneurshipRepository extends JpaRepository<Entrepreneursh
     @Query("select e from Entrepreneurship e where ((e.title in :data) or (e.description in :data) or (e.start_date in :data))")
     List<Entrepreneurship> findAll(List<String> data);
 
+    @Query("SELECT a FROM Entrepreneurship ea INNER JOIN ea.actions a WHERE (ea.id=:ID) AND ((a.title in :values) or (a.manager in :values) or (a.state in :values) or (a.deadline in :values))")
+    List<Action> findActionsEntrepreneurship(Long ID, List<String> values);
 }
