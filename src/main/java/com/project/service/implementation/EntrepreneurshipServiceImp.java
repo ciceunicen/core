@@ -1,8 +1,10 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOAction;
 import com.project.DTO.DTOActivity;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurship;
+import com.project.entities.Action;
 import com.project.entities.Activity;
 import com.project.entities.Entrepreneur;
 import com.project.entities.Entrepreneurship;
@@ -26,6 +28,17 @@ public class EntrepreneurshipServiceImp implements EntrepreneurshipService {
         List<Entrepreneurship> aux = entrepreneurshipRepository.findAll(data);
         for (Entrepreneurship e: aux) {
             DTOEntrepreneurship dto = new DTOEntrepreneurship(e.getId(), e.getTitle(), e.getDescription(), e.getStart_date(),e.getFiles(),e.getActions());
+            list.add(dto);
+        }
+        return list;
+    }
+
+    @Override
+    public List<DTOAction> getAllActionByFilters(Long id, List<String> data) {
+        List<DTOAction> list = new ArrayList<>();
+        List<Action> aux = entrepreneurshipRepository.findActionsEntrepreneurship(id,data);
+        for (Action a: aux){
+            DTOAction dto = new DTOAction(a.getId(),a.getTitle(),a.getManager(),a.getState(),a.getDeadline());
             list.add(dto);
         }
         return list;
