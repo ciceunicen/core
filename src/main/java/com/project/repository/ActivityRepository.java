@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
+
     @Query("select a from Activity a where ((a.title in :data) or (a.description in :data) or (a.start_date in :data) or " +
             "(a.finish_date in :data))")
     List<Activity> findAll(List<String> data);
+
 }
