@@ -4,8 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,7 +15,7 @@ public class CompositeProject extends Entrepreneurship {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Entrepreneurship> entrepreneurships;
 
-    public CompositeProject(@NotEmpty String title, String description, @NotEmpty Date start_date) {
+    public CompositeProject(@NotEmpty String title, String description, @NotEmpty LocalDate start_date) {
         super(title, description, start_date);
         this.entrepreneurships = new ArrayList<>();
     }
