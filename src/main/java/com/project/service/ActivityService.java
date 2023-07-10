@@ -28,4 +28,5 @@ public interface ActivityService {
     DTOActivity deleteActivity(Long id);
 
     List<DTOActivity> getAllByFilters(List<String> data);
+
 }

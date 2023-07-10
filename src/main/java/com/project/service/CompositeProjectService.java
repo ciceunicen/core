@@ -8,6 +8,8 @@ import com.project.entities.CompositeProject;
 import com.project.entities.Entrepreneurship;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface CompositeProjectService {
 
@@ -19,9 +21,13 @@ public interface CompositeProjectService {
 
     CompositeProject getCompositeProjectEntity(Long id);
 
+    List<DTOCompositeProject> getCompositeProjectsThatContain(Long id);
+
     DTOCompositeProject addEntrepreneurship(Long main_project_id, Entrepreneurship e);
 
     boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject);
+
+    boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id);
 
     DTOCompositeProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto);
 
