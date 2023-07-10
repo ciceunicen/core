@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,10 +19,13 @@ public abstract class Entrepreneurship implements Serializable {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     @Column
+    @NotNull
     private String title;
     @Column
+    @NotNull
     private String description;
     @Column
+    @NotNull
     private LocalDate start_date;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<File> files;
