@@ -3,7 +3,6 @@ package com.project.service.implementation;
 import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Activity;
-import com.project.repository.ActionRepository;
 import com.project.repository.ActivityRepository;
 import com.project.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ public class ActivityServiceImp implements ActivityService {
 
     @Autowired
     private ActivityRepository activityRepository;
-
-    @Autowired
-    private ActionRepository actionRepository;
 
     @Override
     public DTOActivity postActivity(DTOActivityInsert a) {

@@ -45,6 +45,9 @@ public abstract class Entrepreneurship implements Serializable {
     public void addAction (Action a){
         this.actions.add(a);
     }
+
+    public void removeAction (Action a) { this.actions.remove(a);}
+
     public void addFile (File f){
         this.files.add(f);
     }

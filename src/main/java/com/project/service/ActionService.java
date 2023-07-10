@@ -1,13 +1,9 @@
 package com.project.service;
 
 import com.project.DTO.DTOAction;
-import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
 import org.springframework.stereotype.Component;
-
-
-import java.util.Iterator;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,15 +12,16 @@ import java.util.Optional;
 @Component
 public interface ActionService {
 
-    DTOAction postAction(DTOActionInsert a);
+    List<DTOAction> getActions();
 
-    Iterable<Action> getActions();
-
-    Optional<Action> getActionById(Long id);
+    DTOAction getActionById(Long id);
 
     DTOActionUpdate updateAction(Long id, DTOActionUpdate action);
 
+    List<DTOAction> getAllByFilters(List<String> data);
+
     Action deleteAction(Long id);
 
-    List<DTOAction> getAllByFilters(List<String> data);
+    Optional<Action> findById(Long id);
+
 }

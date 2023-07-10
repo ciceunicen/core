@@ -2,13 +2,11 @@ package com.project.service.implementation;
 
 import com.project.DTO.*;
 import com.project.entities.Action;
-import com.project.entities.Activity;
 import com.project.entities.CompositeProject;
 import com.project.entities.Entrepreneurship;
 import com.project.repository.CompositeProjectRepository;
 
 import com.project.service.CompositeProjectService;
-import com.project.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +20,6 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
 
     @Autowired
     private CompositeProjectRepository compositeProjectRepository;
-    @Autowired
-    private ProjectService projectService;
 
     @Override
     public DTOCompositeProject postCompositeProject(DTOCompositeProjectInsert cp) {
@@ -85,6 +81,11 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
+    public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
+        return !this.compositeProjectRepository.inCommonEntrepreneurships(main_project_id, subproject_id).isEmpty();
+    }
+
+    @Override
     public DTOCompositeProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto) {
         CompositeProject cp = this.getCompositeProjectEntity(id);
         if (cp != null) {
@@ -107,6 +108,21 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
             DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             return dto;
+        }
+        return null;
+    }
+
+    @Override
+    public List<DTOCompositeProject> getCompositeProjectsThatContain(Long id) {
+        List<DTOCompositeProject> list = new ArrayList<>();
+        List<CompositeProject> projects = this.compositeProjectRepository.getCompositeProjectsThatContainsEntrepreneurship(id);
+        if (projects != null) {
+            for (CompositeProject aux: projects) {
+                DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+                        aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+                list.add(dto);
+            }
+            return list;
         }
         return null;
     }

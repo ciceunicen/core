@@ -19,4 +19,7 @@ public interface EntrepreneurshipRepository extends JpaRepository<Entrepreneursh
             "((a.title in :data) or (a.description in :data) or (a.start_date in :data) or (a.finish_date in :data))")
     List<Activity> findAllActivitiesByCompositeProjectId(Long id, List<String> data);
 
+    @Query(value = "select composite_project_id from composite_project_entrepreneurships where entrepreneurships_id=:id", nativeQuery = true)
+    List<Long> containsEntrepreneurship(Long id);
+
 }

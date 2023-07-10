@@ -1,7 +1,6 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOAction;
-import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActionUpdate;
 import com.project.entities.Action;
 import com.project.repository.ActionRepository;
@@ -21,19 +20,36 @@ public class ActionServiceImp implements ActionService {
     private ActionRepository actionRepository;
 
     @Override
-    public DTOAction postAction(DTOActionInsert a) {
-        Action aux = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
-        aux = this.actionRepository.save(aux);
-        DTOAction dto = new DTOAction(aux.getId(), aux.getTitle(), aux.getManager(), aux.getState(), aux.getDeadline());
-        return dto;
+    public List<DTOAction> getActions() {
+        List<DTOAction> list = new ArrayList<>();
+        List<Action> aux = actionRepository.findAll();
+        for (Action e: aux) {
+            DTOAction dto = new DTOAction(e.getId(), e.getTitle(), e.getManager(), e.getState(), e.getDeadline());
+            list.add(dto);
+        }
+        return list;
     }
 
     @Override
-    public Iterable<Action> getActions() {
-        return this.actionRepository.findAll();
+    public DTOAction getActionById(Long id) {
+        Optional<Action> opt = this.actionRepository.findById(id);
+        if(opt.isPresent()) {
+            Action e = opt.get();
+            DTOAction dto = new DTOAction(e.getId(), e.getTitle(), e.getManager(), e.getState(), e.getDeadline());
+            return dto;
+        }
+        return null;
     }
-    public Optional<Action> getActionById(Long id) {
-        return this.actionRepository.findById(id);
+
+    @Override
+    public List<DTOAction> getAllByFilters(List<String> filters) {
+        List<DTOAction> list = new ArrayList<>();
+        List<Action> aux = actionRepository.findAll(filters);
+        for (Action e: aux) {
+            DTOAction dto = new DTOAction(e.getId(), e.getTitle(), e.getManager(), e.getState(), e.getDeadline());
+            list.add(dto);
+        }
+        return list;
     }
 
     @Override
@@ -56,13 +72,8 @@ public class ActionServiceImp implements ActionService {
     }
 
     @Override
-    public List<DTOAction> getAllByFilters(List<String> filters) {
-        List<DTOAction> list = new ArrayList<>();
-        List<Action> aux = actionRepository.findAll(filters);
-        for (Action e: aux) {
-            DTOAction dto = new DTOAction(e.getId(), e.getTitle(), e.getManager(), e.getState(), e.getDeadline());
-            list.add(dto);
-        }
-        return list;
+    public Optional<Action> findById(Long id) {
+        return this.actionRepository.findById(id);
     }
+
 }
