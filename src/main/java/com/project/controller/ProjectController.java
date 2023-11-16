@@ -2,8 +2,6 @@ package com.project.controller;
 
 import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOCompositeProjectInsert;
-import com.project.DTO.DTOCompositeProjectUpdate;
 import com.project.DTO.DTOEntrepreneurship;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
@@ -267,7 +265,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<DTOProject> postCompositeProject(@RequestBody DTOCompositeProjectInsert cp) {
+    public ResponseEntity<DTOProject> postCompositeProject(@RequestBody DTOProjectInsert cp) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             DTOProject dto = compositeProjectService.postCompositeProject(cp);
             if(dto != null) return new ResponseEntity(dto, HttpStatus.CREATED);
@@ -306,7 +304,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{ID}")
-    public ResponseEntity<DTOProject> updateCompositeProject(@PathVariable ("ID") Long id, @RequestBody DTOCompositeProjectUpdate dto) {
+    public ResponseEntity<DTOProject> updateCompositeProject(@PathVariable ("ID") Long id, @RequestBody DTOProjectUpdate dto) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             DTOProject response = this.compositeProjectService.updateCompositeProject(id, dto);
             if (response != null) {

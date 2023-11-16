@@ -1,10 +1,9 @@
 package com.project.service;
 
 import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOCompositeProject;
-import com.project.DTO.DTOCompositeProjectInsert;
-import com.project.DTO.DTOCompositeProjectUpdate;
 import com.project.DTO.DTOProject;
+import com.project.DTO.DTOProjectInsert;
+import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.CompositeProject;
 import com.project.entities.Entrepreneurship;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ import java.util.List;
 @Component
 public interface CompositeProjectService {
 
-    DTOProject postCompositeProject(DTOCompositeProjectInsert cp);
+    DTOProject postCompositeProject(DTOProjectInsert cp);
 
     Iterable<DTOProject> getCompositeProjects();
 
@@ -30,7 +29,7 @@ public interface CompositeProjectService {
 
     boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id);
 
-    DTOProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto);
+    DTOProject updateCompositeProject(Long id, DTOProjectUpdate dto);
 
     DTOProject postCompositeProjectAction(DTOActionInsert a, Long id);
 }

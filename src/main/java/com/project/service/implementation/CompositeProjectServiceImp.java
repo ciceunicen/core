@@ -22,7 +22,7 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     private CompositeProjectRepository compositeProjectRepository;
 
     @Override
-    public DTOProject postCompositeProject(DTOCompositeProjectInsert cp) {
+    public DTOProject postCompositeProject(DTOProjectInsert cp) {
         CompositeProject aux = new CompositeProject(cp.getTitle(), cp.getDescription(), cp.getStart_date());
         aux = compositeProjectRepository.save(aux);
         if (aux != null) {
@@ -86,7 +86,7 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public DTOProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto) {
+    public DTOProject updateCompositeProject(Long id, DTOProjectUpdate dto) {
         CompositeProject cp = this.getCompositeProjectEntity(id);
         if (cp != null) {
             if (dto.getTitle() != null) cp.setTitle(dto.getTitle());

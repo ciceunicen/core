@@ -2,7 +2,11 @@ package com.project.DTO;
 
 import com.project.entities.File;
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 /**
@@ -21,5 +25,8 @@ public class DTOProjectInsert{
     private List<File> files;
     private List<Long> needs;
     private Long id_Admin;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate start_date;
 
 }
