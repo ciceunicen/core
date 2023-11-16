@@ -22,11 +22,11 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     private CompositeProjectRepository compositeProjectRepository;
 
     @Override
-    public DTOCompositeProject postCompositeProject(DTOCompositeProjectInsert cp) {
+    public DTOProject postCompositeProject(DTOCompositeProjectInsert cp) {
         CompositeProject aux = new CompositeProject(cp.getTitle(), cp.getDescription(), cp.getStart_date());
         aux = compositeProjectRepository.save(aux);
         if (aux != null) {
-            DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+            DTOProject dto = new DTOProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             return dto;
         }
@@ -34,11 +34,11 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public Iterable<DTOCompositeProject> getCompositeProjects() {
-        List<DTOCompositeProject> listaDTO = new ArrayList<>();
+    public Iterable<DTOProject> getCompositeProjects() {
+        List<DTOProject> listaDTO = new ArrayList<>();
         Iterable<CompositeProject> projects = this.compositeProjectRepository.findAll();
         for (CompositeProject aux: projects) {
-            DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+            DTOProject dto = new DTOProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             listaDTO.add(dto);
         }
@@ -46,11 +46,11 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public DTOCompositeProject getCompositeProject(Long id) {
+    public DTOProject getCompositeProject(Long id) {
         Optional<CompositeProject> o = compositeProjectRepository.findById(id);
         if (o.isPresent()) {
             CompositeProject aux = o.get();
-            DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+            DTOProject dto = new DTOProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             return dto;
         }
@@ -68,7 +68,7 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public DTOCompositeProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
+    public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
         CompositeProject main_p = this.compositeProjectRepository.findById(main_project_id).get();
         main_p.addEntrepreneurship(e);
         this.compositeProjectRepository.save(main_p);
@@ -86,7 +86,7 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public DTOCompositeProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto) {
+    public DTOProject updateCompositeProject(Long id, DTOCompositeProjectUpdate dto) {
         CompositeProject cp = this.getCompositeProjectEntity(id);
         if (cp != null) {
             if (dto.getTitle() != null) cp.setTitle(dto.getTitle());
@@ -99,13 +99,13 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public DTOCompositeProject postCompositeProjectAction(DTOActionInsert a, Long id) {
+    public DTOProject postCompositeProjectAction(DTOActionInsert a, Long id) {
         Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
         CompositeProject aux = this.getCompositeProjectEntity(id);
         if (aux != null) {
             aux.addAction(act);
             this.compositeProjectRepository.save(aux);
-            DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+            DTOProject dto = new DTOProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             return dto;
         }
@@ -113,12 +113,12 @@ public class CompositeProjectServiceImp implements CompositeProjectService {
     }
 
     @Override
-    public List<DTOCompositeProject> getCompositeProjectsThatContain(Long id) {
-        List<DTOCompositeProject> list = new ArrayList<>();
+    public List<DTOProject> getCompositeProjectsThatContain(Long id) {
+        List<DTOProject> list = new ArrayList<>();
         List<CompositeProject> projects = this.compositeProjectRepository.getCompositeProjectsThatContainsEntrepreneurship(id);
         if (projects != null) {
             for (CompositeProject aux: projects) {
-                DTOCompositeProject dto = new DTOCompositeProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+                DTOProject dto = new DTOProject(aux.getId(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
                         aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
                 list.add(dto);
             }
