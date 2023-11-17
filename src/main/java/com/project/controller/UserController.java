@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.DTO.DTOUserUpdate;
 import com.project.entities.Role;
 
 import java.util.List;
@@ -36,10 +37,18 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable Long ID){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
     }
-	
+
+	/**
+	 * Actualiza los datos del usuario
+	 * @param updatedUser usuario actualizado
+	 * @param ID es el id del usuario que va a actualizar sus datos
+	 * @return usuario actualizado con estado HTTP OK
+	 */
 	@PutMapping("/{ID}")
-    public User update(@RequestBody User user, @PathVariable Long ID){
-        return user;
+    public ResponseEntity<User> update(@RequestBody DTOUserUpdate updatedUser, @PathVariable Long ID){
+		User updatedUserData = userService.updateUser(ID, updatedUser);
+		// Devuelve el usuario actualizado con el código de estado HTTP OK
+		return ResponseEntity.status(HttpStatus.OK).body(updatedUserData);
     }
 
 	/**

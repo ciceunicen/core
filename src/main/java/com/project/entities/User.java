@@ -81,6 +81,10 @@ public class User implements Serializable,UserDetails{
 		return null;
 	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub

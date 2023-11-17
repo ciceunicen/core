@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOUserUpdate;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 
@@ -59,7 +60,20 @@ public class UserServiceImp implements UserService {
 		}
 		return userRepo.findById(id).get();
 	}
-	
+
+	@Override
+	public User updateUser(Long id, DTOUserUpdate updatedUser) {
+		// Buscar el usuario por ID
+		User userToUpdate = userRepo.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+		// Aplicar los cambios desde el DTO al usuario
+		userToUpdate.setUsername(updatedUser.getUsername());
+		userToUpdate.setEmail(updatedUser.getEmail());
+		userToUpdate.setPassword(updatedUser.getPassword());
+
+		// Guarda el usuario actualizado en la base de datos
+		return userRepo.save(userToUpdate);
+	}
+
 	public Iterable<User> findAll(List<String> rolIds) {
 		if(rolIds!=null) {
 			return userRepo.findByRolIds(rolIds);
