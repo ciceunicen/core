@@ -1,11 +1,18 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOActionInsert;
+import com.project.DTO.DTOProject;
+import com.project.DTO.DTOProjectInsert;
+import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.AdministrationRecords;
+import com.project.entities.CompositeProject;
 import com.project.entities.DeletedProject;
+import com.project.entities.Entrepreneurship;
 import com.project.entities.Project;
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,7 +138,55 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
-    public Project getProject(Long id){
+    public Project getProjectEntity(Long id){
         return projectRepository.getProject(id);
     }
+    
+    @Override
+    public DTOProject postProject(DTOProjectInsert cp) {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+
+	@Override
+	public DTOProject getProject(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<DTOProject> getProjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DTOProject> getProjectsThatContain(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean containsEntrepreneurship(Entrepreneurship mainProject, Entrepreneurship subProject) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public DTOProject postProjectAction(DTOActionInsert a, Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
