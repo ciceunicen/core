@@ -4,6 +4,7 @@ import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
+import com.project.entities.Action;
 import com.project.entities.AdministrationRecords;
 import com.project.entities.CompositeProject;
 import com.project.entities.DeletedProject;
@@ -144,49 +145,86 @@ public class ProjectServiceImp implements ProjectService {
     
     @Override
     public DTOProject postProject(DTOProjectInsert cp) {
-    	// TODO Auto-generated method stub
-    	return null;
+//    	Project aux = new Project(cp.getTitle(), cp.getDescription(), cp.getStart_date());
+//        aux = projectRepository.save(aux);
+//        if (aux != null) {
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            return dto;
+//        }
+        return null;
     }
 
 	@Override
-	public DTOProject getProject(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Iterable<DTOProject> getProjects() {
-		// TODO Auto-generated method stub
+//		List<DTOProject> listaDTO = new ArrayList<>();
+//        Iterable<Project> projects = this.projectRepository.findAll();
+//        for (Project aux: projects) {
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            listaDTO.add(dto);
+//        }
+//        return listaDTO;
 		return null;
 	}
-
+	
 	@Override
-	public List<DTOProject> getProjectsThatContain(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public DTOProject getProject(Long id) {
+//		Optional<Project> o = projectRepository.findById(id);
+//        if (o.isPresent()) {
+//            Project aux = o.get();
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            return dto;
+//        }
+        return null;
 	}
 
 	@Override
 	public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
-		// TODO Auto-generated method stub
+//		Project main_p = this.projectRepository.findById(main_project_id).get();
+//        main_p.addEntrepreneurship(e);
+//        this.projectRepository.save(main_p);
+//        return this.getProject(main_project_id);
 		return null;
 	}
 
 	@Override
 	public boolean containsEntrepreneurship(Entrepreneurship mainProject, Entrepreneurship subProject) {
-		// TODO Auto-generated method stub
-		return false;
+		return (mainProject.containsEntrepreneurship(subProject));
 	}
 
 	@Override
 	public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
-		// TODO Auto-generated method stub
-		return false;
+		return !this.projectRepository.inCommonEntrepreneurships(main_project_id, subproject_id).isEmpty();
 	}
 
 	@Override
 	public DTOProject postProjectAction(DTOActionInsert a, Long id) {
-		// TODO Auto-generated method stub
-		return null;
+//		Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+//        Project aux = this.getProjectEntity(id);
+//        if (aux != null) {
+//            aux.addAction(act);
+//            this.projectRepository.save(aux);
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            return dto;
+//        }
+        return null;
+	}
+	
+	@Override
+	public List<DTOProject> getProjectsThatContain(Long id) {
+//		List<DTOProject> list = new ArrayList<>();
+//        List<Project> projects = this.projectRepository.getProjectsThatContainsEntrepreneurship(id);
+//        if (projects != null) {
+//            for (Project aux: projects) {
+//                DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(), aux.getStart_date(),
+//                        aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//                list.add(dto);
+//            }
+//            return list;
+//        }
+        return null;
 	}
 }
