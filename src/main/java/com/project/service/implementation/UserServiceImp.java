@@ -105,6 +105,7 @@ public class UserServiceImp implements UserService {
 	 * @param id el id del usuario a borrar
 	 * @return el usuario eliminado
 	 * @throws BadRequestException
+	 * @throws NotFounException
 	 */
 	@Override
 	public User deleteUser(Long id) {

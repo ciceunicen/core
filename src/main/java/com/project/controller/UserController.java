@@ -50,6 +50,7 @@ public class UserController {
 	 * Solo pueden realizarlo un superAdmin
 	 * @param ID el identificador del usuario
 	 * @return el user borrado
+	 * @throws UnauthorizedException
 	 */
 	@DeleteMapping("/{ID}")
     public ResponseEntity<User> delete(@PathVariable Long ID) {
