@@ -1,6 +1,8 @@
 package com.project.service.implementation;
 
+import com.project.entities.Entrepreneur;
 import com.project.entities.Role;
+import com.project.repository.EntrepreneurRepository;
 import com.project.repository.RoleRepository;
 
 
@@ -27,6 +29,7 @@ public class UserServiceImp implements UserService {
 
 	@Autowired UserRepository userRepo;
 	@Autowired RoleRepository roleRepository;
+	@Autowired EntrepreneurRepository entrepreneurRepository;
 
 	@Override
 	public User postUser(User u) {
@@ -94,6 +97,36 @@ public class UserServiceImp implements UserService {
 
 	public Optional<User> findByTokenPassword(String tokenPassword){
 		return userRepo.findByTokenPassword(tokenPassword);
+	}
+
+	/**
+	 * Borrado lógico de usuario por defecto.
+	 * Si el usuario a eliminar no es un usuario por defecto o tiene una cuenta de emprendedor activa no es posible eliminarlo 
+	 * @param id el id del usuario a borrar
+	 * @return el usuario eliminado
+	 * @throws BadRequestException
+	 */
+	@Override
+	public User deleteUser(Long id) {
+		Optional<User> optional = userRepo.findById(id);
+		if (optional.isPresent()) {
+			User user = optional.get();
+			
+			if (!user.getRole().getType().equals(roleRepository.findByType("Defecto").getType())) {
+				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto");
+			}
+			
+			Optional<Entrepreneur> entrepreneurOptional = entrepreneurRepository.findByIdUserAndIsActive(id);
+			if (entrepreneurOptional.isPresent()) {
+				throw new BadRequestException("No es posible eliminar al usuario porque tiene una cuenta de emprendedor activa");
+			}
+			
+			user.set_deleted(true);
+			
+			return userRepo.save(user);
+		} else {
+			throw new NotFoundException(String.format("El usuario con id %s no existe", id));
+		}
 	}
 
 }

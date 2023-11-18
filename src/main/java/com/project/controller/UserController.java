@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
+import com.project.exception.UnauthorizedException;
 import com.project.service.implementation.UserServiceImp;
 
 @RestController
@@ -20,6 +21,8 @@ public class UserController {
 	
 	@Autowired 
 	UserServiceImp userService;
+	@Autowired
+	RoleAuthController roleAuthController;
 
 	
 	@PostMapping()
@@ -40,6 +43,21 @@ public class UserController {
 	@PutMapping("/{ID}")
     public User update(@RequestBody User user, @PathVariable Long ID){
         return user;
+    }
+	
+	/**
+	 * Realiza el borrado lógico de un usuario.
+	 * Solo pueden realizarlo un superAdmin
+	 * @param ID el identificador del usuario
+	 * @return el user borrado
+	 */
+	@DeleteMapping("/{ID}")
+    public ResponseEntity<User> delete(@PathVariable Long ID) {
+		if (roleAuthController.hasPermission(1)) {
+			return ResponseEntity.ok(userService.deleteUser(ID));
+		} else {
+			throw new UnauthorizedException();
+		}
     }
 
 	/**

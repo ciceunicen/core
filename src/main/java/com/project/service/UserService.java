@@ -13,4 +13,6 @@ public interface UserService {
 	public User changeRole(Long id, Role role);
 
 	public User findById(Long id);
+	
+	public User deleteUser(Long id);
 }

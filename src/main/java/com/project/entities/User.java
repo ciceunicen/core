@@ -42,6 +42,8 @@ public class User implements Serializable,UserDetails{
 	@JoinColumn(name="id_role")
 	private Role role;
 	private String tokenPassword;
+	@Column(nullable = false)
+	private boolean is_deleted;
 
 	public User(@NotEmpty String email, @NotEmpty String password) {
 		super();
