@@ -8,14 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.exception.BadRequestException;
 import com.project.exception.ConflictException;
+import com.project.exception.DeletedUserException;
 import com.project.exception.NotFoundException;
 import com.project.exception.UnauthorizedException;
 import com.project.exception.UnprocessableContentException;
 
 @ControllerAdvice(annotations= RestController.class)
 public class ExceptionConfig {
+	@ExceptionHandler(value=DeletedUserException.class)
+	public ResponseEntity<?> deletedUserException(DeletedUserException e){
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
 	@ExceptionHandler(value=UnauthorizedException.class)
-	public ResponseEntity<?> UnauthorizedException(UnauthorizedException e){
+	public ResponseEntity<?> unauthorizedException(UnauthorizedException e){
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 	}
 	@ExceptionHandler(value=NotFoundException.class)
