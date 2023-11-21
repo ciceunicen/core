@@ -101,7 +101,8 @@ public class UserServiceImp implements UserService {
 
 	/**
 	 * Borrado lógico de usuario por defecto.
-	 * Si el usuario a eliminar no es un usuario por defecto o tiene una cuenta de emprendedor activa no es posible eliminarlo 
+	 * Si el usuario a eliminar no es un usuario por defecto o tiene una cuenta de emprendedor activa no es posible eliminarlo.
+	 * Si el usuario por defecto tiene una cuenta de emprendedor no activa, esta también es eliminada 
 	 * @param id el id del usuario a borrar
 	 * @return el usuario eliminado
 	 * @throws BadRequestException
@@ -121,6 +122,8 @@ public class UserServiceImp implements UserService {
 			if (entrepreneurOptional.isPresent()) {
 				throw new BadRequestException("No es posible eliminar al usuario porque tiene una cuenta de emprendedor activa");
 			}
+			
+			entrepreneurRepository.deleteByIdUserAndNoActive(id);
 			
 			user.set_deleted(true);
 			

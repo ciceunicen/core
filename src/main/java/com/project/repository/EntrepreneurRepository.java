@@ -30,4 +30,12 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     		+ " AND e.is_active IS TRUE")
     Optional<Entrepreneur> findByIdUserAndIsActive(Long idUser);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Entrepreneur e"
+    		+ " SET e.is_deleted = true"
+    		+ " WHERE e.id_user = :idUser"
+    		+ " AND e.is_active IS NOT TRUE")
+	void deleteByIdUserAndNoActive(Long idUser);
+
 }
