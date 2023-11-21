@@ -36,7 +36,7 @@ IntelliJ IDEA, Eclipse y Spring Tool Suite están diseñados para trabajar con p
 #### Git:
 - Clonar el repositorio `git clone https://github.com/ciceunicen/core.git`.
 - (Opcional) Ver todas las ramas del proyecto (locales y remotas) `git branch -a`.
-- Cambiar a la rama develop (rama con la última versión del proyecto) `git checkout -b develop`.
+- Cambiar a la rama develop (rama con la última versión del proyecto) `git checkout develop`.
 
 #### IDE:
 - Abrir la carpeta del proyecto desde el IDE.
