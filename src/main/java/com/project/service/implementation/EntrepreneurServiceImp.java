@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.entities.Entrepreneur;
 import com.project.entities.User;
+import com.project.exception.DeletedUserException;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
 
@@ -37,7 +38,13 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		Entrepreneur aux = new Entrepreneur(e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getCuil_cuit(), e.getPhone(),
 				e.getLocation(), e.getHowimetcice(), e.isIspf());
 
-		if (currentUser_id != null) aux.setId_user(currentUser_id);
+		if (currentUser_id != null) {
+			User user = userRepository.findById(currentUser_id).get();
+			if (user.is_deleted()) {
+				throw new DeletedUserException();
+			}
+			aux.setId_user(currentUser_id);
+		}
 		aux = entrepreneurRepository.save(aux);
 
 		DTOEntrepreneur dto = new DTOEntrepreneur(aux.getId(), aux.getDni(), aux.getName(), aux.getSurname(), aux.getEmail(),
