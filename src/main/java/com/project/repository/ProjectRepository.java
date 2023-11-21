@@ -1,6 +1,5 @@
 package com.project.repository;
 
-import com.project.entities.CompositeProject;
 import com.project.entities.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,10 +29,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     @Query(value = "SELECT project_id FROM project_entrepreneurships cp WHERE project_id=:ID && entrepreneurships_id=:id", nativeQuery = true)
     Long containsEntrepreneurship(Long ID, Long id);
-
-//    @Query(value = "select * from composite_project cp where cp.id in (select composite_project_id from composite_project_entrepreneurships where entrepreneurships_id=:id)", nativeQuery = true)
-//    List<CompositeProject> getProjectsThatContainsEntrepreneurship(Long id);
     
     @Query(value = "select * from project p where p.id_project in (select project_id from project_entrepreneurships where entrepreneurships_id=:id)", nativeQuery = true)
-    List<CompositeProject> getProjectsThatContainsEntrepreneurship(Long id);
+    List<Project> getProjectsThatContainsEntrepreneurship(Long id);
 }
