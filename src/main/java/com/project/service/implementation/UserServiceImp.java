@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.User;
@@ -22,12 +23,16 @@ import com.project.exception.UnprocessableContentException;
 import com.project.repository.UserRepository;
 import com.project.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
+
 
 @Service
 public class UserServiceImp implements UserService {
 
 	@Autowired UserRepository userRepo;
 	@Autowired RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	public User postUser(User u) {
@@ -63,14 +68,14 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public User updateUser(Long id, DTOUserUpdate updatedUser) {
-		// Buscar el usuario por ID
+		// Busca el usuario por ID
 		User userToUpdate = userRepo.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-		// Aplicar los cambios desde el DTO al usuario
+		// Aplica los cambios desde el DTO al usuario
 		userToUpdate.setUsername(updatedUser.getUsername());
 		userToUpdate.setEmail(updatedUser.getEmail());
-		userToUpdate.setPassword(updatedUser.getPassword());
+		userToUpdate.setPassword(updatedUser.getNew_password());
 
-		// Guarda el usuario actualizado en la base de datos
+		// Guarda el usuario actualizado en la BD
 		return userRepo.save(userToUpdate);
 	}
 
@@ -102,12 +107,28 @@ public class UserServiceImp implements UserService {
 		return userRepo.findByEmail(email);
 	}
 
-	public void saveUser(User user) {
-		 userRepo.save(user);
+	public User saveUser(User user) {
+		return userRepo.save(user);
 	}
 
 	public Optional<User> findByTokenPassword(String tokenPassword){
 		return userRepo.findByTokenPassword(tokenPassword);
+	}
+
+	public boolean isPasswordCorrect(Long userId, String currentPassword) {
+		Optional<User> userOptional = userRepo.findById(userId);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			String storedPassword = user.getPassword(); // Obtiene la contraseña almacenada
+
+			// Compara contraseña almacenada con la contraseña proporcionada
+			return passwordEncoder.matches(currentPassword, storedPassword);
+		}
+		else{
+			throw new EntityNotFoundException("Usuario no encontrado con ID: " + userId);
+		}
+
 	}
 
 }

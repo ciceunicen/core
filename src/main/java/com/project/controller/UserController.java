@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
 import com.project.service.implementation.UserServiceImp;
@@ -18,11 +19,11 @@ import com.project.service.implementation.UserServiceImp;
 @RequestMapping("usuarios")
 public class UserController {
 
-	
-	@Autowired 
+	@Autowired
 	UserServiceImp userService;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
-	
 	@PostMapping()
 	public ResponseEntity<User> postUser(@RequestBody @Valid User user) {	
 		 return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(user));
@@ -46,8 +47,29 @@ public class UserController {
 	 */
 	@PutMapping("/{ID}")
     public ResponseEntity<User> update(@RequestBody DTOUserUpdate updatedUser, @PathVariable Long ID){
-		User updatedUserData = userService.updateUser(ID, updatedUser);
-		// Devuelve el usuario actualizado con el código de estado HTTP OK
+		// Verificar la contraseña actual
+		if (!userService.isPasswordCorrect(ID, updatedUser.getCurrent_password())) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		// Obtiene el usuario actual que se va a actualizar
+		User existingUser = userService.findById(ID);
+
+		// Chequea si el usuario existe
+		if (existingUser == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		//settea los nuevos valores de username y mail
+		existingUser.setUsername(updatedUser.getUsername());
+		existingUser.setEmail(updatedUser.getEmail());
+
+		String newPassword = updatedUser.getNew_password();
+		String hashedPassword = passwordEncoder.encode(newPassword);
+		//settea contraseña actualizada
+		existingUser.setPassword(hashedPassword);
+
+		// Guarda el usuario actualizado en la BD
+		User updatedUserData = userService.saveUser(existingUser);
+
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUserData);
     }
 

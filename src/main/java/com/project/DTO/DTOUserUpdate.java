@@ -9,7 +9,8 @@ import lombok.Data;
 public class DTOUserUpdate {
         private String username;
         private String email;
-        private String password;
+        private String current_password;
+        private String new_password;
 
 }
 
