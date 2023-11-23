@@ -242,7 +242,7 @@ public class ProjectController {
     @GetMapping (value = "/{ID}/actividades", params="filters")
     public ResponseEntity<List<DTOActivity>> getCompositeProjectActivitiesByFilters(@PathVariable("ID") Long id, @RequestParam(value = "filters") List<String> data) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            List<DTOActivity> list = this.entrepreneurshipService.getActivitiesByCompositeProjectIdFiltered(id, data);
+            List<DTOActivity> list = this.entrepreneurshipService.getActivitiesByProjectIdFiltered(id, data);
             if (list != null) {
                 return new ResponseEntity(list, HttpStatus.OK);
             }
