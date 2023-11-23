@@ -273,7 +273,6 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
     
-    //Project tiene que heredar de Entrepreneurship, luego descomentar  
 //    @PostMapping("/{ID}/subemprendimientos/{id}")
 //    public ResponseEntity<DTOProject> addProjectEntrepreneurship(@PathVariable ("ID") Long IDMainProyect, @PathVariable ("id") Long idSubproject) {
 //        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
@@ -303,7 +302,6 @@ public class ProjectController {
 //       return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
 //    }
     
-    // ESTE METODO YA EXISTE updateProject()
 //    @PutMapping("/{ID}")
 //    public ResponseEntity<DTOProject> updateCompositeProject(@PathVariable ("ID") Long id, @RequestBody DTOProjectUpdate dto) {
 //        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {

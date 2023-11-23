@@ -142,7 +142,6 @@ public class ProjectServiceImp implements ProjectService {
         return projectRepository.getProject(id);
     }
     
-    //Project debe heredar de Entrepreneurship, luego descomentar
     @Override
     public DTOProject postProject(DTOProjectInsert cp) {
     	Project aux = new Project(cp.getTitle(), cp.getDescription(), cp.getId_Admin());
