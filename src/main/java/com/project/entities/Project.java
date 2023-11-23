@@ -50,12 +50,16 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Entrepreneurship> entrepreneurships;
+	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Action> actions;
 
 	public Project(String title, String description, List<File> files, Long administrador) {
 		this.title = title;
 		this.description = description;
 		this.files = new ArrayList<>();
-
+		this.entrepreneurships = new ArrayList<>();
+		this.actions = new ArrayList<>();
 		for (File file : files) {
 			this.files.add(new File(file.getFile(), file.getType()));
 		}
@@ -66,7 +70,8 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 		this.title = title;
 		this.description = description;
 		this.files = new ArrayList<>();
-
+		this.entrepreneurships = new ArrayList<>();
+		this.actions = new ArrayList<>();
 		for (File file : files) {
 			this.files.add(new File(file.getFile(), file.getType()));
 		}
@@ -104,5 +109,9 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 	    }
 	    return entrepreneurships.contains(e);
 	}
+	
+	 public void addAction (Action a){
+	        this.actions.add(a);
+	    }
 
 }
