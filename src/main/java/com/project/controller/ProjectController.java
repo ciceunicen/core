@@ -70,10 +70,13 @@ public class ProjectController {
      * @param project son los datos de un proyecto a cargar
      * @return retorna un dto del archivo cargado a la base de datos
      */
-    @PostMapping()
-    public Project addProject(@Valid @RequestBody DTOProjectInsert project){
-        return ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
-    }
+	/*
+	 * @PostMapping() public Project addProject(@Valid @RequestBody DTOProjectInsert
+	 * project){ return
+	 * ProjectService.addProject(mapper.toProject(project),project.getStage(),
+	 * project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager()
+	 * ); }
+	 */
 
     /**
      * obtiene un proyecto por id

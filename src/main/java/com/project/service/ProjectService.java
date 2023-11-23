@@ -5,7 +5,6 @@ import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.AdministrationRecords;
-import com.project.entities.CompositeProject;
 import com.project.entities.DeletedProject;
 import com.project.entities.Entrepreneurship;
 import com.project.entities.Project;

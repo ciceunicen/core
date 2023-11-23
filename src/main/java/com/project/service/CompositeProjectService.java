@@ -4,7 +4,7 @@ import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
-import com.project.entities.CompositeProject;
+import com.project.entities.Project;
 import com.project.entities.Entrepreneurship;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public interface CompositeProjectService {
 
     DTOProject getCompositeProject(Long id);
 
-    CompositeProject getCompositeProjectEntity(Long id);
+    Project getCompositeProjectEntity(Long id);
 
     List<DTOProject> getCompositeProjectsThatContain(Long id);
 
