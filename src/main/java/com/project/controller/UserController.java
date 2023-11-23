@@ -68,7 +68,11 @@ public class UserController {
 	 */
 	@PutMapping("/{id}/rol")
 	public ResponseEntity< User> updateRole(@PathVariable Long id, @RequestBody Role role){
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.changeRole(id,role));
+		if (roleAuthController.hasPermission(1)) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(userService.changeRole(id,role));
+		} else {
+			throw new UnauthorizedException();
+		}
 	}
 
 }
