@@ -25,7 +25,6 @@ import com.project.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 
-
 @Service
 public class UserServiceImp implements UserService {
 
@@ -36,7 +35,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public User postUser(User u) {
-		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){ 
+		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){
 			throw new BadRequestException("El email esta mal formateado");
 		}
 		else if(userRepo.isEmail(u.getEmail())!=null){
@@ -58,7 +57,7 @@ public class UserServiceImp implements UserService {
 			return userRepo.save(u);
 		}
 	}
-	
+
 	public User findById(Long id) {
 		if(!userRepo.existsById(id)) {
 			throw new NotFoundException("No existe ese user con ese" +id);
@@ -73,7 +72,7 @@ public class UserServiceImp implements UserService {
 		// Aplica los cambios desde el DTO al usuario
 		userToUpdate.setUsername(updatedUser.getUsername());
 		userToUpdate.setEmail(updatedUser.getEmail());
-		userToUpdate.setPassword(updatedUser.getNew_password());
+		userToUpdate.setPassword(updatedUser.getNewPassword());
 
 		// Guarda el usuario actualizado en la BD
 		return userRepo.save(userToUpdate);
@@ -102,7 +101,7 @@ public class UserServiceImp implements UserService {
 		return userRepo.save(user);//persiste los datos en la base de datos
 
 	}
-	
+
 	public Optional<User> findEmail(String email){
 		return userRepo.findByEmail(email);
 	}

@@ -25,19 +25,19 @@ public class UserController {
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping()
-	public ResponseEntity<User> postUser(@RequestBody @Valid User user) {	
-		 return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(user));
+	public ResponseEntity<User> postUser(@RequestBody @Valid User user) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.postUser(user));
 	}
-	
+
 	@GetMapping()
-    public ResponseEntity<Iterable<User>>getUsers(@RequestParam(required = false) List<String> rolIds){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(rolIds));
-    }
-	
+	public ResponseEntity<Iterable<User>>getUsers(@RequestParam(required = false) List<String> rolIds){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(rolIds));
+	}
+
 	@GetMapping("/{ID}")
-    public ResponseEntity<User> getUser(@PathVariable Long ID){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
-    }
+	public ResponseEntity<User> getUser(@PathVariable Long ID){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
+	}
 
 	/**
 	 * Actualiza los datos del usuario
@@ -46,11 +46,12 @@ public class UserController {
 	 * @return usuario actualizado con estado HTTP OK
 	 */
 	@PutMapping("/{ID}")
-    public ResponseEntity<User> update(@RequestBody DTOUserUpdate updatedUser, @PathVariable Long ID){
+	public ResponseEntity<User> update(@RequestBody DTOUserUpdate updatedUser, @PathVariable Long ID){
 		// Verificar la contraseña actual
-		if (!userService.isPasswordCorrect(ID, updatedUser.getCurrent_password())) {
+		if (!userService.isPasswordCorrect(ID, updatedUser.getCurrentPassword())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+
 		// Obtiene el usuario actual que se va a actualizar
 		User existingUser = userService.findById(ID);
 
@@ -62,7 +63,7 @@ public class UserController {
 		existingUser.setUsername(updatedUser.getUsername());
 		existingUser.setEmail(updatedUser.getEmail());
 
-		String newPassword = updatedUser.getNew_password();
+		String newPassword = updatedUser.getNewPassword();
 		String hashedPassword = passwordEncoder.encode(newPassword);
 		//settea contraseña actualizada
 		existingUser.setPassword(hashedPassword);
@@ -71,7 +72,7 @@ public class UserController {
 		User updatedUserData = userService.saveUser(existingUser);
 
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUserData);
-    }
+	}
 
 	/**
 	 * Actualiza el rol de un usuario a Administrador

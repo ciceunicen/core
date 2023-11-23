@@ -1,5 +1,6 @@
 package com.project.DTO;
 
+
 import lombok.Data;
 
 @Data
@@ -9,8 +10,7 @@ import lombok.Data;
 public class DTOUserUpdate {
         private String username;
         private String email;
-        private String current_password;
-        private String new_password;
-
+        private String currentPassword;
+        private String newPassword;
 }
 
