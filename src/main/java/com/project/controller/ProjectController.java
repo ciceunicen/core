@@ -8,7 +8,6 @@ import com.project.DTO.DTOProjectUpdate;
 import com.project.Mapper.Mapper;
 import com.project.entities.*;
 import com.project.service.ActivityService;
-import com.project.service.CompositeProjectService;
 import com.project.service.EntrepreneurshipService;
 import com.project.service.implementation.*;
 
