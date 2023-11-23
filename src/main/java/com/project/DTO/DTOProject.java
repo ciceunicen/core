@@ -24,22 +24,16 @@ public class DTOProject {
 	private ProjectManager projectManager;
 	private List<File> files;
 	private List<Need> needs;
-
-	private Long id;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate start_date;
 	private List<Action> actions;
-
-	private List<Entrepreneurship> entrepreneurships;
-
-	public DTOProject(Long id, String title, String description, LocalDate start_date, List<File> files,
-			List<Action> actions, List<Entrepreneurship> entrepreneurships) {
-		this.id = id;
+	private List<Entrepreneurship> entrepreneurships;	
+	
+	public DTOProject(Long id, String title, String description, List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
+		this.id_Project = id;
 		this.title = title;
 		this.description = description;
-		this.start_date = start_date;
 		this.files = files;
 		this.actions = actions;
 		this.entrepreneurships = entrepreneurships;
 	}
+
 }

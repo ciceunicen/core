@@ -25,8 +25,5 @@ public class DTOProjectInsert{
     private List<File> files;
     private List<Long> needs;
     private Long id_Admin;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate start_date;
 
 }

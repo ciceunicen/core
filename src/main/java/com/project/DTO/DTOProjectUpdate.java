@@ -21,9 +21,6 @@ public class DTOProjectUpdate {
     private List<Long> assistances;
     private List<Long> files;
     private List<Long> needs;
-    private List<File> newFiles;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate start_date;
+    private List<File> newFiles;  
 
 }
