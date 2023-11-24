@@ -273,34 +273,34 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
     
-//    @PostMapping("/{ID}/subemprendimientos/{id}")
-//    public ResponseEntity<DTOProject> addProjectEntrepreneurship(@PathVariable ("ID") Long IDMainProyect, @PathVariable ("id") Long idSubproject) {
-//        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-//            Entrepreneurship mainProject = this.ProjectService.getProjectEntity(IDMainProyect);
-//            if(mainProject != null) {
-//                Entrepreneurship subProject = this.ProjectService.getProjectEntity(idSubproject);
-//
-//                if (subProject == null) {
-//                    subProject = this.activityService.getActivityEntity(idSubproject);
-//                }
-//                 if (subProject == null){
-//                     return new ResponseEntity("No existe el recurso a asociar id " + idSubproject, HttpStatus.NOT_FOUND);
-//                }
-//                 //No chequea en profundidad
-//                 if (this.ProjectService.containsCommonEntrepreneurships(IDMainProyect, idSubproject)) {
-//                     return new ResponseEntity("Los recursos tienen emprendimientos asociados en común ", HttpStatus.BAD_REQUEST);
-//                 }
-//                if (this.ProjectService.containsEntrepreneurship(mainProject,subProject) || this.ProjectService.containsEntrepreneurship(subProject,mainProject)){
-//                    return new ResponseEntity("El recurso ya está asociado", HttpStatus.BAD_REQUEST);
-//                }else {
-//                    DTOProject response = this.ProjectService.addEntrepreneurship(IDMainProyect, subProject);
-//                    return new ResponseEntity(response, HttpStatus.OK);
-//                }
-//            }
-//            else return new ResponseEntity("No existe el recurso a asociar id " + IDMainProyect, HttpStatus.NOT_FOUND);
-//        }
-//       return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
-//    }
+    @PostMapping("/{ID}/subemprendimientos/{id}")
+    public ResponseEntity<DTOProject> addProjectEntrepreneurship(@PathVariable ("ID") Long IDMainProyect, @PathVariable ("id") Long idSubproject) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Project mainProject = this.ProjectService.getProjectEntity(IDMainProyect);
+            if(mainProject != null) {
+                Entrepreneurship subProject = this.ProjectService.getEntrepreneurshipByIdFromProject(IDMainProyect, idSubproject);
+
+                if (subProject == null) {
+                    subProject = this.activityService.getActivityEntity(idSubproject);
+                }
+                 if (subProject == null){
+                     return new ResponseEntity("No existe el recurso a asociar id " + idSubproject, HttpStatus.NOT_FOUND);
+                }
+                 //No chequea en profundidad
+                 if (this.ProjectService.containsCommonEntrepreneurships(IDMainProyect, idSubproject)) {
+                     return new ResponseEntity("Los recursos tienen emprendimientos asociados en común ", HttpStatus.BAD_REQUEST);
+                 }
+                if (this.ProjectService.containsEntrepreneurship(mainProject,subProject)){
+                    return new ResponseEntity("El recurso ya está asociado", HttpStatus.BAD_REQUEST);
+                }else {
+                    DTOProject response = this.ProjectService.addEntrepreneurship(IDMainProyect, subProject);
+                    return new ResponseEntity(response, HttpStatus.OK);
+                }
+            }
+            else return new ResponseEntity("No existe el recurso a asociar id " + IDMainProyect, HttpStatus.NOT_FOUND);
+        }
+       return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
+    }
     
 //    @PutMapping("/{ID}")
 //    public ResponseEntity<DTOProject> updateCompositeProject(@PathVariable ("ID") Long id, @RequestBody DTOProjectUpdate dto) {

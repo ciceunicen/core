@@ -186,10 +186,6 @@ public class ProjectServiceImp implements ProjectService {
         return this.getProject(main_project_id);
 	}
 
-	@Override
-	public boolean containsEntrepreneurship(Entrepreneurship mainProject, Entrepreneurship subProject) {
-		return (mainProject.containsEntrepreneurship(subProject));
-	}
 
 	@Override
 	public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
@@ -224,4 +220,38 @@ public class ProjectServiceImp implements ProjectService {
         }
         return null;
 	}
+	
+	/**
+     * Obtiene un emprendimiento por su ID desde la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna el emprendimiento si se encuentra en la lista, de lo contrario, retorna null.
+     */
+    @Override
+    public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            return project.getEntrepreneurshipById(entrepreneurshipId);
+        }
+
+        return null;
+    }
+    
+    /**
+     * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna true si el emprendimiento está contenido, de lo contrario, retorna false.
+     */
+    public boolean containsEntrepreneurship(Project project, Entrepreneurship entrepreneurship) {
+        if (project == null || entrepreneurship == null) {
+            return false;
+        }
+
+        return project.containsEntrepreneurship(entrepreneurship);
+    }
+    
+    
 }

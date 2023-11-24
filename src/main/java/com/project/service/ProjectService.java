@@ -45,9 +45,11 @@ public interface ProjectService {
 
     public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e);
 
-    public boolean containsEntrepreneurship(Entrepreneurship mainProject,Entrepreneurship subProject);
+    public boolean containsEntrepreneurship(Project mainProject,Entrepreneurship subProject);
 
     public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id);
 
     public DTOProject postProjectAction(DTOActionInsert a, Long id);
+
+	public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId);
 }

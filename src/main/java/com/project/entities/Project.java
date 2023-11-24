@@ -113,5 +113,14 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 	 public void addAction (Action a){
 	        this.actions.add(a);
 	    }
+	 
+	 public Entrepreneurship getEntrepreneurshipById(Long entrepreneurshipId) {
+		    for (Entrepreneurship entrepreneurship : entrepreneurships) {
+		        if (entrepreneurship.getId().equals(entrepreneurshipId)) {
+		            return entrepreneurship;
+		        }
+		    }
+		    return null; // Retorna null si no se encuentra el emprendimiento con el ID especificado
+		}
 
 }
