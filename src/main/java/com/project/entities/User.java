@@ -36,7 +36,7 @@ public class User implements Serializable,UserDetails{
     @NotEmpty
 	private String password;
 	@Column(length = 40)
-	@NotEmpty
+	//@NotEmpty
 	private String username;
 	@ManyToOne
 	@JoinColumn(name="id_role")
