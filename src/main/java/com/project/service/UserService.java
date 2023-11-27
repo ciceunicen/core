@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.DTO.DTOUserUpdate;
 import com.project.entities.Role;
 import org.springframework.stereotype.Component;
 
@@ -13,4 +14,6 @@ public interface UserService {
 	public User changeRole(Long id, Role role);
 
 	public User findById(Long id);
+
+	public User updateUser(Long id, DTOUserUpdate updateUser);
 }

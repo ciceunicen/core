@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOUserUpdate;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.User;
@@ -21,16 +23,19 @@ import com.project.exception.UnprocessableContentException;
 import com.project.repository.UserRepository;
 import com.project.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImp implements UserService {
 
 	@Autowired UserRepository userRepo;
 	@Autowired RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	public User postUser(User u) {
-		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){ 
+		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){
 			throw new BadRequestException("El email esta mal formateado");
 		}
 		else if(userRepo.isEmail(u.getEmail())!=null){
@@ -52,14 +57,27 @@ public class UserServiceImp implements UserService {
 			return userRepo.save(u);
 		}
 	}
-	
+
 	public User findById(Long id) {
 		if(!userRepo.existsById(id)) {
 			throw new NotFoundException("No existe ese user con ese" +id);
 		}
 		return userRepo.findById(id).get();
 	}
-	
+
+	@Override
+	public User updateUser(Long id, DTOUserUpdate updatedUser) {
+		// Busca el usuario por ID
+		User userToUpdate = userRepo.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+		// Aplica los cambios desde el DTO al usuario
+		userToUpdate.setUsername(updatedUser.getUsername());
+		userToUpdate.setEmail(updatedUser.getEmail());
+		userToUpdate.setPassword(updatedUser.getNewPassword());
+
+		// Guarda el usuario actualizado en la BD
+		return userRepo.save(userToUpdate);
+	}
+
 	public Iterable<User> findAll(List<String> rolIds) {
 		if(rolIds!=null) {
 			return userRepo.findByRolIds(rolIds);
@@ -83,17 +101,33 @@ public class UserServiceImp implements UserService {
 		return userRepo.save(user);//persiste los datos en la base de datos
 
 	}
-	
+
 	public Optional<User> findEmail(String email){
 		return userRepo.findByEmail(email);
 	}
 
-	public void saveUser(User user) {
-		 userRepo.save(user);
+	public User saveUser(User user) {
+		return userRepo.save(user);
 	}
 
 	public Optional<User> findByTokenPassword(String tokenPassword){
 		return userRepo.findByTokenPassword(tokenPassword);
+	}
+
+	public boolean isPasswordCorrect(Long userId, String currentPassword) {
+		Optional<User> userOptional = userRepo.findById(userId);
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			String storedPassword = user.getPassword(); // Obtiene la contraseña almacenada
+
+			// Compara contraseña almacenada con la contraseña proporcionada
+			return passwordEncoder.matches(currentPassword, storedPassword);
+		}
+		else{
+			throw new EntityNotFoundException("Usuario no encontrado con ID: " + userId);
+		}
+
 	}
 
 }

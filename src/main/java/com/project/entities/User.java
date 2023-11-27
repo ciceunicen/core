@@ -36,7 +36,7 @@ public class User implements Serializable,UserDetails{
     @NotEmpty
 	private String password;
 	@Column(length = 40)
-	@NotEmpty
+//	@NotEmpty
 	private String username;
 	@ManyToOne
 	@JoinColumn(name="id_role")
@@ -79,6 +79,10 @@ public class User implements Serializable,UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override
