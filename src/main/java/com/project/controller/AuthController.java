@@ -20,6 +20,7 @@ import com.project.DTO.DTOEmail;
 import com.project.POJO.AuthRequest;
 import com.project.POJO.AuthResponse;
 import com.project.entities.User;
+import com.project.exception.DeletedUserException;
 import com.project.jwt.JwtTokenUtil;
 import com.project.service.implementation.EmailServiceImp;
 import com.project.service.implementation.UserServiceImp;
@@ -46,6 +47,10 @@ public class AuthController {
 			);
 
 			User user = (User) authentication.getPrincipal();
+			if (user.is_deleted()) {
+            	throw new DeletedUserException();
+            }
+			
 			String accessToken = jwtUtil.generateAccessToken(user);
 			Object UsuarioResponse = new Object() {
 				public Long id = user.getId();
@@ -59,7 +64,9 @@ public class AuthController {
 			return ResponseEntity.ok().body(response);
 
 		} catch (BadCredentialsException ex) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (DeletedUserException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
 

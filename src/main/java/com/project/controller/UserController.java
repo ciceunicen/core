@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import com.project.entities.User;
+import com.project.exception.UnauthorizedException;
 import com.project.service.implementation.UserServiceImp;
 
 @RestController
@@ -23,6 +24,8 @@ public class UserController {
 	UserServiceImp userService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	RoleAuthController roleAuthController;
 
 	@PostMapping()
 	public ResponseEntity<User> postUser(@RequestBody @Valid User user) {
@@ -73,6 +76,22 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUserData);
 	}
+	
+	/**
+	 * Realiza el borrado lógico de un usuario.
+	 * Solo pueden realizarlo un superAdmin
+	 * @param ID el identificador del usuario
+	 * @return el user borrado
+	 * @throws UnauthorizedException
+	 */
+	@DeleteMapping("/{ID}")
+    public ResponseEntity<User> delete(@PathVariable Long ID) {
+		if (roleAuthController.hasPermission(1)) {
+			return ResponseEntity.ok(userService.deleteUser(ID));
+		} else {
+			throw new UnauthorizedException();
+		}
+    }
 
 	/**
 	 * Actualiza el rol de un usuario a Administrador

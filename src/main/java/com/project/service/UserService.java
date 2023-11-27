@@ -16,4 +16,6 @@ public interface UserService {
 	public User findById(Long id);
 
 	public User updateUser(Long id, DTOUserUpdate updateUser);
+	
+	public User deleteUser(Long id);
 }
