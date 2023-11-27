@@ -1,11 +1,18 @@
 package com.project.service.implementation;
 
+import com.project.DTO.DTOActionInsert;
+import com.project.DTO.DTOProject;
+import com.project.DTO.DTOProjectInsert;
+import com.project.DTO.DTOProjectUpdate;
+import com.project.entities.Action;
 import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
+import com.project.entities.Entrepreneurship;
 import com.project.entities.Project;
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,7 +138,120 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
-    public Project getProject(Long id){
+    public Project getProjectEntity(Long id){
         return projectRepository.getProject(id);
     }
+    
+    @Override
+    public DTOProject postProject(DTOProjectInsert cp) {
+    	Project aux = new Project(cp.getTitle(), cp.getDescription(), cp.getId_Admin());
+        aux = projectRepository.save(aux);
+        if (aux != null) {
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+    }
+
+	@Override
+	public Iterable<DTOProject> getProjects() {
+		List<DTOProject> listaDTO = new ArrayList<>();
+        Iterable<Project> projects = this.projectRepository.findAll();
+        for (Project aux: projects) {
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            listaDTO.add(dto);
+        }
+        return listaDTO;
+	}
+	
+	@Override
+	public DTOProject getProject(Long id) {
+		Optional<Project> o = projectRepository.findById(id);
+        if (o.isPresent()) {
+            Project aux = o.get();
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+	}
+
+	@Override
+	public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
+		Project main_p = this.projectRepository.findById(main_project_id).get();
+        main_p.addEntrepreneurship(e);
+        this.projectRepository.save(main_p);
+        return this.getProject(main_project_id);
+	}
+
+
+	@Override
+	public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
+		return !this.projectRepository.inCommonEntrepreneurships(main_project_id, subproject_id).isEmpty();
+	}
+
+	@Override
+	public DTOProject postProjectAction(DTOActionInsert a, Long id) {
+		Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+        Project aux = this.getProjectEntity(id);
+        if (aux != null) {
+            aux.addAction(act);
+            this.projectRepository.save(aux);
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+	}
+	
+	@Override
+	public List<DTOProject> getProjectsThatContain(Long id) {
+		List<DTOProject> list = new ArrayList<>();
+        List<Project> projects = this.projectRepository.getProjectsThatContainsEntrepreneurship(id);
+        if (projects != null) {
+            for (Project aux: projects) {
+                DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                        aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+                list.add(dto);
+            }
+            return list;
+        }
+        return null;
+	}
+	
+	/**
+     * Obtiene un emprendimiento por su ID desde la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna el emprendimiento si se encuentra en la lista, de lo contrario, retorna null.
+     */
+    @Override
+    public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            return project.getEntrepreneurshipById(entrepreneurshipId);
+        }
+
+        return null;
+    }
+    
+    /**
+     * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna true si el emprendimiento está contenido, de lo contrario, retorna false.
+     */
+    public boolean containsEntrepreneurship(Project project, Entrepreneurship entrepreneurship) {
+        if (project == null || entrepreneurship == null) {
+            return false;
+        }
+
+        return project.containsEntrepreneurship(entrepreneurship);
+    }
+    
+    
 }

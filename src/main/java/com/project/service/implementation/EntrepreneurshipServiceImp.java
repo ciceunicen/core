@@ -60,9 +60,9 @@ public class EntrepreneurshipServiceImp implements EntrepreneurshipService {
 
     @Override
 
-    public List<DTOActivity> getActivitiesByCompositeProjectIdFiltered(Long cp_id, List<String> data) {
+    public List<DTOActivity> getActivitiesByProjectIdFiltered(Long cp_id, List<String> data) {
         List<DTOActivity> list = new ArrayList<>();
-        List<Activity> aux = this.entrepreneurshipRepository.findAllActivitiesByCompositeProjectId(cp_id, data);
+        List<Activity> aux = this.entrepreneurshipRepository.findAllActivitiesByProjectId(cp_id, data);
         for (Activity act: aux) {
             DTOActivity actAux = new DTOActivity(act.getId(),act.getTitle(),act.getDescription(),act.getStart_date(),act.getFinish_date(),act.getFiles(),act.getActions());
             list.add(actAux);

@@ -21,7 +21,7 @@ public interface EntrepreneurshipService {
     List<DTOEntrepreneurship> getAllByFilters(List<String> data);
 
 
-    List<DTOActivity> getActivitiesByCompositeProjectIdFiltered(Long cp_id, List<String> data);
+    List<DTOActivity> getActivitiesByProjectIdFiltered(Long cp_id, List<String> data);
 
     Action deleteAction(Long entrepreneurship_id, Long action_id);
 
