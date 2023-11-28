@@ -141,8 +141,8 @@ public class UserServiceImp implements UserService {
 	 * Al eliminar un admin, se le agrega el string 'eliminado.' al principio del email (de la cuenta eliminada) para que no hayan problemas de integridad de usuarios duplicados en la base de datos  
 	 * @param id el id del usuario a borrar
 	 * @return el usuario eliminado
-	 * @throws BadRequestException
-	 * @throws NotFounException
+	 * @throws BadRequestException cuando no quiere eliminar un usuario que no es defecto o admin, el usuario tiene una cuenta de emprendedor activa o el usuario ya ha sido eliminado
+	 * @throws NotFoundException cuando el usuario a eliminar no existe
 	 */
 	@Override
 	public User deleteUser(Long id) {
@@ -151,6 +151,10 @@ public class UserServiceImp implements UserService {
 			User user = optional.get();
 			Role defecto = roleRepository.findByType("Defecto");
 			Role admin = roleRepository.findByType("Admin");
+			
+			if (user.is_deleted()) {
+				throw new BadRequestException("El usuario ya ha sido eliminado");
+			}
 			
 			if (!user.getRole().getType().equals(defecto.getType()) && !user.getRole().getType().equals(admin.getType())) {
 				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto o un admin");
