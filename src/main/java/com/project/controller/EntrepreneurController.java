@@ -3,7 +3,11 @@ package com.project.controller;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
+import com.project.DTO.DTOProject;
+import com.project.DTO.DTOProjectInsert;
 import com.project.service.EntrepreneurService;
+import com.project.service.ProjectService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,8 @@ public class EntrepreneurController {
 	private EntrepreneurService entrepreneurService;
 	@Autowired
 	private RoleAuthController roleAuthController;
+	@Autowired
+	private ProjectService projectService;
 
 	/**
 	 * Obtiene todos los emprendedores
@@ -30,6 +36,27 @@ public class EntrepreneurController {
 	public Iterable<DTOEntrepreneur> getEntrepreneurs() {
 		return entrepreneurService.getEntrepreneurs();
 	}
+	
+	/**
+	 * Guarda una entidad Project a la base de datos, siempre y cuando tenga
+	 * los permisos de usuario Emprendedor
+	 * 
+	 * @param project Proyecto que se va a guardar, no debe ser null
+	 * @return si se tiene los permisos de usuario Emprendedor, devuelve el 
+	 * proyecto guardado, de lo contrario, error 401 UNAUTHORIZED
+	 */
+	@PostMapping("/projects")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert project) {
+        if (roleAuthController.hasPermission(3)) {
+            DTOProject dto = projectService.postProject(project);
+            if(dto != null) {
+            	return new ResponseEntity(dto, HttpStatus.CREATED);
+            } else {
+            	return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else return new ResponseEntity("No tiene permisos para realizar esta acción",HttpStatus.UNAUTHORIZED);
+    }
 
 	/**
 	 * Obtiene un entrepreneur pod id
