@@ -136,7 +136,9 @@ public class UserServiceImp implements UserService {
 	/**
 	 * Borrado lógico de usuario por defecto.
 	 * Si el usuario a eliminar no es un usuario por defecto o tiene una cuenta de emprendedor activa no es posible eliminarlo.
-	 * Si el usuario por defecto tiene una cuenta de emprendedor no activa, esta también es eliminada 
+	 * Si el usuario por defecto tiene una cuenta de emprendedor no activa, esta también es eliminada.
+	 * Al eliminar un admin se setea como eliminado y se duplica su registro pero con el rol de usuario defecto.
+	 * Al eliminar un admin, se le agrega el string 'eliminado.' al principio del email (de la cuenta eliminada) para que no hayan problemas de integridad de usuarios duplicados en la base de datos  
 	 * @param id el id del usuario a borrar
 	 * @return el usuario eliminado
 	 * @throws BadRequestException
@@ -147,9 +149,11 @@ public class UserServiceImp implements UserService {
 		Optional<User> optional = userRepo.findById(id);
 		if (optional.isPresent()) {
 			User user = optional.get();
+			Role defecto = roleRepository.findByType("Defecto");
+			Role admin = roleRepository.findByType("Admin");
 			
-			if (!user.getRole().getType().equals(roleRepository.findByType("Defecto").getType())) {
-				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto");
+			if (!user.getRole().getType().equals(defecto.getType()) && !user.getRole().getType().equals(admin.getType())) {
+				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto o un admin");
 			}
 			
 			Optional<Entrepreneur> entrepreneurOptional = entrepreneurRepository.findByIdUserAndIsActive(id);
@@ -159,9 +163,27 @@ public class UserServiceImp implements UserService {
 			
 			entrepreneurRepository.deleteByIdUserAndNoActive(id);
 			
+			String email = user.getEmail();
+			if (user.getRole().getType().equals(admin.getType())) {
+				user.setEmail("eliminado." + user.getEmail());
+			}
 			user.set_deleted(true);
+			user = userRepo.save(user);
 			
-			return userRepo.save(user);
+			User duplicatedUser = null;
+			if (user.getRole().getType().equals(admin.getType())) {
+				duplicatedUser = new User(email, user.getPassword());
+				duplicatedUser.setUsername(user.getUsername());
+				duplicatedUser.setRole(defecto);
+				duplicatedUser.setTokenPassword(user.getTokenPassword());
+				
+				duplicatedUser = userRepo.save(duplicatedUser);
+			}
+			
+			if (duplicatedUser != null) {
+				return duplicatedUser;
+			}
+			return user;
 		} else {
 			throw new NotFoundException(String.format("El usuario con id %s no existe", id));
 		}
