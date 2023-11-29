@@ -35,10 +35,12 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	@Autowired EntrepreneurRepository entrepreneurRepository;
+	
+	private static final String prefijoEmailEliminado = "eliminado.";
 
 	@Override
 	public User postUser(User u) {
-		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){
+		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty()) || u.getEmail().contains(prefijoEmailEliminado)){
 			throw new BadRequestException("El email esta mal formateado");
 		}
 		else if(userRepo.isEmail(u.getEmail())!=null){
@@ -169,7 +171,10 @@ public class UserServiceImp implements UserService {
 			
 			String email = user.getEmail();
 			if (user.getRole().getType().equals(admin.getType())) {
-				user.setEmail("eliminado." + user.getEmail());
+				// Elimina el email con prefijo por si anteriormente se elimino a un admin con este email y ahora se quiere conecrtir en admin al duplicado del mismo  
+				userRepo.deleteByEmail(prefijoEmailEliminado + user.getEmail());
+				
+				user.setEmail(prefijoEmailEliminado + user.getEmail());
 			}
 			user.set_deleted(true);
 			user = userRepo.save(user);
