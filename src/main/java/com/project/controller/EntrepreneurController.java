@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
+import com.project.DTO.DTOProject;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -149,6 +150,17 @@ public class EntrepreneurController {
 		} else {
 			return new ResponseEntity("No existe emprendedor con id: " + ID, HttpStatus.NOT_FOUND);
 		}
+	}
+
+	/**
+	 * Obtiene todos los proyectos del emprendedor logueado.
+	 * @return Retorna una lista de proyectos del emprendedor logueado
+	 */
+	@GetMapping("/{ID}/mis_proyectos")
+	public ResponseEntity<List<DTOProject>> getMyProjects(@PathVariable Long ID) {
+
+		List<DTOProject> myProjects = entrepreneurService.getProjectsByEntrepreneurId(ID);
+		return new ResponseEntity<>(myProjects, HttpStatus.OK);
 	}
 
 }
