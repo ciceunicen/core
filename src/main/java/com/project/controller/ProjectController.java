@@ -140,6 +140,22 @@ public class ProjectController {
     		 throw new UnauthorizedException();
     	 }
       }
+     
+     @GetMapping(value = "entrepreneur/page/{page}")
+     public Page<Project> getProjectsByIsActiveAndEntrepreneur(@PathVariable("page") Integer page, @RequestBody @Valid DTOChecks checks){
+    	 if (roleAuthController.hasPermission(3)) { // Emprendedor
+    		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
+    		 
+    		 Integer indexPage = page - 1;
+             Integer cantProjects = 15;
+             String sortAttribute = "title";
+             Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+             return ProjectService.getByIsActive(pageable, idEntrepreneur, checks);
+    	 } else {
+    		 throw new UnauthorizedException();
+    	 }
+      }
+     
      /**
       * Elimina de forma lógica un projecto dado. No se elimina el registro del proyecto en la base de datos, solo se crea un registro en latabla de proyectos eliminados que apunta al proyecto dado.
       * @param id_project de tipo Long, es el ID del proyecto a tratar.

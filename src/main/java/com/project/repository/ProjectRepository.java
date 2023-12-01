@@ -14,6 +14,12 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 	
 	@Query("SELECT p"
 			+ " FROM Project p"
+			+ " WHERE p.is_active = :isActive"
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur")
+	Page<Project> findByIsActive(Pageable pageable, Long idEntrepreneur, boolean isActive);
+	
+	@Query("SELECT p"
+			+ " FROM Project p"
 			+ " JOIN p.assistances a"
 			+ " JOIN p.needs n"
 			+ " WHERE ((p.title IN :values"

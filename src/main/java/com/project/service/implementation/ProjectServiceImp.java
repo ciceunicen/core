@@ -96,6 +96,11 @@ public class ProjectServiceImp implements ProjectService {
     	}
     }
     
+    public Page<Project> getByIsActive(Pageable pageable, Long idEntrepreneur, DTOChecks checks) {
+    	boolean isActive = checks.getIsActive();
+    	return projectRepository.findByIsActive(pageable, idEntrepreneur, isActive);
+    }
+    
     /**
      * Realiza eliminado lógico de la base de datos, chequea que el proyecto exist y que ya no haya sido eliminado.
      * @param id_project es el ID del proyecto a eliminar
