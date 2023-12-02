@@ -38,27 +38,6 @@ public class EntrepreneurController {
 	}
 	
 	/**
-	 * Guarda una entidad Project a la base de datos, siempre y cuando tenga
-	 * los permisos de usuario Emprendedor
-	 * 
-	 * @param project Proyecto que se va a guardar, no debe ser null
-	 * @return si se tiene los permisos de usuario Emprendedor, devuelve el 
-	 * proyecto guardado, de lo contrario, error 401 UNAUTHORIZED
-	 */
-	@PostMapping("/projects")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert project) {
-        if (roleAuthController.hasPermission(3)) {
-            DTOProject dto = projectService.postProject(project);
-            if(dto != null) {
-            	return new ResponseEntity(dto, HttpStatus.CREATED);
-            } else {
-            	return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else return new ResponseEntity("No tiene permisos para realizar esta acción",HttpStatus.UNAUTHORIZED);
-    }
-
-	/**
 	 * Obtiene un entrepreneur pod id
 	 * @param ID id_entrepreneur
 	 * @return 200 Ok, Entrepreneur | 404 Not found
