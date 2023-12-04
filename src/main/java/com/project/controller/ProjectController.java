@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -135,7 +136,7 @@ public class ProjectController {
       * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
       */
      @GetMapping(value = "/entrepreneur/filters/page/{page}",params="filters")
-     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestBody DTOChecks checks){
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestParam(value = "active") List<String> active){
     	 if (roleAuthController.hasPermission(3)) { // Emprendedor
     		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
     		 
@@ -143,7 +144,10 @@ public class ProjectController {
              Integer cantProjects = 15;
              String sortAttribute = "title";
              Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
-             return ProjectService.getByFiltersAndEntrepreneur(datos,pageable,idEntrepreneur, checks);
+             List<Boolean> activeBooleans = active.stream()
+            		 .map(Boolean::valueOf)
+            		 .collect(Collectors.toList());
+             return ProjectService.getByFiltersAndEntrepreneur(datos,pageable,idEntrepreneur, activeBooleans);
     	 } else {
     		 throw new UnauthorizedException();
     	 }

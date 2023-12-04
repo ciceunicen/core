@@ -87,12 +87,11 @@ public class ProjectServiceImp implements ProjectService {
     }
     
     
-    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, DTOChecks checks) {
-    	Boolean isActive = checks.getIsActive();
-    	if (isActive == null) {
+    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, List<Boolean> active) {
+    	if (active == null) {
     		return projectRepository.findAll(filters,pageable, idEntrepreneur);
     	} else {
-    		return projectRepository.findAll(filters,pageable, idEntrepreneur, isActive);
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur, active);
     	}
     }
     
