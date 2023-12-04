@@ -36,7 +36,8 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 			+ " WHERE ((p.title IN :values"
 			+ " OR p.stage.stage_type IN :values"
 			+ " OR a.type IN :values"
-			+ " OR n.needType IN :values)"
+			+ " OR n.needType IN :values"
+			+ " OR :isActive IS NOT NULL)"
 			+ " AND p.is_active = :isActive"
 			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
 	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur, boolean isActive);
