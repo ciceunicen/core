@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 	@Query(value="Select * from User u where u.id_role in (:ids) ",nativeQuery = true)
 	Iterable<User> findByRolIds(List<String> ids);
+	
+	@Query("SELECT u FROM User u WHERE u.role.type = :rol")
+	Iterable<User> findAllByRol(String rol);
 
 	
 }

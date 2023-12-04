@@ -167,4 +167,8 @@ public class UserServiceImp implements UserService {
 		}
 	}
 
+	public Iterable<User> getUsersByRole(String rol) {
+		return userRepo.findAllByRol(rol);
+	}
+
 }
