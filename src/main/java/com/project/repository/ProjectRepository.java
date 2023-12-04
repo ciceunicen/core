@@ -29,7 +29,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
 	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur);
 	
-	@Query("SELECT p"
+	@Query("SELECT DISTINCT p"
 			+ " FROM Project p"
 			+ " JOIN p.assistances a"
 			+ " JOIN p.needs n"
