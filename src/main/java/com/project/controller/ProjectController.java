@@ -126,8 +126,16 @@ public class ProjectController {
          return ProjectService.getAllByFilters(datos,pageable);
      }
      
+     /**
+      * Obtiene los proyectos filtrados de forma paginada del emprendedor actualmente logueado
+      * @param page es un Integer que representa la página a la que apunta
+      * @param datos es un array donde llegan los filtros a aplicar
+      * @param checks son valores que vienen desde el body de la solicitud. Filtra por proyectos activos o no activos. Puede tener un valor nulo
+      * @return retorna los proyectos filtrados de forma paginada
+      * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
+      */
      @GetMapping(value = "/entrepreneur/filters/page/{page}",params="filters")
-     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page,@RequestParam(value = "filters") List<String> datos,@RequestBody DTOChecks checks){
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestBody DTOChecks checks){
     	 if (roleAuthController.hasPermission(3)) { // Emprendedor
     		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
     		 
@@ -141,6 +149,13 @@ public class ProjectController {
     	 }
       }
      
+     /**
+      * Obtiene los proyectos filtrados por activos o no activos de forma paginada del emprendedor actualmente logueado
+      * @param page es un Integer que representa la página a la que apunta
+      * @param checks son valores que vienen desde el body de la solicitud. Filtra por proyectos activos o no activos. Puede tener un valor nulo
+      * @return retorna los proyectos filtrados de forma paginada
+      * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
+      */
      @GetMapping(value = "entrepreneur/page/{page}")
      public Page<Project> getProjectsByIsActiveAndEntrepreneur(@PathVariable("page") Integer page, @RequestBody @Valid DTOChecks checks){
     	 if (roleAuthController.hasPermission(3)) { // Emprendedor
