@@ -42,9 +42,9 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
 	}
 	
-	@GetMapping("/rol/{rol}")
-	public ResponseEntity<Iterable<User>> getUsersByRole(@PathVariable String rol){
-		return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersByRole(rol));
+	@GetMapping("/rol/{id_rol}")
+	public ResponseEntity<Iterable<User>> getUsersByRole(@PathVariable int id_rol){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersByRole(id_rol));
 	}
 
 	/**
