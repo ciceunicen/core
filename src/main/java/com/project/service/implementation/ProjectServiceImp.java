@@ -1,7 +1,6 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOChecks;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
@@ -87,17 +86,12 @@ public class ProjectServiceImp implements ProjectService {
     }
     
     
-    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, List<Boolean> active) {
+    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, Boolean active) {
     	if (active == null) {
     		return projectRepository.findAll(filters,pageable, idEntrepreneur);
     	} else {
     		return projectRepository.findAll(filters,pageable, idEntrepreneur, active);
     	}
-    }
-    
-    public Page<Project> getByIsActive(Pageable pageable, Long idEntrepreneur, DTOChecks checks) {
-    	boolean isActive = checks.getIsActive();
-    	return projectRepository.findByIsActive(pageable, idEntrepreneur, isActive);
     }
     
     /**

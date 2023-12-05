@@ -131,12 +131,12 @@ public class ProjectController {
       * Obtiene los proyectos filtrados de forma paginada del emprendedor actualmente logueado
       * @param page es un Integer que representa la página a la que apunta
       * @param datos es un array donde llegan los filtros a aplicar
-      * @param checks son valores que vienen desde el body de la solicitud. Filtra por proyectos activos o no activos. Puede tener un valor nulo
+      * @param active es un boolean que filtra por proyectos activos o no activos. Si es null no tiene en cuenta el campo is_active de Proyecto
       * @return retorna los proyectos filtrados de forma paginada
       * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
       */
      @GetMapping(value = "/entrepreneur/filters/page/{page}",params="filters")
-     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestParam(value = "active") List<String> active){
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestParam(value = "active") Optional<String> active){
     	 if (roleAuthController.hasPermission(3)) { // Emprendedor
     		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
     		 
@@ -144,32 +144,12 @@ public class ProjectController {
              Integer cantProjects = 15;
              String sortAttribute = "title";
              Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
-             List<Boolean> activeBooleans = active.stream()
-            		 .map(Boolean::valueOf)
-            		 .collect(Collectors.toList());
-             return ProjectService.getByFiltersAndEntrepreneur(datos,pageable,idEntrepreneur, activeBooleans);
-    	 } else {
-    		 throw new UnauthorizedException();
-    	 }
-      }
-     
-     /**
-      * Obtiene los proyectos filtrados por activos o no activos de forma paginada del emprendedor actualmente logueado
-      * @param page es un Integer que representa la página a la que apunta
-      * @param checks son valores que vienen desde el body de la solicitud. Filtra por proyectos activos o no activos. Puede tener un valor nulo
-      * @return retorna los proyectos filtrados de forma paginada
-      * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
-      */
-     @GetMapping(value = "entrepreneur/page/{page}")
-     public Page<Project> getProjectsByIsActiveAndEntrepreneur(@PathVariable("page") Integer page, @RequestBody @Valid DTOChecks checks){
-    	 if (roleAuthController.hasPermission(3)) { // Emprendedor
-    		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
-    		 
-    		 Integer indexPage = page - 1;
-             Integer cantProjects = 15;
-             String sortAttribute = "title";
-             Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
-             return ProjectService.getByIsActive(pageable, idEntrepreneur, checks);
+             
+             Boolean activeBoolean = null;
+             if (active.isPresent()) {
+            	 activeBoolean = Boolean.valueOf(active.get());
+             }
+             return ProjectService.getByFiltersAndEntrepreneur(datos, pageable, idEntrepreneur, activeBoolean);
     	 } else {
     		 throw new UnauthorizedException();
     	 }
