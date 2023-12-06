@@ -82,6 +82,7 @@ public class ProjectController {
      * @param id es el id del proyecto a buscar
      * @return retorna un proyecto específico, en caso de no encontrarlo retorna error 404
      */
+    /*
     @GetMapping("/{id_project}")
     public ResponseEntity<?> getProjectById(@PathVariable ("id_project") Long id) {
         Optional <Project>p= ProjectService.getProjectById(id);
@@ -91,6 +92,8 @@ public class ProjectController {
             return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
     }
+
+     */
      /**
       * Obtiene todos los proyectos guardados en la base de datos, estos los devuelve de forma paginada.
       * @param page es un Integer que representa la página a la que apunta. 
