@@ -177,6 +177,7 @@ public class ProjectController {
             }
             updateProject.setAssistances(assistances);
             updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+            updateProject.set_active(project.getIs_active());
             List<File> files = new ArrayList<>();
             for (Long idFiles:project.getFiles()) {
                 files.add(fileServiceImp.getFile(idFiles));
