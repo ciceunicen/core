@@ -3,10 +3,7 @@ package com.project.controller;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
-import com.project.DTO.DTOProject;
-import com.project.DTO.DTOProjectInsert;
 import com.project.service.EntrepreneurService;
-import com.project.service.ProjectService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +21,6 @@ public class EntrepreneurController {
 	private EntrepreneurService entrepreneurService;
 	@Autowired
 	private RoleAuthController roleAuthController;
-	@Autowired
-	private ProjectService projectService;
 
 	/**
 	 * Obtiene todos los emprendedores
