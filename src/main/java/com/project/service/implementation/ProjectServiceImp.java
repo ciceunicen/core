@@ -9,6 +9,7 @@ import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
 import com.project.entities.Entrepreneurship;
 import com.project.entities.Project;
+import com.project.exception.NotFoundException;
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
@@ -125,6 +126,21 @@ public class ProjectServiceImp implements ProjectService {
         administrationRecordsRepository.save(ar);
         return p;
     }
+    
+    public DTOProject changeProjectStatus(Long id) {
+    	Optional<Project> optional = projectRepository.findById(id);
+    	if (optional.isPresent()) {
+    		Project project = optional.get();
+    		if (project.is_active()) {
+    			project.set_active(false);
+    		} else {
+    			project.set_active(true);
+    		}
+    		return new DTOProject(projectRepository.save(project));
+    	} else {
+    		throw new NotFoundException(String.format("El proyecto con id %s no existe", id));
+    	}
+	}
 
     /**
      * Consulta a administrationRecordsRepository por todo el historial de un proyecto, este historial se retorna paginado.
@@ -252,6 +268,4 @@ public class ProjectServiceImp implements ProjectService {
 
         return project.containsEntrepreneurship(entrepreneurship);
     }
-    
-    
 }

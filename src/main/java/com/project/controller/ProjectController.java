@@ -31,6 +31,7 @@ import javax.validation.Valid;
 import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Entrepreneurship;
+import com.project.exception.UnauthorizedException;
 
 /**
  * 
@@ -191,6 +192,14 @@ public class ProjectController {
         }else {
             return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
+    }
+    
+    @PutMapping("/{ID}/isActive")
+    public ResponseEntity<DTOProject> changeProjectStatus(@PathVariable Long ID) {
+    	if (roleAuthController.hasPermission(5)) { // Personal del CICE
+    		return ResponseEntity.ok(ProjectService.changeProjectStatus(ID));
+    	}
+    	throw new UnauthorizedException();
     }
 
     /**
