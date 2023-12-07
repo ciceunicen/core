@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -135,8 +136,8 @@ public class ProjectController {
       * @return retorna los proyectos filtrados de forma paginada
       * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
       */
-     @GetMapping(value = "/entrepreneur/filters/page/{page}",params="filters")
-     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") List<String> datos, @RequestParam(value = "active") Optional<String> active){
+     @GetMapping(value = "/entrepreneur/filters/page/{page}")
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") Optional<List<String>> filters, @RequestParam(value = "active") Optional<String> active){
     	 if (roleAuthController.hasPermission(3)) { // Emprendedor
     		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
     		 
@@ -149,7 +150,12 @@ public class ProjectController {
              if (active.isPresent()) {
             	 activeBoolean = Boolean.valueOf(active.get());
              }
-             return ProjectService.getByFiltersAndEntrepreneur(datos, pageable, idEntrepreneur, activeBoolean);
+             List<String> datosList = new LinkedList<>();
+             if (filters.isPresent()) {
+            	 datosList = filters.get();
+             }
+             
+             return ProjectService.getByFiltersAndEntrepreneur(datosList, pageable, idEntrepreneur, activeBoolean);
     	 } else {
     		 throw new UnauthorizedException();
     	 }

@@ -87,6 +87,9 @@ public class ProjectServiceImp implements ProjectService {
     
     
     public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, Boolean active) {
+    	if (filters.isEmpty() && active == null) {
+    		return projectRepository.findAll(pageable, idEntrepreneur);
+    	}
     	if (active == null) {
     		return projectRepository.findAll(filters,pageable, idEntrepreneur);
     	} else {
