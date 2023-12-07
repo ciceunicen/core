@@ -53,6 +53,9 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Action> actions;
+	
+	@Column(nullable = false)
+	private boolean is_active;
 
 	public Project(String title, String description, List<File> files, Long administrador) {
 		this.title = title;

@@ -23,14 +23,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Entrepreneurship;
+import com.project.exception.UnauthorizedException;
 
 /**
  * 
@@ -124,6 +127,40 @@ public class ProjectController {
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(datos,pageable);
      }
+     
+     /**
+      * Obtiene los proyectos filtrados de forma paginada del emprendedor actualmente logueado
+      * @param page es un Integer que representa la página a la que apunta
+      * @param datos es un array donde llegan los filtros a aplicar
+      * @param active es un boolean que filtra por proyectos activos o no activos. Si es null no tiene en cuenta el campo is_active de Proyecto
+      * @return retorna los proyectos filtrados de forma paginada
+      * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
+      */
+     @GetMapping(value = "/entrepreneur/filters/page/{page}")
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") Optional<List<String>> filters, @RequestParam(value = "active") Optional<String> active){
+    	 if (roleAuthController.hasPermission(3)) { // Emprendedor
+    		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
+    		 
+    		 Integer indexPage = page - 1;
+             Integer cantProjects = 15;
+             String sortAttribute = "title";
+             Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+             
+             Boolean activeBoolean = null;
+             if (active.isPresent()) {
+            	 activeBoolean = Boolean.valueOf(active.get());
+             }
+             List<String> datosList = new LinkedList<>();
+             if (filters.isPresent()) {
+            	 datosList = filters.get();
+             }
+             
+             return ProjectService.getByFiltersAndEntrepreneur(datosList, pageable, idEntrepreneur, activeBoolean);
+    	 } else {
+    		 throw new UnauthorizedException();
+    	 }
+      }
+     
      /**
       * Elimina de forma lógica un projecto dado. No se elimina el registro del proyecto en la base de datos, solo se crea un registro en latabla de proyectos eliminados que apunta al proyecto dado.
       * @param id_project de tipo Long, es el ID del proyecto a tratar.
