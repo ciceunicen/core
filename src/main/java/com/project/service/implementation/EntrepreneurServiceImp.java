@@ -3,10 +3,12 @@ package com.project.service.implementation;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
+import com.project.DTO.DTOProject;
 import com.project.entities.Project;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
+import com.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private ProjectRepository projectRepository;
 
 
 	@Override
@@ -161,6 +165,35 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		return list;
 	}
 
+	/**
+	 * Obtiene todos los proyectos asociados a un emprendedor por su ID
+	 * @param id El ID del emprendedor
+	 * @return Una lista de proyectos asociados al emprendedor
+	 */
+	@Override
+	public List<DTOProject> getProjectsByEntrepreneurId(Long id) {
+		List<DTOProject> list = new ArrayList<>();
+		List<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id);
+		if (projects != null) {
+			for (Project aux: projects) {
+				DTOProject dto = new DTOProject(
+						aux.getId_Project(),
+						aux.getTitle(),
+						aux.getDescription(),
+						aux.getStage().getStage_type(),
+						aux.getProjectManager(),
+						aux.getFiles(),
+						aux.getActions(),
+						aux.getEntrepreneurships());
+
+				dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
+
+				list.add(dto);
+			}
+			return list;
+		}
+		return null;
+	}
 
 }
 
