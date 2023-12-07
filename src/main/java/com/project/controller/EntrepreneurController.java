@@ -4,6 +4,7 @@ import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.service.EntrepreneurService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class EntrepreneurController {
 	public Iterable<DTOEntrepreneur> getEntrepreneurs() {
 		return entrepreneurService.getEntrepreneurs();
 	}
-
+	
 	/**
 	 * Obtiene un entrepreneur pod id
 	 * @param ID id_entrepreneur
