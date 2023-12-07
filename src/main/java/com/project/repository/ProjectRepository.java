@@ -32,4 +32,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     
     @Query(value = "select * from project p where p.id_project in (select project_id_project from project_entrepreneurships where entrepreneurships_id=:id)", nativeQuery = true)
     List<Project> getProjectsThatContainsEntrepreneurship(Long id);
+
+    @Query("select p from Project p where p.projectManager.id_ProjectManager =:id")
+    List<Project> getProjectsByEntrepreneurId(Long id);
 }
