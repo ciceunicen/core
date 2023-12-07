@@ -161,36 +161,38 @@ public class ProjectController {
      */
     @PutMapping("/{id_project}")
     public ResponseEntity<?> updateProject(@PathVariable ("id_project") Long id, @RequestBody DTOProjectUpdate project){
-        Project updateProject=ProjectService.getProjectEntity(id);
-        if (updateProject!=null){
-            updateProject.setTitle(project.getTitle());
-            updateProject.setDescription(project.getDescription());
-            List<Need> needs = new ArrayList<>();
-            for (Long idNeed:project.getNeeds()) {
-                needs.add(needServiceImp.getNeed(idNeed));
-            }
-            updateProject.setNeeds(needs);
-            List<Assistance> assistances = new ArrayList<>();
-            for (Long idAssistance:project.getAssistances()) {
-                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
-            }
-            updateProject.setAssistances(assistances);
-            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
-            List<File> files = new ArrayList<>();
-            for (Long idFiles:project.getFiles()) {
-                files.add(fileServiceImp.getFile(idFiles));
-            }
-            if (project.getNewFiles().size()>0){
-                for (File file:project.getNewFiles()) {
-                    files.add(fileServiceImp.addFile(file));
-                }
-            }
-            updateProject.setFiles(files);
-            Project response = ProjectService.save(updateProject);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
-        }
+    	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+	    	Project updateProject=ProjectService.getProjectEntity(id);
+	        if (updateProject!=null){
+	            updateProject.setTitle(project.getTitle());
+	            updateProject.setDescription(project.getDescription());
+	            List<Need> needs = new ArrayList<>();
+	            for (Long idNeed:project.getNeeds()) {
+	                needs.add(needServiceImp.getNeed(idNeed));
+	            }
+	            updateProject.setNeeds(needs);
+	            List<Assistance> assistances = new ArrayList<>();
+	            for (Long idAssistance:project.getAssistances()) {
+	                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
+	            }
+	            updateProject.setAssistances(assistances);
+	            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+	            List<File> files = new ArrayList<>();
+	            for (Long idFiles:project.getFiles()) {
+	                files.add(fileServiceImp.getFile(idFiles));
+	            }
+	            if (project.getNewFiles().size()>0){
+	                for (File file:project.getNewFiles()) {
+	                    files.add(fileServiceImp.addFile(file));
+	                }
+	            }
+	            updateProject.setFiles(files);
+	            Project response = ProjectService.save(updateProject);
+	            return new ResponseEntity<>(response, HttpStatus.OK);
+	        }else {
+	            return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+	        }
+    	}else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -229,15 +231,15 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
 
-    @GetMapping ("/{ID}")
-    public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
-        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            DTOProject dto = this.ProjectService.getProject(ID);
-            if (dto != null) return new ResponseEntity(dto, HttpStatus.OK);
-            else return new ResponseEntity("No existe el recurso con id: " + ID, HttpStatus.NOT_FOUND);
-        }
-        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
-    }
+//    @GetMapping ("/{ID}")
+//    public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
+//        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+//            DTOProject dto = this.ProjectService.getProject(ID);
+//            if (dto != null) return new ResponseEntity(dto, HttpStatus.OK);
+//            else return new ResponseEntity("No existe el recurso con id: " + ID, HttpStatus.NOT_FOUND);
+//        }
+//        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
+//    }
 
     @GetMapping (value = "/{ID}/actividades", params="filters")
     public ResponseEntity<List<DTOActivity>> getCompositeProjectActivitiesByFilters(@PathVariable("ID") Long id, @RequestParam(value = "filters") List<String> data) {
