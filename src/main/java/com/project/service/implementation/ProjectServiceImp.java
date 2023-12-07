@@ -4,11 +4,7 @@ import com.project.DTO.DTOActionInsert;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
-import com.project.entities.Action;
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Entrepreneurship;
-import com.project.entities.Project;
+import com.project.entities.*;
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
@@ -42,6 +38,8 @@ public class ProjectServiceImp implements ProjectService {
     private DeletedProjectRepository deletedProjetcRepository;
     @Autowired
     private AdministrationRecordsRepository administrationRecordsRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
@@ -84,7 +82,7 @@ public class ProjectServiceImp implements ProjectService {
     public Page<Project> getAllByFilters(List<String> filters,Pageable pageable) {
         return projectRepository.findAll(filters,pageable);
     }
-    
+
     /**
      * Realiza eliminado lógico de la base de datos, chequea que el proyecto exist y que ya no haya sido eliminado.
      * @param id_project es el ID del proyecto a eliminar
@@ -141,7 +139,7 @@ public class ProjectServiceImp implements ProjectService {
     public Project getProjectEntity(Long id){
         return projectRepository.getProject(id);
     }
-    
+
     @Override
     public DTOProject postProject(DTOProjectInsert cp) {
     	Project aux = new Project(cp.getTitle(), cp.getDescription(), cp.getId_Admin());
@@ -171,12 +169,33 @@ public class ProjectServiceImp implements ProjectService {
 		Optional<Project> o = projectRepository.findById(id);
         if (o.isPresent()) {
             Project aux = o.get();
-            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
-                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            // DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+            //       aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+
+
+            DTOProject dto = new DTOProject(aux.getId_Project(),
+                    aux.getTitle(),
+                    aux.getDescription(),
+                    aux.getStage().getStage_type(),
+                    aux.getAdministrador(),
+                    aux.getProjectManager(),
+                    aux.getFiles(),
+                    aux.getActions(),
+                    aux.getEntrepreneurships());
+
+            dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
+            Optional<User> admin  = userRepository.findById(aux.getAdministrador());
+            if (admin.isPresent()) {
+                dto.setAdminUsername(admin.get().getUsername());
+                dto.setAdminEmail(admin.get().getEmail());
+            } else {
+                dto.setAdminUsername("Administrador sin asignar");
+                dto.setAdminEmail("Administrador sin asignar");
+            }
             return dto;
         }
         return null;
-	}
+    }
 
 	@Override
 	public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
@@ -238,7 +257,7 @@ public class ProjectServiceImp implements ProjectService {
 
         return null;
     }
-    
+
     /**
      * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
      * @param projectId ID del proyecto.
@@ -252,6 +271,6 @@ public class ProjectServiceImp implements ProjectService {
 
         return project.containsEntrepreneurship(entrepreneurship);
     }
-    
-    
+
+
 }
