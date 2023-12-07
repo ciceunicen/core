@@ -163,17 +163,26 @@ public class ProjectServiceImp implements ProjectService {
         }
         return listaDTO;
 	}
-	
-	@Override
-	public DTOProject getProject(Long id) {
-		Optional<Project> o = projectRepository.findById(id);
+
+    @Override
+    public DTOProject getProject(Long id) {
+        Optional<Project> o = projectRepository.findById(id);
         if (o.isPresent()) {
             Project aux = o.get();
-            // DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
-            //       aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+    }
 
-
-            DTOProject dto = new DTOProject(aux.getId_Project(),
+    @Override
+    public DTOProject getDTOProjectById(Long id) {
+        Optional<Project> o = projectRepository.findByIdWithAssistancesAndNeeds(id);
+        if (o.isPresent()) {
+            Project aux = o.get();
+            DTOProject dto = new DTOProject(
+                    aux.getId_Project(),
                     aux.getTitle(),
                     aux.getDescription(),
                     aux.getStage().getStage_type(),
@@ -181,10 +190,13 @@ public class ProjectServiceImp implements ProjectService {
                     aux.getProjectManager(),
                     aux.getFiles(),
                     aux.getActions(),
-                    aux.getEntrepreneurships());
+                    aux.getEntrepreneurships(),
+                    aux.getAssistances(),
+                    aux.getNeeds());
 
             dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
-            Optional<User> admin  = userRepository.findById(aux.getAdministrador());
+            // Busca el administrador
+            Optional<User> admin = userRepository.findById(aux.getAdministrador());
             if (admin.isPresent()) {
                 dto.setAdminUsername(admin.get().getUsername());
                 dto.setAdminEmail(admin.get().getEmail());
@@ -195,6 +207,7 @@ public class ProjectServiceImp implements ProjectService {
             return dto;
         }
         return null;
+        //return projectRepository.findByIdWithAssistancesAndNeeds(id);
     }
 
 	@Override

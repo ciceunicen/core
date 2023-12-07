@@ -82,7 +82,7 @@ public class ProjectController {
      * @param id es el id del proyecto a buscar
      * @return retorna un proyecto específico, en caso de no encontrarlo retorna error 404
      */
-    @GetMapping("/{id_project}")
+/*    @GetMapping("/{id_project}")
     public ResponseEntity<?> getProjectById(@PathVariable ("id_project") Long id) {
         Optional <Project>p= ProjectService.getProjectById(id);
         if(!p.isEmpty()) {
@@ -90,11 +90,12 @@ public class ProjectController {
         }else{
             return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
     @GetMapping("/{id_project}")
-    public ResponseEntity<?> getDTOProjectById(@PathVariable("id_project") Long id) {
-        DTOProject dtoProject = ProjectService.getProject(id);
+    public ResponseEntity<?> getProjectById(@PathVariable("id_project") Long id) {
+       // DTOProject dtoProject = ProjectService.getProject(id);
+        DTOProject dtoProject = ProjectService.getDTOProjectById(id);
         if (dtoProject != null) {
             return new ResponseEntity<>(dtoProject, HttpStatus.OK);
         } else {
