@@ -194,14 +194,6 @@ public class ProjectController {
             return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
         }
     }
-    
-    @PutMapping("/{ID}/isActive")
-    public ResponseEntity<DTOProject> changeProjectStatus(@PathVariable Long ID) {
-    	if (roleAuthController.hasPermission(5)) { // Personal del CICE
-    		return ResponseEntity.ok(ProjectService.changeProjectStatus(ID));
-    	}
-    	throw new UnauthorizedException();
-    }
 
     /**
      * Obtiene el historial de un proyecto en particular, este se devuelve de forma paginada.
