@@ -188,10 +188,12 @@ public class ProjectController {
 	            updateProject.setAssistances(assistances);
 	            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
 	            List<File> files = new ArrayList<>();
-	            for (Long idFiles:project.getFiles()) {
-	                files.add(fileServiceImp.getFile(idFiles));
+	            if(project.getFiles() != null) {
+		            for (Long idFiles:project.getFiles()) {
+		                files.add(fileServiceImp.getFile(idFiles));
+		            }
 	            }
-	            if (project.getNewFiles().size()>0){
+	            if (project.getNewFiles() != null && project.getNewFiles().size()>0){
 	                for (File file:project.getNewFiles()) {
 	                    files.add(fileServiceImp.addFile(file));
 	                }
