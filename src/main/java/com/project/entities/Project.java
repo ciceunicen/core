@@ -63,9 +63,9 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 		this.files = new ArrayList<>();
 		this.entrepreneurships = new ArrayList<>();
 		this.actions = new ArrayList<>();
-		for (File file : files) {
-			this.files.add(new File(file.getFile(), file.getType()));
-		}
+//		for (File file : files) {
+//			this.files.add(new File(file.getFile(), file.getType()));
+//		}
 		this.administrador = administrador;
 	}
 

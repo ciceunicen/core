@@ -68,17 +68,27 @@ public class ProjectController {
     }
 
     /**
-     * inserta un nuevo proyecto a la base de datos
-     * @param project son los datos de un proyecto a cargar
-     * @return retorna un dto del archivo cargado a la base de datos
-     */
-	/*
-	 * @PostMapping() public Project addProject(@Valid @RequestBody DTOProjectInsert
-	 * project){ return
-	 * ProjectService.addProject(mapper.toProject(project),project.getStage(),
-	 * project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager()
-	 * ); }
+	 * Guarda una entidad Project a la base de datos, siempre y cuando tenga
+	 * los permisos necesarios
+	 * 
+	 * @param project Proyecto que se va a guardar, no debe ser null
+	 * @return si se tiene los permisos adecuados, devuelve el 
+	 * proyecto guardado, de lo contrario, error 401 UNAUTHORIZED
 	 */
+    @PostMapping() 
+    public ResponseEntity<?> addProject(@Valid @RequestBody DTOProjectInsert project) { 
+    	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
+    		
+    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
+    		if(saveProject != null) {
+    			return new ResponseEntity<>(saveProject, HttpStatus.CREATED);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+    	}
+    	return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+	}
+	 
 
     /**
      * obtiene un proyecto por id
@@ -301,15 +311,15 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
     
-    @PostMapping
-    public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert cp) {
-        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            DTOProject dto = ProjectService.postProject(cp);
-            if(dto != null) return new ResponseEntity(dto, HttpStatus.CREATED);
-            else return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
-    }
+//    @PostMapping
+//    public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert cp) {
+//        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+//            DTOProject dto = ProjectService.postProject(cp);
+//            if(dto != null) return new ResponseEntity(dto, HttpStatus.CREATED);
+//            else return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
+//    }
     
     @PostMapping("/{ID}/subemprendimientos/{id}")
     public ResponseEntity<DTOProject> addProjectEntrepreneurship(@PathVariable ("ID") Long IDMainProyect, @PathVariable ("id") Long idSubproject) {

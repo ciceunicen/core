@@ -198,4 +198,8 @@ public class UserServiceImp implements UserService {
 		}
 	}
 
+	public Iterable<User> getUsersByRole(int id_rol) {
+		return userRepo.findAllByRol(id_rol);
+	}
+
 }

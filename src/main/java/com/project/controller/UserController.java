@@ -41,6 +41,11 @@ public class UserController {
 	public ResponseEntity<User> getUser(@PathVariable Long ID){
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findById(ID));
 	}
+	
+	@GetMapping("/rol/{id_rol}")
+	public ResponseEntity<Iterable<User>> getUsersByRole(@PathVariable int id_rol){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersByRole(id_rol));
+	}
 
 	/**
 	 * Actualiza los datos del usuario
