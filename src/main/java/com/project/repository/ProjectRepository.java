@@ -11,6 +11,41 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project,Long> {
+	
+	@Query("SELECT p"
+			+ " FROM Project p"
+			+ " WHERE p.is_active = :isActive"
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur")
+	Page<Project> findByIsActive(Pageable pageable, Long idEntrepreneur, boolean isActive);
+	
+	@Query("SELECT DISTINCT p"
+			+ " FROM Project p"
+			+ " WHERE p.projectManager.id_ProjectManager = :idEntrepreneur")
+	Page<Project> findAll(Pageable pageable, Long idEntrepreneur);
+	
+	@Query("SELECT DISTINCT p"
+			+ " FROM Project p"
+			+ " JOIN p.assistances a"
+			+ " JOIN p.needs n"
+			+ " WHERE ((p.title IN :values"
+			+ " OR p.stage.stage_type IN :values"
+			+ " OR a.type IN :values"
+			+ " OR n.needType IN :values)"
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
+	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur);
+	
+	@Query("SELECT DISTINCT p"
+			+ " FROM Project p"
+			+ " JOIN p.assistances a"
+			+ " JOIN p.needs n"
+			+ " WHERE ((p.title IN :values"
+			+ " OR p.stage.stage_type IN :values"
+			+ " OR a.type IN :values"
+			+ " OR n.needType IN :values"
+			+ " OR :isActive IS NOT NULL)"
+			+ " AND p.is_active = :isActive"
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
+	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur, Boolean isActive);
 
     @Query("select p from Project p inner join p.assistances a inner join p.needs n where " +
             "(p.title in :values) or (p.stage.stage_type in :values) or (a.type in :values) or (n.needType in :values) group by p.id_Project")
@@ -32,4 +67,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     
     @Query(value = "select * from project p where p.id_project in (select project_id_project from project_entrepreneurships where entrepreneurships_id=:id)", nativeQuery = true)
     List<Project> getProjectsThatContainsEntrepreneurship(Long id);
+
+    @Query("select p from Project p where p.projectManager.id_ProjectManager =:id")
+    List<Project> getProjectsByEntrepreneurId(Long id);
 }
