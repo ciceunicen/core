@@ -280,7 +280,6 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
 
-<<<<<<< HEAD
    //Ruta repetida
    /* @GetMapping ("/{ID}")
     public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
@@ -291,17 +290,6 @@ public class ProjectController {
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }*/
-=======
-//    @GetMapping ("/{ID}")
-//    public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
-//        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-//            DTOProject dto = this.ProjectService.getProject(ID);
-//            if (dto != null) return new ResponseEntity(dto, HttpStatus.OK);
-//            else return new ResponseEntity("No existe el recurso con id: " + ID, HttpStatus.NOT_FOUND);
-//        }
-//        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
-//    }
->>>>>>> b57718f7292053580caa565eb58bed4f0e1bd3c5
 
     @GetMapping (value = "/{ID}/actividades", params="filters")
     public ResponseEntity<List<DTOActivity>> getCompositeProjectActivitiesByFilters(@PathVariable("ID") Long id, @RequestParam(value = "filters") List<String> data) {
