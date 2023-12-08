@@ -10,16 +10,20 @@ import com.project.entities.Assistance;
 import com.project.entities.Entrepreneurship;
 import com.project.entities.File;
 import com.project.entities.Need;
+import com.project.entities.Project;
 import com.project.entities.ProjectManager;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class DTOProject {
 
 	private Long id_Project;
 	private String title;
 	private String description;
 	private String stage;
+	private boolean is_active;
 	private List<Assistance> assistanceType;
 	private ProjectManager projectManager;
 	private List<File> files;
@@ -27,6 +31,20 @@ public class DTOProject {
 	private List<Action> actions;
 	private List<Entrepreneurship> entrepreneurships;
 	private String projectManagerName;
+	
+	public DTOProject(Project project) {
+		this.id_Project = project.getId_Project();
+		this.title = project.getTitle();
+		this.description = project.getDescription();
+		this.stage = project.getStage().getStage_type();
+		this.is_active = project.is_active();
+		this.assistanceType = project.getAssistances();
+		this.projectManager = project.getProjectManager();
+		this.files = project.getFiles();
+		this.needs = project.getNeeds();
+		this.actions = project.getActions();
+		this.entrepreneurships = project.getEntrepreneurships();
+	}
 	
 	public DTOProject(Long id, String title, String description, List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
 		this.id_Project = id;

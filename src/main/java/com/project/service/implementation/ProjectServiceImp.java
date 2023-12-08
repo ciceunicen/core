@@ -9,6 +9,7 @@ import com.project.entities.AdministrationRecords;
 import com.project.entities.DeletedProject;
 import com.project.entities.Entrepreneurship;
 import com.project.entities.Project;
+import com.project.exception.NotFoundException;
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
@@ -264,6 +265,4 @@ public class ProjectServiceImp implements ProjectService {
 
         return project.containsEntrepreneurship(entrepreneurship);
     }
-    
-    
 }
