@@ -29,7 +29,8 @@ public class DTOProject {
 	private List<File> files;
 	private List<Need> needs;
 	private List<Action> actions;
-	private List<Entrepreneurship> entrepreneurships;	
+	private List<Entrepreneurship> entrepreneurships;
+	private String projectManagerName;
 	
 	public DTOProject(Project project) {
 		this.id_Project = project.getId_Project();
@@ -52,6 +53,22 @@ public class DTOProject {
 		this.files = files;
 		this.actions = actions;
 		this.entrepreneurships = entrepreneurships;
+		// Inicializa con el nombre del project manager o null si es null
+		this.projectManagerName = this.projectManager != null ? this.projectManager.getName() : null;
+	}
+
+	public DTOProject(Long id, String title, String description, String stage,ProjectManager projectManager,
+					  List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
+		this.id_Project = id;
+		this.title = title;
+		this.description = description;
+		this.stage = stage;
+		this.projectManager = projectManager;
+		this.files = files;
+		this.actions = actions;
+		this.entrepreneurships = entrepreneurships;
+		// Inicializa con el nombre del project manager o null si es null
+		this.projectManagerName = this.projectManager != null ? this.projectManager.getName() : null;
 	}
 
 }

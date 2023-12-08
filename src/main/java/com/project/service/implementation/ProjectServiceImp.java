@@ -86,6 +86,18 @@ public class ProjectServiceImp implements ProjectService {
         return projectRepository.findAll(filters,pageable);
     }
     
+    
+    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, Boolean active) {
+    	if (filters.isEmpty() && active == null) {
+    		return projectRepository.findAll(pageable, idEntrepreneur);
+    	}
+    	if (active == null) {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur);
+    	} else {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur, active);
+    	}
+    }
+    
     /**
      * Realiza eliminado lógico de la base de datos, chequea que el proyecto exist y que ya no haya sido eliminado.
      * @param id_project es el ID del proyecto a eliminar
