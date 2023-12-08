@@ -223,6 +223,7 @@ public class ProjectController {
             }
             updateProject.setAssistances(assistances);
             updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+            updateProject.set_active(project.getIs_active());
             List<File> files = new ArrayList<>();
             for (Long idFiles:project.getFiles()) {
                 files.add(fileServiceImp.getFile(idFiles));
@@ -275,7 +276,7 @@ public class ProjectController {
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
-
+  
    //Ruta repetida
    /* @GetMapping ("/{ID}")
     public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
