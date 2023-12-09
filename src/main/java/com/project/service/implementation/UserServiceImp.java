@@ -35,10 +35,12 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	@Autowired EntrepreneurRepository entrepreneurRepository;
+	
+	private static final String prefijoEmailEliminado = "eliminado.";
 
 	@Override
 	public User postUser(User u) {
-		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty())){
+		if ((u.getEmail()==null || !u.getEmail().contains("@")||u.getEmail().isEmpty()) || u.getEmail().contains(prefijoEmailEliminado)){
 			throw new BadRequestException("El email esta mal formateado");
 		}
 		else if(userRepo.isEmail(u.getEmail())!=null){
@@ -136,20 +138,28 @@ public class UserServiceImp implements UserService {
 	/**
 	 * Borrado lógico de usuario por defecto.
 	 * Si el usuario a eliminar no es un usuario por defecto o tiene una cuenta de emprendedor activa no es posible eliminarlo.
-	 * Si el usuario por defecto tiene una cuenta de emprendedor no activa, esta también es eliminada 
+	 * Si el usuario por defecto tiene una cuenta de emprendedor no activa, esta también es eliminada.
+	 * Al eliminar un admin se setea como eliminado y se duplica su registro pero con el rol de usuario defecto.
+	 * Al eliminar un admin, se le agrega el string 'eliminado.' al principio del email (de la cuenta eliminada) para que no hayan problemas de integridad de usuarios duplicados en la base de datos  
 	 * @param id el id del usuario a borrar
 	 * @return el usuario eliminado
-	 * @throws BadRequestException
-	 * @throws NotFounException
+	 * @throws BadRequestException cuando no quiere eliminar un usuario que no es defecto o admin, el usuario tiene una cuenta de emprendedor activa o el usuario ya ha sido eliminado
+	 * @throws NotFoundException cuando el usuario a eliminar no existe
 	 */
 	@Override
 	public User deleteUser(Long id) {
 		Optional<User> optional = userRepo.findById(id);
 		if (optional.isPresent()) {
 			User user = optional.get();
+			Role defecto = roleRepository.findByType("Defecto");
+			Role admin = roleRepository.findByType("Admin");
 			
-			if (!user.getRole().getType().equals(roleRepository.findByType("Defecto").getType())) {
-				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto");
+			if (user.is_deleted()) {
+				throw new BadRequestException("El usuario ya ha sido eliminado");
+			}
+			
+			if (!user.getRole().getType().equals(defecto.getType()) && !user.getRole().getType().equals(admin.getType())) {
+				throw new BadRequestException("El usuario a eliminar no es un usuario por defecto o un admin");
 			}
 			
 			Optional<Entrepreneur> entrepreneurOptional = entrepreneurRepository.findByIdUserAndIsActive(id);
@@ -159,12 +169,37 @@ public class UserServiceImp implements UserService {
 			
 			entrepreneurRepository.deleteByIdUserAndNoActive(id);
 			
+			String email = user.getEmail();
+			if (user.getRole().getType().equals(admin.getType())) {
+				// Elimina el email con prefijo por si anteriormente se elimino a un admin con este email y ahora se quiere conecrtir en admin al duplicado del mismo  
+				userRepo.deleteByEmail(prefijoEmailEliminado + user.getEmail());
+				
+				user.setEmail(prefijoEmailEliminado + user.getEmail());
+			}
 			user.set_deleted(true);
+			user = userRepo.save(user);
 			
-			return userRepo.save(user);
+			User duplicatedUser = null;
+			if (user.getRole().getType().equals(admin.getType())) {
+				duplicatedUser = new User(email, user.getPassword());
+				duplicatedUser.setUsername(user.getUsername());
+				duplicatedUser.setRole(defecto);
+				duplicatedUser.setTokenPassword(user.getTokenPassword());
+				
+				duplicatedUser = userRepo.save(duplicatedUser);
+			}
+			
+			if (duplicatedUser != null) {
+				return duplicatedUser;
+			}
+			return user;
 		} else {
 			throw new NotFoundException(String.format("El usuario con id %s no existe", id));
 		}
+	}
+
+	public Iterable<User> getUsersByRole(int id_rol) {
+		return userRepo.findAllByRol(id_rol);
 	}
 
 }

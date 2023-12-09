@@ -23,14 +23,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Entrepreneurship;
+import com.project.exception.UnauthorizedException;
 
 /**
  * 
@@ -65,17 +68,27 @@ public class ProjectController {
     }
 
     /**
-     * inserta un nuevo proyecto a la base de datos
-     * @param project son los datos de un proyecto a cargar
-     * @return retorna un dto del archivo cargado a la base de datos
-     */
-	/*
-	 * @PostMapping() public Project addProject(@Valid @RequestBody DTOProjectInsert
-	 * project){ return
-	 * ProjectService.addProject(mapper.toProject(project),project.getStage(),
-	 * project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager()
-	 * ); }
+	 * Guarda una entidad Project a la base de datos, siempre y cuando tenga
+	 * los permisos necesarios
+	 * 
+	 * @param project Proyecto que se va a guardar, no debe ser null
+	 * @return si se tiene los permisos adecuados, devuelve el 
+	 * proyecto guardado, de lo contrario, error 401 UNAUTHORIZED
 	 */
+    @PostMapping() 
+    public ResponseEntity<?> addProject(@Valid @RequestBody DTOProjectInsert project) { 
+    	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
+    		
+    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
+    		if(saveProject != null) {
+    			return new ResponseEntity<>(saveProject, HttpStatus.CREATED);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+    	}
+    	return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+	}
+	 
 
     /**
      * obtiene un proyecto por id
@@ -137,6 +150,40 @@ public class ProjectController {
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(datos,pageable);
      }
+     
+     /**
+      * Obtiene los proyectos filtrados de forma paginada del emprendedor actualmente logueado
+      * @param page es un Integer que representa la página a la que apunta
+      * @param datos es un array donde llegan los filtros a aplicar
+      * @param active es un boolean que filtra por proyectos activos o no activos. Si es null no tiene en cuenta el campo is_active de Proyecto
+      * @return retorna los proyectos filtrados de forma paginada
+      * @exception UnauthorizedException cuando se quiere llamar al método desde una cuenta que no es emprendedor
+      */
+     @GetMapping(value = "/entrepreneur/filters/page/{page}")
+     public Page<Project> getProjectsByFiltersAndEntrepreneur(@PathVariable("page") Integer page, @RequestParam(value = "filters") Optional<List<String>> filters, @RequestParam(value = "active") Optional<String> active){
+    	 if (roleAuthController.hasPermission(3)) { // Emprendedor
+    		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
+    		 
+    		 Integer indexPage = page - 1;
+             Integer cantProjects = 15;
+             String sortAttribute = "title";
+             Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+             
+             Boolean activeBoolean = null;
+             if (active.isPresent()) {
+            	 activeBoolean = Boolean.valueOf(active.get());
+             }
+             List<String> datosList = new LinkedList<>();
+             if (filters.isPresent()) {
+            	 datosList = filters.get();
+             }
+             
+             return ProjectService.getByFiltersAndEntrepreneur(datosList, pageable, idEntrepreneur, activeBoolean);
+    	 } else {
+    		 throw new UnauthorizedException();
+    	 }
+      }
+     
      /**
       * Elimina de forma lógica un projecto dado. No se elimina el registro del proyecto en la base de datos, solo se crea un registro en latabla de proyectos eliminados que apunta al proyecto dado.
       * @param id_project de tipo Long, es el ID del proyecto a tratar.
@@ -189,6 +236,7 @@ public class ProjectController {
             }
             updateProject.setAssistances(assistances);
             updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+            updateProject.set_active(project.getIs_active());
             List<File> files = new ArrayList<>();
             for (Long idFiles:project.getFiles()) {
                 files.add(fileServiceImp.getFile(idFiles));
@@ -241,9 +289,8 @@ public class ProjectController {
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
-
-
-    //Ruta repetida /////////////////////////////////////////////////////////////
+  
+   //Ruta repetida
    /* @GetMapping ("/{ID}")
     public ResponseEntity<DTOProject> getProject(@PathVariable Long ID) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
@@ -253,7 +300,7 @@ public class ProjectController {
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }*/
- //////////////////////////////////////////////////////////////////////////////////////
+
     @GetMapping (value = "/{ID}/actividades", params="filters")
     public ResponseEntity<List<DTOActivity>> getCompositeProjectActivitiesByFilters(@PathVariable("ID") Long id, @RequestParam(value = "filters") List<String> data) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
@@ -278,15 +325,15 @@ public class ProjectController {
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
     
-    @PostMapping
-    public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert cp) {
-        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            DTOProject dto = ProjectService.postProject(cp);
-            if(dto != null) return new ResponseEntity(dto, HttpStatus.CREATED);
-            else return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
-    }
+//    @PostMapping
+//    public ResponseEntity<DTOProject> postProject(@RequestBody DTOProjectInsert cp) {
+//        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+//            DTOProject dto = ProjectService.postProject(cp);
+//            if(dto != null) return new ResponseEntity(dto, HttpStatus.CREATED);
+//            else return new ResponseEntity("No se pudo crear el recurso", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
+//    }
     
     @PostMapping("/{ID}/subemprendimientos/{id}")
     public ResponseEntity<DTOProject> addProjectEntrepreneurship(@PathVariable ("ID") Long IDMainProyect, @PathVariable ("id") Long idSubproject) {

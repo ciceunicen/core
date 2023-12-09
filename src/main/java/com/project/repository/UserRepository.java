@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.entities.User;
 @Repository
@@ -19,6 +21,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
 	@Query(value="Select * from User u where u.id_role in (:ids) ",nativeQuery = true)
 	Iterable<User> findByRolIds(List<String> ids);
-
 	
+	@Query("SELECT u FROM User u WHERE u.role.id = :id_rol")
+	Iterable<User> findAllByRol(int id_rol);
+
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM User u WHERE u.email = :email")
+	public void deleteByEmail(String email);
 }

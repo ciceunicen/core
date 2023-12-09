@@ -5,6 +5,14 @@ import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.*;
+
+import com.project.entities.Action;
+import com.project.entities.AdministrationRecords;
+import com.project.entities.DeletedProject;
+import com.project.entities.Entrepreneurship;
+import com.project.entities.Project;
+import com.project.exception.NotFoundException;
+
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
@@ -81,6 +89,19 @@ public class ProjectServiceImp implements ProjectService {
     @Override
     public Page<Project> getAllByFilters(List<String> filters,Pageable pageable) {
         return projectRepository.findAll(filters,pageable);
+    }
+
+    
+    
+    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, Boolean active) {
+    	if (filters.isEmpty() && active == null) {
+    		return projectRepository.findAll(pageable, idEntrepreneur);
+    	}
+    	if (active == null) {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur);
+    	} else {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur, active);
+    	}
     }
 
     /**

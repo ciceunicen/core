@@ -10,10 +10,13 @@ import com.project.entities.Assistance;
 import com.project.entities.Entrepreneurship;
 import com.project.entities.File;
 import com.project.entities.Need;
+import com.project.entities.Project;
 import com.project.entities.ProjectManager;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class DTOProject {
 
 	private Long id_Project;
@@ -21,6 +24,9 @@ public class DTOProject {
 	private String description;
 	private String stage;
 	private Long administrador;
+
+	private boolean is_active;
+
 	private List<Assistance> assistanceType;
 	private ProjectManager projectManager;
 	private List<File> files;
@@ -30,7 +36,7 @@ public class DTOProject {
 	private String projectManagerName;
 	private String adminUsername;
 	private String adminEmail;
-	
+
 	public DTOProject(Long id, String title, String description, List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
 		this.id_Project = id;
 		this.title = title;

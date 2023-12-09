@@ -31,7 +31,7 @@ public class EntrepreneurController {
 	public Iterable<DTOEntrepreneur> getEntrepreneurs() {
 		return entrepreneurService.getEntrepreneurs();
 	}
-
+	
 	/**
 	 * Obtiene un entrepreneur pod id
 	 * @param ID id_entrepreneur
