@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project,Long> {
@@ -70,4 +71,10 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     @Query("select p from Project p where p.projectManager.id_ProjectManager =:id")
     List<Project> getProjectsByEntrepreneurId(Long id);
+
+    @Query("SELECT p FROM Project p " +
+            " JOIN  p.assistances " +
+            " JOIN  p.needs " +
+            "WHERE p.id_Project = :projectId")
+    Optional<Project> findByIdWithAssistancesAndNeeds(Long projectId);
 }

@@ -181,12 +181,22 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 						aux.getTitle(),
 						aux.getDescription(),
 						aux.getStage().getStage_type(),
+						aux.getAdministrador(),
 						aux.getProjectManager(),
 						aux.getFiles(),
 						aux.getActions(),
 						aux.getEntrepreneurships());
 
 				dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
+				Optional<User> admin  = userRepository.findById(aux.getAdministrador());
+				if (admin.isPresent()) {
+					dto.setAdminUsername(admin.get().getUsername());
+					dto.setAdminEmail(admin.get().getEmail());
+				} else {
+					dto.setAdminUsername("Administrador sin asignar");
+					dto.setAdminEmail("Administrador sin asignar");
+				}
+
 
 				list.add(dto);
 			}

@@ -21,7 +21,7 @@ public interface ProjectService {
 
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs,Long id_ProjectManager);
 
-    public Optional<Project> getProjectById(Long id);
+    //public Optional<Project> getProjectById(Long id);
     
     public Page<Project> getAll(Pageable pageable);
 
@@ -40,6 +40,9 @@ public interface ProjectService {
     public Iterable<DTOProject> getProjects();
 
     public DTOProject getProject(Long id);
+    public Optional<Project> getProjectById(Long id);
+
+    public DTOProject getDTOProjectById(Long id);
 
     public List<DTOProject> getProjectsThatContain(Long id);
 
