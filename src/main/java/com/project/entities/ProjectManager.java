@@ -35,6 +35,10 @@ public class ProjectManager implements Serializable{
     @NotFound(action = NotFoundAction.IGNORE)
     @JsonIgnore
     private List<Project> projects;
+    
+    @OneToMany(mappedBy = "projectManager", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Notification> notifications;
 
     public ProjectManager(String name, String surname, String email, String phone, String linkUnicen, String medioConocimientoCice) {
         this.name = name;

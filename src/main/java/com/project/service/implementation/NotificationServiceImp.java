@@ -51,7 +51,7 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public List<Notification> findByNotReadAndProjectManager(Long id) {
+	public List<Notification> findAllByNotReadAndProjectManager(Long id) {
 		Optional<ProjectManager> projectManagerOptional = projectManagerRepository.findById(id);
 		if (projectManagerOptional.isPresent()) {
 			ProjectManager projectManager = projectManagerOptional.get();
