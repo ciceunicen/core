@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,8 @@ public class ProjectController {
     private ActivityService activityService;
     @Autowired
     private EntrepreneurshipService entrepreneurshipService;
+    @Autowired
+    private NotificationServiceImp notificationService;
     @Autowired
     private RoleAuthController roleAuthController;
 
@@ -224,19 +227,67 @@ public class ProjectController {
     	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
 	    	Project updateProject=ProjectService.getProjectEntity(id);
 	        if (updateProject!=null){
-	            updateProject.setTitle(project.getTitle());
-	            updateProject.setDescription(project.getDescription());
+	        	String fields = ""; 
+	        	String message = String.format("El/Los campo/s %s de tu proyecto %s ha/n sido modificado/s por un administrador", fields, project.getTitle());
+	        	String newTitle = project.getTitle();
+	        	String newDescription = project.getDescription();
+	        	Integer equalNeeds = 0;
+	        	Integer equalAssistances = 0;
+	        	Integer equalFiles = 0;
+	        	
+	        	if (!updateProject.getTitle().equals(newTitle)) {
+	        		fields += "título, ";
+	        	}
+	        	
+	        	if (!updateProject.getDescription().equals(newDescription)) {
+	        		fields += "descripción, ";
+	        	}
+	        	
+	            updateProject.setTitle(newTitle);
+	            updateProject.setDescription(newDescription);
+	            
 	            List<Need> needs = new ArrayList<>();
 	            for (Long idNeed:project.getNeeds()) {
 	                needs.add(needServiceImp.getNeed(idNeed));
 	            }
+	            
+	            for (Need need : needs) {
+	            	if (updateProject.getNeeds().contains(need)) {
+	            		equalNeeds++;
+	            	}
+	            }
+	            
+	            if (updateProject.getNeeds().size() != equalNeeds) {
+	            	fields += "necesidades, ";
+	            }
+	            
 	            updateProject.setNeeds(needs);
+	            
 	            List<Assistance> assistances = new ArrayList<>();
 	            for (Long idAssistance:project.getAssistances()) {
 	                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
 	            }
+	            
+	            for (Assistance assistance : assistances) {
+	            	if (updateProject.getAssistances().contains(assistance)) {
+	            		equalAssistances++;
+	            	}
+	            }
+	            
+	            if (updateProject.getAssistances().size() != equalAssistances) {
+	            	fields += "asistencias, ";
+	            }
+	            
 	            updateProject.setAssistances(assistances);
-	            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+	            
+	            Stage stage = stageServiceImp.getStage(project.getStage());
+	            
+	            if (!updateProject.getStage().equals(stage)) {
+	            	fields += "estadio, ";
+	            }
+	            
+	            updateProject.setStage(stage);
+	            
 	            List<File> files = new ArrayList<>();
 	            if(project.getFiles() != null) {
 		            for (Long idFiles:project.getFiles()) {
@@ -246,9 +297,22 @@ public class ProjectController {
 	            if (project.getNewFiles() != null && project.getNewFiles().size()>0){
 	                for (File file:project.getNewFiles()) {
 	                    files.add(fileServiceImp.addFile(file));
+	                    if (updateProject.getFiles().contains(file)) {
+	                    	equalFiles++;
+	                    }
 	                }
 	            }
+	            
+	            if (updateProject.getFiles().size() != equalFiles) {
+	            	fields += "archivos, ";
+	            }
+	            
 	            updateProject.setFiles(files);
+	            
+	            if (!fields.isEmpty()) {
+	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
+	            }
+	            
 	            Project response = ProjectService.save(updateProject);
 	            return new ResponseEntity<>(response, HttpStatus.OK);
 	        }else {
