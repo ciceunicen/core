@@ -311,17 +311,18 @@ public class ProjectController {
 	            
 	            updateProject.setFiles(files);
 	            
+	            if (updateProject.getIs_active() != project.getIs_active()) {
+	            	fields += "estado, ";
+	            }
+	            
+	            updateProject.setIs_active(project.getIs_active());
+	            
 	            if (!fields.isEmpty()) {
 	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
 	            }
 	            
-	            User projectAdmin = null;
-	            try {
-	            	// Project manager del proyecto
-		            projectAdmin = userService.findById(updateProject.getAdministrador());
-				} catch (Exception e) {
-					return ResponseEntity.ok(updateProject.getAdministrador());
-				}
+            	// Project manager del proyecto
+	            User projectAdmin = userService.findById(updateProject.getAdministrador());
 	            DTOProject response = new DTOProject(ProjectService.save(updateProject), projectAdmin.getUsername(), projectAdmin.getEmail()); 
 	            return new ResponseEntity<>(response, HttpStatus.OK);
 	        }else {

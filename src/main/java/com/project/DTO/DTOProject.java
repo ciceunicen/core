@@ -22,7 +22,7 @@ public class DTOProject {
 	private String stage;
 	private Long administrador;
 
-	private boolean is_active;
+	private Boolean is_active;
 
 	private List<Assistance> assistances;
 	private ProjectManager projectManager;
@@ -40,7 +40,7 @@ public class DTOProject {
 		this.description = project.getDescription();
 		this.stage = project.getStage().getStage_type();
 		this.administrador = project.getAdministrador();
-		this.is_active = project.is_active();
+		this.setIs_active(project.getIs_active());
 		this.assistances = project.getAssistances();
 		this.projectManager = project.getProjectManager();
 		this.files = project.getFiles();
@@ -82,7 +82,7 @@ public class DTOProject {
       this.adminEmail = null;
    }
 
-	public DTOProject(Long id, String title, String description, String stage, Long idAdmin, ProjectManager projectManager,
+	public DTOProject(Long id, String title, String description, String stage, Long idAdmin, Boolean is_active, ProjectManager projectManager,
 					  List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships,
 					  List<Assistance> assistances, List<Need> needs) {
 		this.id_Project = id;
@@ -90,6 +90,7 @@ public class DTOProject {
 		this.description = description;
 		this.stage = stage;
 		this.administrador = idAdmin;
+		this.is_active = is_active;
 		this.projectManager = projectManager;
 		this.files = files;
 		this.actions = actions;

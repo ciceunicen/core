@@ -208,6 +208,7 @@ public class ProjectServiceImp implements ProjectService {
                     aux.getDescription(),
                     aux.getStage().getStage_type(),
                     aux.getAdministrador(),
+                    aux.getIs_active(),
                     aux.getProjectManager(),
                     aux.getFiles(),
                     aux.getActions(),
