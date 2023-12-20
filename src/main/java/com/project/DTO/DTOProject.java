@@ -1,9 +1,6 @@
 package com.project.DTO;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.project.entities.Action;
 import com.project.entities.Assistance;
@@ -27,7 +24,7 @@ public class DTOProject {
 
 	private boolean is_active;
 
-	private List<Assistance> assistanceType;
+	private List<Assistance> assistances;
 	private ProjectManager projectManager;
 	private List<File> files;
 	private List<Need> needs;
@@ -36,6 +33,24 @@ public class DTOProject {
 	private String projectManagerName;
 	private String adminUsername;
 	private String adminEmail;
+	
+	public DTOProject(Project project, String adminUsername, String adminEmail) {
+		this.id_Project = project.getId_Project();
+		this.title = project.getTitle();
+		this.description = project.getDescription();
+		this.stage = project.getStage().getStage_type();
+		this.administrador = project.getAdministrador();
+		this.is_active = project.is_active();
+		this.assistances = project.getAssistances();
+		this.projectManager = project.getProjectManager();
+		this.files = project.getFiles();
+		this.needs = project.getNeeds();
+		this.actions = project.getActions();
+		this.entrepreneurships = project.getEntrepreneurships();
+		this.projectManagerName = this.projectManager != null ? this.projectManager.getName() : null;
+		this.adminUsername =  adminUsername;
+		this.adminEmail = adminEmail;
+	}
 
 	public DTOProject(Long id, String title, String description, List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
 		this.id_Project = id;
@@ -79,7 +94,7 @@ public class DTOProject {
 		this.files = files;
 		this.actions = actions;
 		this.entrepreneurships = entrepreneurships;
-		this.assistanceType = assistances;
+		this.assistances = assistances;
 		this.needs = needs;
 		// Inicializa con el nombre del project manager o null si es null
 		this.projectManagerName = this.projectManager != null ? this.projectManager.getName() : null;

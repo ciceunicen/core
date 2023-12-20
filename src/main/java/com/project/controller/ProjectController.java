@@ -65,6 +65,8 @@ public class ProjectController {
     private NotificationServiceImp notificationService;
     @Autowired
     private RoleAuthController roleAuthController;
+    @Autowired
+    private UserServiceImp userService;
 
     public ProjectController() {
         this.mapper = new Mapper();
@@ -313,7 +315,14 @@ public class ProjectController {
 	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
 	            }
 	            
-	            Project response = ProjectService.save(updateProject);
+	            User projectAdmin = null;
+	            try {
+	            	// Project manager del proyecto
+		            projectAdmin = userService.findById(updateProject.getAdministrador());
+				} catch (Exception e) {
+					return ResponseEntity.ok(updateProject.getAdministrador());
+				}
+	            DTOProject response = new DTOProject(ProjectService.save(updateProject), projectAdmin.getUsername(), projectAdmin.getEmail()); 
 	            return new ResponseEntity<>(response, HttpStatus.OK);
 	        }else {
 	            return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);
