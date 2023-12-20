@@ -1,6 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOActionInsert;
+import com.project.DTO.DTOAdministrationRecord;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
@@ -179,9 +180,12 @@ public class ProjectServiceImp implements ProjectService {
         Iterable<Project> projects = this.projectRepository.findAll();
         for (Project aux: projects) {
             DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getStage() != null ? aux.getStage().getStage_type() : null, aux.getAdministrador(), aux.getProjectManager(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             listaDTO.add(dto);
         }
+        listaDTO.sort((p1, p2) -> p1.getTitle().compareTo(p2.getTitle()));
+
         return listaDTO;
 	}
 
@@ -306,5 +310,19 @@ public class ProjectServiceImp implements ProjectService {
         return project.containsEntrepreneurship(entrepreneurship);
     }
 
+    /**
+     * Guarda un AdministrationRecords a la base de datos
+     * 
+     * @param dto DTOAdministrationRecord que se utiliza para crear un AdministrationRecords
+     * @return AdministrationRecords creado
+     */
+    public AdministrationRecords saveDiagnostic(DTOAdministrationRecord dto) {
+        Project project = projectRepository.findById(dto.getIdProject()).get();
+        if(project != null) {
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getDiagnostic());
+            return administrationRecordsRepository.save(ad);
+        }
+        return null;
+    }
 
 }

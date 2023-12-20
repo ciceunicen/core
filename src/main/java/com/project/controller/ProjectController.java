@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -34,6 +33,9 @@ import com.project.DTO.*;
 import com.project.entities.Action;
 import com.project.entities.Entrepreneurship;
 import com.project.exception.UnauthorizedException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 /**
  * 
@@ -426,4 +428,25 @@ public class ProjectController {
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
     }
+
+    /**
+     * Guarda un diagnostico para un proyecto
+     * 
+     * @param dto AdministrationRecord que se va a guardar en la base de datos
+     * @return si se tiene los permisos adecuados, devuelve el 
+	 * AdministrationRecord guardado, de lo contrario, error 401 UNAUTHORIZED
+     */
+    @PostMapping("/diagnostic")
+    public ResponseEntity<?> saveDiagnostic(@RequestBody DTOAdministrationRecord dto) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
+            AdministrationRecords ad = ProjectService.saveDiagnostic(dto);
+            if(ad != null) {
+    			return new ResponseEntity<>(ad, HttpStatus.CREATED);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+        }
+        return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+    }
+    
 }
