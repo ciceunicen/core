@@ -45,6 +45,7 @@ public class Notification implements Serializable {
 	public Notification(DTONotificationInsert request, ProjectManager projectManager) {
 		this.message = request.getMessage();
 		this.date = request.getDate();
+		this.isRead = false;
 		this.projectManager = projectManager;
 	}
 }
