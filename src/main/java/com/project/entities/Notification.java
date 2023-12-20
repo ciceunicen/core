@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import com.project.DTO.DTONotificationInsert;
 
@@ -21,7 +20,6 @@ import lombok.NoArgsConstructor;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "notification")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,7 +32,7 @@ public class Notification implements Serializable {
 	@Column(nullable = false)
 	private Date date;
 	@Column(nullable = false)
-	private Boolean read;
+	private Boolean isRead;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_project_manager")

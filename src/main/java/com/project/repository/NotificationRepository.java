@@ -20,6 +20,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	@Query("SELECT n"
 			+ " FROM Notification n"
 			+ " WHERE n.projectManager = :projectManager"
-			+ " AND n.read IS NOT TRUE")
+			+ " AND n.isRead IS NOT TRUE")
 	public List<Notification> findByNotReadProjectManager(ProjectManager projectManager);
 }
