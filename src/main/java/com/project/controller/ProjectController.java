@@ -438,7 +438,7 @@ public class ProjectController {
      */
     @PostMapping("/diagnostic")
     public ResponseEntity<?> saveDiagnostic(@RequestBody DTOAdministrationRecord dto) {
-        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             AdministrationRecords ad = ProjectService.saveDiagnostic(dto);
             if(ad != null) {
     			return new ResponseEntity<>(ad, HttpStatus.CREATED);

@@ -319,7 +319,7 @@ public class ProjectServiceImp implements ProjectService {
     public AdministrationRecords saveDiagnostic(DTOAdministrationRecord dto) {
         Project project = projectRepository.findById(dto.getIdProject()).get();
         if(project != null) {
-            AdministrationRecords ad = new AdministrationRecords(project, dto.getDiagnostic());
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), dto.getDiagnostic());
             return administrationRecordsRepository.save(ad);
         }
         return null;
