@@ -56,7 +56,7 @@ public class ProjectServiceImp implements ProjectService {
         }
         project.setStage(stageRepository.getStage(id_stage));
         project = projectRepository.save(project);
-        AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
+        AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
         return project;
     }

@@ -62,6 +62,8 @@ public class ProjectController {
     private EntrepreneurshipService entrepreneurshipService;
     @Autowired
     private RoleAuthController roleAuthController;
+    @Autowired
+    private ReferentServiceImp referentService;
 
     public ProjectController() {
         this.mapper = new Mapper();
@@ -81,6 +83,12 @@ public class ProjectController {
     		
     		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
     		if(saveProject != null) {
+    			 // Now, save the Referent with the project id
+                Referent referent = mapper.toReferent(project);
+                if (referent != null) {
+                    referent.setProjectId(saveProject.getId_Project());
+                    this.referentService.addReferent(referent);
+                }
     			return new ResponseEntity<>(saveProject, HttpStatus.CREATED);
     		}else {
     			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
