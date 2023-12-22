@@ -230,7 +230,7 @@ public class ProjectController {
 	    	Project updateProject=ProjectService.getProjectEntity(id);
 	        if (updateProject!=null){
 	        	String fields = ""; 
-	        	String message = String.format("El/Los campo/s %s de tu proyecto %s ha/n sido modificado/s por un administrador", fields, project.getTitle());
+	        	
 	        	String newTitle = project.getTitle();
 	        	String newDescription = project.getDescription();
 	        	Integer equalNeeds = 0;
@@ -250,16 +250,15 @@ public class ProjectController {
 	            
 	            List<Need> needs = new ArrayList<>();
 	            for (Long idNeed:project.getNeeds()) {
-	                needs.add(needServiceImp.getNeed(idNeed));
-	            }
-	            
-	            for (Need need : needs) {
-	            	if (updateProject.getNeeds().contains(need)) {
+	            	Need need = needServiceImp.getNeed(idNeed); 
+	                needs.add(need);
+	                
+	                if (updateProject.getNeeds().contains(need)) {
 	            		equalNeeds++;
 	            	}
 	            }
 	            
-	            if (updateProject.getNeeds().size() != equalNeeds) {
+	            if (updateProject.getNeeds().size() != equalNeeds || updateProject.getNeeds().size() != needs.size()) {
 	            	fields += "necesidades, ";
 	            }
 	            
@@ -267,16 +266,15 @@ public class ProjectController {
 	            
 	            List<Assistance> assistances = new ArrayList<>();
 	            for (Long idAssistance:project.getAssistances()) {
-	                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
-	            }
-	            
-	            for (Assistance assistance : assistances) {
-	            	if (updateProject.getAssistances().contains(assistance)) {
+	            	Assistance assistance = assistanceServiceImp.getAssistance(idAssistance); 
+	                assistances.add(assistance);
+	                
+	                if (updateProject.getAssistances().contains(assistance)) {
 	            		equalAssistances++;
 	            	}
 	            }
 	            
-	            if (updateProject.getAssistances().size() != equalAssistances) {
+	            if (updateProject.getAssistances().size() != equalAssistances || updateProject.getAssistances().size() != assistances.size()) {
 	            	fields += "asistencias, ";
 	            }
 	            
@@ -317,6 +315,10 @@ public class ProjectController {
 	            
 	            updateProject.setIs_active(project.getIs_active());
 	            
+	            if (!fields.isEmpty()) {
+	            	fields = fields.substring(0, fields.length()-2);
+	            }
+	            String message = String.format("El/Los campo/s %s de tu proyecto %s ha/n sido modificado/s por un administrador", fields, project.getTitle());
 	            if (!fields.isEmpty()) {
 	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
 	            }
