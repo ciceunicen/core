@@ -219,10 +219,10 @@ public class ProjectController {
     }
 
     /**
-     * Sobreescribe todo el proyecto en la base de datos
+     * Sobreescribe todo el proyecto en la base de datos y envía una notificación al project manager indicando los campos modificados y fecha
      * @param id es el id del proyecto a buscar
      * @param project son los datos de un proyecto a modificar
-     * @return un projecto modificado
+     * @return el DTO de un projecto modificado
      */
     @PutMapping("/{id_project}")
     public ResponseEntity<?> updateProject(@PathVariable ("id_project") Long id, @RequestBody DTOProjectUpdate project){
