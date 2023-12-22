@@ -1,17 +1,11 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOAdministrationRecord;
+import com.project.DTO.DTODiagnostic;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.*;
-
-import com.project.entities.Action;
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Entrepreneurship;
-import com.project.entities.Project;
 import com.project.exception.NotFoundException;
 
 import com.project.repository.*;
@@ -49,6 +43,8 @@ public class ProjectServiceImp implements ProjectService {
     private AdministrationRecordsRepository administrationRecordsRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private DiagnosticRepository diagnosticRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
@@ -311,16 +307,20 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     /**
-     * Guarda un AdministrationRecords a la base de datos
+     * Guarda un Diagnostico a la base de datos
+     * Crea un AdministrationRecords con la accion Diagnostico
      * 
-     * @param dto DTOAdministrationRecord que se utiliza para crear un AdministrationRecords
-     * @return AdministrationRecords creado
+     * @param dto DTODiagnostic que se utiliza para crear un Diagnostico
+     * @return Diagnostico creado
      */
-    public AdministrationRecords saveDiagnostic(DTOAdministrationRecord dto) {
+    public Diagnostic saveDiagnostic(DTODiagnostic dto) {
         Project project = projectRepository.findById(dto.getIdProject()).get();
         if(project != null) {
-            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), dto.getDiagnostic());
-            return administrationRecordsRepository.save(ad);
+            Diagnostic diagnostic = new Diagnostic(dto.getDiagnostic(), project);
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
+            administrationRecordsRepository.save(ad);
+
+            return diagnosticRepository.save(diagnostic);
         }
         return null;
     }
