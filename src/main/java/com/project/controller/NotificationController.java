@@ -29,13 +29,13 @@ public class NotificationController {
 		return ResponseEntity.ok(service.findByid(id)); 
 	}
 	
-	@GetMapping("/projectManager/{id}")
-	public ResponseEntity<List<Notification>> findAllByProjectManager(@PathVariable Long projectManagerId) {
-		return ResponseEntity.ok(service.findAllByProjectManager(projectManagerId)); 
+	@GetMapping("/projectManager/{administratorId}")
+	public ResponseEntity<List<Notification>> findAllByAdministratorId(@PathVariable Long administratorId) {
+		return ResponseEntity.ok(service.findAllByAdministrator(administratorId)); 
 	}
 	
-	@GetMapping("/notRead/projectManager/{id}")
-	public ResponseEntity<List<Notification>> findAllByNotReadAndProjectManager(@PathVariable Long projectManagerId) {
-		return ResponseEntity.ok(service.findAllByNotReadAndProjectManager(projectManagerId)); 
+	@GetMapping("/notRead/projectManager/{administratorId}")
+	public ResponseEntity<List<Notification>> findAllByNotReadAndAdministratorId(@PathVariable Long administratorId) {
+		return ResponseEntity.ok(service.findAllByNotReadAndAdministrator(administratorId)); 
 	}
 }

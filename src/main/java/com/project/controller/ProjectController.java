@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -54,8 +53,6 @@ public class ProjectController {
     private NeedServiceImp needServiceImp;
     @Autowired
     private FileServiceImp fileServiceImp;
-    @Autowired
-    private ProjectManagerServiceImp projectManagerServiceImp;
     private Mapper mapper;
     @Autowired
     private ActivityService activityService;
@@ -320,7 +317,7 @@ public class ProjectController {
 	            }
 	            String message = String.format("El/Los campo/s %s de tu proyecto %s ha/n sido modificado/s por un administrador", fields, project.getTitle());
 	            if (!fields.isEmpty()) {
-	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
+	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getAdministrador()));
 	            }
 	            
             	// Project manager del proyecto

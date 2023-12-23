@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service;
 
 import com.project.DTO.DTONotificationInsert;
 import com.project.entities.Notification;
-import com.project.entities.ProjectManager;
+import com.project.entities.User;
 import com.project.exception.NotFoundException;
 import com.project.repository.NotificationRepository;
-import com.project.repository.ProjectManagerRepository;
+import com.project.repository.UserRepository;
 import com.project.service.NotificationService;
 
 @Service
 public class NotificationServiceImp implements NotificationService {
-	
+	 
 	@Autowired
 	private NotificationRepository repository;
 	
 	@Autowired
-	private ProjectManagerRepository projectManagerRepository;
+	private UserRepository userRepository;
 
 	@Override
 	public List<Notification> findAll() {
@@ -39,37 +39,37 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public List<Notification> findAllByProjectManager(Long id) {
-		Optional<ProjectManager> projectManagerOptional = projectManagerRepository.findById(id);
-		if (projectManagerOptional.isPresent()) {
-			ProjectManager projectManager = projectManagerOptional.get();
-			List<Notification> notifications = repository.findByProjectManager(projectManager);
+	public List<Notification> findAllByAdministrator(Long id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (userOptional.isPresent()) {
+			User administrator = userOptional.get();
+			List<Notification> notifications = repository.findAllByAdministrator(administrator);
 			return notifications;
 		} else {
-			throw new NotFoundException("No existe un project manager con el id " + id);
+			throw new NotFoundException("No existe un usuario con el id " + id);
 		}
 	}
 	
 	@Override
-	public List<Notification> findAllByNotReadAndProjectManager(Long id) {
-		Optional<ProjectManager> projectManagerOptional = projectManagerRepository.findById(id);
-		if (projectManagerOptional.isPresent()) {
-			ProjectManager projectManager = projectManagerOptional.get();
-			List<Notification> notifications = repository.findByNotReadProjectManager(projectManager);
+	public List<Notification> findAllByNotReadAndAdministrator(Long id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (userOptional.isPresent()) {
+			User administrator = userOptional.get();
+			List<Notification> notifications = repository.findAllByNotReadAndAdministrator(administrator);
 			return notifications;
 		} else {
-			throw new NotFoundException("No existe un project manager con el id " + id);
+			throw new NotFoundException("No existe un usuario con el id " + id);
 		}
 	}
-
+	
 	@Override
 	public Notification save(DTONotificationInsert request) {
-		Optional<ProjectManager> projectManagerOptional = projectManagerRepository.findById(request.getProjectManagerId());
-		if (projectManagerOptional.isPresent()) {
-			Notification notification = new Notification(request, projectManagerOptional.get());
+		Optional<User> userOptional = userRepository.findById(request.getAdministratorId());
+		if (userOptional.isPresent()) {
+			Notification notification = new Notification(request, userOptional.get());
 			return repository.save(notification);
 		} else {
-			throw new NotFoundException("No existe un project manager con el id " + request.getProjectManagerId());
+			throw new NotFoundException("No existe un project manager con el id " + request.getAdministratorId());
 		}
 	}
 

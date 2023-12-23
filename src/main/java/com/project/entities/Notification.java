@@ -35,17 +35,17 @@ public class Notification implements Serializable {
 	private Boolean isRead;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_project_manager")
-	private ProjectManager projectManager;
+	@JoinColumn(name = "id_administrator")
+	private User administrator;
 	
 	public Notification(DTONotificationInsert request) {
 		this(request, null);
 	}
 	
-	public Notification(DTONotificationInsert request, ProjectManager projectManager) {
+	public Notification(DTONotificationInsert request, User administrator) {
 		this.message = request.getMessage();
 		this.date = request.getDate();
 		this.isRead = false;
-		this.projectManager = projectManager;
+		this.administrator = administrator;
 	}
 }

@@ -3,6 +3,7 @@ package com.project.DTO;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,6 @@ public class DTONotificationInsert {
 	private String message;
 	@NotNull(message = "date shouldn't be null")
 	private Date date;
-	private Long projectManagerId;
+	@Positive(message = "administratorId should be positive")
+	private Long administratorId;
 }

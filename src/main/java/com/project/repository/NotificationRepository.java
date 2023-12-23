@@ -7,19 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.project.entities.Notification;
-import com.project.entities.ProjectManager;
+import com.project.entities.User;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
 	@Query("SELECT n"
 			+ " FROM Notification n"
-			+ " WHERE n.projectManager = :projectManager")
-	public List<Notification> findByProjectManager(ProjectManager projectManager);
-
+			+ " WHERE n.administrator = :administrator")
+	public List<Notification> findAllByAdministrator(User administrator);
+	
 	@Query("SELECT n"
 			+ " FROM Notification n"
-			+ " WHERE n.projectManager = :projectManager"
+			+ " WHERE n.administrator = :administrator"
 			+ " AND n.isRead IS NOT TRUE")
-	public List<Notification> findByNotReadProjectManager(ProjectManager projectManager);
+	public List<Notification> findAllByNotReadAndAdministrator(User administrator);
 }
