@@ -70,6 +70,7 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 //			this.files.add(new File(file.getFile(), file.getType()));
 //		}
 		this.administrador = administrador;
+		this.is_active = false;
 	}
 
 	public Project(String title, String description, Long administrador) {
@@ -83,6 +84,7 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 		}
 
 		this.administrador = administrador;
+		this.is_active = false;
 	}
 
 	public Project(@NotEmpty String title, String description, @NotEmpty LocalDate start_date) {
@@ -90,6 +92,7 @@ public class Project implements Serializable {//se removio extends entrepreneurs
 		this.description = description;
 		
 		this.entrepreneurships = new ArrayList<>();
+		this.is_active = false;
 	}
 
 	public void addNeed(Need need) {

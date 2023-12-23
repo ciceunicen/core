@@ -81,7 +81,7 @@ public class ProjectController {
     public ResponseEntity<?> addProject(@Valid @RequestBody DTOProjectInsert project) { 
     	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
     		
-    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
+    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistances(),project.getNeeds(),project.getId_ProjectManager());
     		if(saveProject != null) {
     			return new ResponseEntity<>(saveProject, HttpStatus.CREATED);
     		}else {

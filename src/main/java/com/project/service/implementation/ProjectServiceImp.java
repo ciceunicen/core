@@ -48,10 +48,13 @@ public class ProjectServiceImp implements ProjectService {
     private AdministrationRecordsRepository administrationRecordsRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private NotificationRepository notificationRespository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
-        project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
+    	ProjectManager projectManager = projectManagerRepository.getByProjectManagerById(id_ProjectManager); 
+        project.setProjectManager(projectManager);
 
         for (Long id:id_needs) {
             project.addNeed(needRepository.getNeed(id));
@@ -63,6 +66,11 @@ public class ProjectServiceImp implements ProjectService {
         project = projectRepository.save(project);
         AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
+        
+//        if (projectManager != null) {
+//        	Notification notification = new NOtif
+//        }
+        
         return project;
     }
 
