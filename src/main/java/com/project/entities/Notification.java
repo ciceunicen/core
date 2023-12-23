@@ -48,4 +48,11 @@ public class Notification implements Serializable {
 		this.isRead = false;
 		this.administrator = administrator;
 	}
+	
+	public Notification(String message, Date date, User administrator) {
+		this.message = message;
+		this.date = date;
+		this.isRead = false;
+		this.administrator = administrator;
+	}
 }

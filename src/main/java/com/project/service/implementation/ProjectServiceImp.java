@@ -17,6 +17,7 @@ import com.project.repository.*;
 import com.project.service.ProjectService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,9 +68,12 @@ public class ProjectServiceImp implements ProjectService {
         AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
         
-//        if (projectManager != null) {
-//        	Notification notification = new NOtif
-//        }
+        Optional<User> userOptional = userRepository.findById(id_ProjectManager);
+        if (userOptional.isPresent()) {
+        	User user = userOptional.get();
+        	Notification notification = new Notification("El proyecto ha sido creado satisfactoriamente", new Date(System.currentTimeMillis()), user);
+        	notificationRespository.save(notification);
+        }
         
         return project;
     }
