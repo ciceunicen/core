@@ -315,9 +315,9 @@ public class ProjectController {
 	            if (!fields.isEmpty()) {
 	            	fields = fields.substring(0, fields.length()-2);
 	            }
-	            String message = String.format("El/Los campo/s %s de tu proyecto %s ha/n sido modificado/s por un administrador", fields, project.getTitle());
+	            String message = String.format("El/Los campo/s %s de tu proyecto '%s' ha/n sido modificado/s por un administrador", fields, project.getTitle());
 	            if (!fields.isEmpty()) {
-	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getAdministrador()));
+	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
 	            }
 	            
             	// Project manager del proyecto

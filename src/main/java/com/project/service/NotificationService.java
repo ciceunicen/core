@@ -12,8 +12,8 @@ public interface NotificationService {
 	
 	public List<Notification> findAll();
 	public Notification findByid(Long id);
-	public List<Notification> findAllByAdministrator(Long id);
-	public List<Notification> findAllByNotReadAndAdministrator(Long id);
+	public List<Notification> findAllByUser(Long id);
+	public List<Notification> findAllByNotReadAndUser(Long id);
 	public Notification save(DTONotificationInsert request);
 	public Notification deleteByid(Long id);
 }

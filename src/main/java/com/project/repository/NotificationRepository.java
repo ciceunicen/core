@@ -14,14 +14,14 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	@Query("SELECT n"
 			+ " FROM Notification n"
-			+ " WHERE n.administrator = :administrator"
+			+ " WHERE n.user = :user"
 			+ " ORDER BY n.date DESC")
-	public List<Notification> findAllByAdministrator(User administrator);
+	public List<Notification> findAllByUser(User user);
 	
 	@Query("SELECT n"
 			+ " FROM Notification n"
-			+ " WHERE n.administrator = :administrator"
+			+ " WHERE n.user = :user"
 			+ " AND n.isRead IS NOT TRUE"
 			+ " ORDER BY n.date DESC")
-	public List<Notification> findAllByNotReadAndAdministrator(User administrator);
+	public List<Notification> findAllByNotReadAndUser(User user);
 }

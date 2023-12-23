@@ -17,6 +17,6 @@ public class DTONotificationInsert {
 	private String message;
 	@NotNull(message = "date shouldn't be null")
 	private Date date;
-	@Positive(message = "administratorId should be positive")
-	private Long administratorId;
+	@Positive(message = "userId should be positive")
+	private Long userId;
 }

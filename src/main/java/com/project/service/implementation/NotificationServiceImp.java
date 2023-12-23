@@ -39,11 +39,11 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public List<Notification> findAllByAdministrator(Long id) {
+	public List<Notification> findAllByUser(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isPresent()) {
-			User administrator = userOptional.get();
-			List<Notification> notifications = repository.findAllByAdministrator(administrator);
+			User user = userOptional.get();
+			List<Notification> notifications = repository.findAllByUser(user);
 			return notifications;
 		} else {
 			throw new NotFoundException("No existe un usuario con el id " + id);
@@ -51,11 +51,11 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public List<Notification> findAllByNotReadAndAdministrator(Long id) {
+	public List<Notification> findAllByNotReadAndUser(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isPresent()) {
-			User administrator = userOptional.get();
-			List<Notification> notifications = repository.findAllByNotReadAndAdministrator(administrator);
+			User user = userOptional.get();
+			List<Notification> notifications = repository.findAllByNotReadAndUser(user);
 			return notifications;
 		} else {
 			throw new NotFoundException("No existe un usuario con el id " + id);
@@ -64,12 +64,12 @@ public class NotificationServiceImp implements NotificationService {
 	
 	@Override
 	public Notification save(DTONotificationInsert request) {
-		Optional<User> userOptional = userRepository.findById(request.getAdministratorId());
+		Optional<User> userOptional = userRepository.findById(request.getUserId());
 		if (userOptional.isPresent()) {
 			Notification notification = new Notification(request, userOptional.get());
 			return repository.save(notification);
 		} else {
-			throw new NotFoundException("No existe un project manager con el id " + request.getAdministratorId());
+			throw new NotFoundException("No existe un project manager con el id " + request.getUserId());
 		}
 	}
 

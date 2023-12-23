@@ -50,7 +50,7 @@ public class User implements Serializable,UserDetails{
 	@Column(nullable = false)
 	private boolean is_deleted;
 	
-	@OneToMany(mappedBy = "administrator", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Notification> notifications;
 

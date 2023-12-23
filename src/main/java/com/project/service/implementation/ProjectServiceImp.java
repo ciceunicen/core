@@ -71,7 +71,7 @@ public class ProjectServiceImp implements ProjectService {
         Optional<User> userOptional = userRepository.findById(id_ProjectManager);
         if (userOptional.isPresent()) {
         	User user = userOptional.get();
-        	Notification notification = new Notification("El proyecto ha sido creado satisfactoriamente", new Date(System.currentTimeMillis()), user);
+        	Notification notification = new Notification(String.format("El proyecto '%s' ha sido creado satisfactoriamente", project.getTitle()), new Date(System.currentTimeMillis()), user);
         	notificationRespository.save(notification);
         }
         
