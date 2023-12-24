@@ -124,12 +124,25 @@ public class ProjectServiceImp implements ProjectService {
      */
     @Override
 	public Project deleteProject(Long id_project, Long id_admin) {
-    	Optional <Project> project = this.getProjectById(id_project);
+    	Optional <Project> projectOptional = this.getProjectById(id_project);
     	Boolean isRemoved = (deletedProjetcRepository.getDeletedProjectByIdProject(id_project) != null);
-    	if(!project.isEmpty() && !isRemoved) {
+    	if(!projectOptional.isEmpty() && !isRemoved) {
+    		Project project = projectOptional.get();
+    		
     		DeletedProject deleteProject = new DeletedProject();
-    		deleteProject.setProject(project.get());
+    		deleteProject.setProject(project);
     		deleteProject.setId_admin(id_admin);
+    		
+    		Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Tu proyecto '%s' ha sido eliminado por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+    		
     		return deletedProjetcRepository.save(deleteProject).getProject();
     	}
 		return null;
