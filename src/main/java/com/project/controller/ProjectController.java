@@ -441,4 +441,24 @@ public class ProjectController {
         return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
     }
     
+    /**
+     * Obtiene un Diagnostico de la base de datos mediante su id
+     * que se obtiene por URL
+     * 
+     * @param id identificador del Diagnostico
+     * @return Diagnostico encontrado si se tiene autorizacion,
+     * de lo contrario, error 401 UNAUTHORIZED
+     */
+    @GetMapping("/diagnostic/{id}")
+    public ResponseEntity<?> getDiagnostic(@PathVariable Long id) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Diagnostic diagnostic = ProjectService.getDiagnosticById(id);
+            if(diagnostic != null) {
+    			return new ResponseEntity<>(diagnostic, HttpStatus.OK);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+        }
+        return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+    }
 }

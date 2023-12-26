@@ -316,13 +316,23 @@ public class ProjectServiceImp implements ProjectService {
     public Diagnostic saveDiagnostic(DTODiagnostic dto) {
         Project project = projectRepository.findById(dto.getIdProject()).get();
         if(project != null) {
-            Diagnostic diagnostic = new Diagnostic(dto.getDiagnostic(), project);
             AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
-            administrationRecordsRepository.save(ad);
-
-            return diagnosticRepository.save(diagnostic);
+            ad = administrationRecordsRepository.save(ad);
+            Diagnostic diagnostic = diagnosticRepository.save(new Diagnostic(dto.getDiagnostic(), project, ad.getId_record()));
+            
+            return diagnostic;   
         }
         return null;
+    }
+
+    /**
+     * Busca un Diagnostico guardado en la base de datos mediante un id
+     * 
+     * @param id del Diagnostico que se quiere obtener
+     * @return Diagnostico que se encuentra
+     */
+    public Diagnostic getDiagnosticById(Long id) {
+        return diagnosticRepository.findByIdRecord(id).get();
     }
 
 }

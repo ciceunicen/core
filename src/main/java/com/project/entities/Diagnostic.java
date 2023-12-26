@@ -27,11 +27,15 @@ public class Diagnostic {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "fk_project")
     private Project project;
+    
+    @Column
+    private Long idRecord;
 
     public Diagnostic() {}
 
-    public Diagnostic(String diagnostic, Project project) {
+    public Diagnostic(String diagnostic, Project project, Long idRecord) {
         this.diagnostic = diagnostic;
         this.project = project;
+        this.idRecord = idRecord;
     }
 }
