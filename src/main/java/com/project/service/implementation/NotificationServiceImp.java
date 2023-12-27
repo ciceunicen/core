@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.DTO.DTONotificationInsert;
 import com.project.entities.Notification;
@@ -15,6 +16,7 @@ import com.project.repository.UserRepository;
 import com.project.service.NotificationService;
 
 @Service
+@Transactional
 public class NotificationServiceImp implements NotificationService {
 	 
 	@Autowired
@@ -72,6 +74,18 @@ public class NotificationServiceImp implements NotificationService {
 			throw new NotFoundException("No existe un project manager con el id " + request.getUserId());
 		}
 	}
+	
+	public List<Notification> setNotificationsAsReadeadByUser(Long userId) {
+		Optional<User> userOptional = userRepository.findById(userId);
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			repository.setNotificationsAsReadeadByUser(user);
+			
+			return repository.findAllByUser(user);
+		} else {
+			throw new NotFoundException("El usuario con id " + userId + " no existe");
+		}
+	}
 
 	@Override
 	public Notification deleteByid(Long id) {
@@ -82,6 +96,6 @@ public class NotificationServiceImp implements NotificationService {
 		} else {
 			throw new NotFoundException("No existe una notificación con el id " + id);
 		}
-	}	
+	}
 
 }
