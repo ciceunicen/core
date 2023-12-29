@@ -176,7 +176,7 @@ public class ProjectServiceImp implements ProjectService {
         Iterable<Project> projects = this.projectRepository.findAll();
         for (Project aux: projects) {
             DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
-                    aux.getStage() != null ? aux.getStage().getStage_type() : null, aux.getAdministrador(), aux.getProjectManager(),
+                    aux.getStage(), aux.getAdministrador(), aux.getProjectManager(),
                     aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
             listaDTO.add(dto);
         }
@@ -206,7 +206,7 @@ public class ProjectServiceImp implements ProjectService {
                     aux.getId_Project(),
                     aux.getTitle(),
                     aux.getDescription(),
-                    aux.getStage().getStage_type(),
+                    aux.getStage(),
                     aux.getAdministrador(),
                     aux.getProjectManager(),
                     aux.getFiles(),
