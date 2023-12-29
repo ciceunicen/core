@@ -13,6 +13,12 @@ import com.project.entities.User;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+	@Query("SELECT COUNT(n)"
+			+ " FROM Notification n"
+			+ " WHERE n.isRead IS NOT TRUE"
+			+ " AND n.user = :user")
+	public Long getNotReadNotificationsByUser(User user);
+	
 	@Query("SELECT n"
 			+ " FROM Notification n"
 			+ " WHERE n.user = :user"

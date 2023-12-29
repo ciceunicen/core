@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.DTO.DTONotificationsAndReadQuantity;
 import com.project.DTO.DTONotificationInsert;
 import com.project.entities.Notification;
 import com.project.entities.User;
@@ -41,12 +42,15 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public List<Notification> findAllByUser(Long id) {
+	public DTONotificationsAndReadQuantity findAllByUser(Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
 			List<Notification> notifications = repository.findAllByUser(user);
-			return notifications;
+			Long readQuantity = repository.getNotReadNotificationsByUser(user);
+			DTONotificationsAndReadQuantity DTONotifications = new DTONotificationsAndReadQuantity(notifications, readQuantity);
+			
+			return DTONotifications;
 		} else {
 			throw new NotFoundException("No existe un usuario con el id " + id);
 		}
@@ -75,13 +79,17 @@ public class NotificationServiceImp implements NotificationService {
 		}
 	}
 	
-	public List<Notification> setNotificationsAsReadeadByUser(Long userId) {
+	public DTONotificationsAndReadQuantity setNotificationsAsReadeadByUser(Long userId) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
 			repository.setNotificationsAsReadeadByUser(user);
 			
-			return repository.findAllByUser(user);
+			Long readQuantity = repository.getNotReadNotificationsByUser(user);
+			List<Notification> notifications = repository.findAllByUser(user);
+			DTONotificationsAndReadQuantity DTONotifications = new DTONotificationsAndReadQuantity(notifications, readQuantity);
+			
+			return DTONotifications;
 		} else {
 			throw new NotFoundException("El usuario con id " + userId + " no existe");
 		}

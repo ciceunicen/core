@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.DTO.DTONotificationsAndReadQuantity;
 import com.project.entities.Notification;
 import com.project.service.implementation.NotificationServiceImp;
 
@@ -31,7 +32,7 @@ public class NotificationController {
 	}
 	
 	@GetMapping("/projectManager/{userId}")
-	public ResponseEntity<List<Notification>> findAllByUserId(@PathVariable Long userId) {
+	public ResponseEntity<DTONotificationsAndReadQuantity> findAllByUserId(@PathVariable Long userId) {
 		return ResponseEntity.ok(service.findAllByUser(userId)); 
 	}
 	
@@ -41,7 +42,7 @@ public class NotificationController {
 	}
 	
 	@PutMapping("/projectManager/{userId}")
-	public ResponseEntity<List<Notification>> setNotificationsAsReadeadByUser(@PathVariable Long userId) {
+	public ResponseEntity<DTONotificationsAndReadQuantity> setNotificationsAsReadeadByUser(@PathVariable Long userId) {
 		return ResponseEntity.ok(service.setNotificationsAsReadeadByUser(userId));
 	}
 }
