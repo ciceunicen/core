@@ -180,7 +180,7 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 						aux.getId_Project(),
 						aux.getTitle(),
 						aux.getDescription(),
-						aux.getStage().getStage_type(),
+						aux.getStage(),
 						aux.getAdministrador(),
 						aux.getProjectManager(),
 						aux.getFiles(),

@@ -1,10 +1,5 @@
 package com.project.controller;
 
-import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOActivity;
-import com.project.DTO.DTOEntrepreneurship;
-import com.project.DTO.DTOProjectInsert;
-import com.project.DTO.DTOProjectUpdate;
 import com.project.Mapper.Mapper;
 import com.project.entities.*;
 import com.project.service.ActivityService;
@@ -26,14 +21,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.project.DTO.*;
-import com.project.entities.Action;
-import com.project.entities.Entrepreneurship;
 import com.project.exception.UnauthorizedException;
+
 
 /**
  * 
@@ -433,5 +426,47 @@ public class ProjectController {
             else return new ResponseEntity("No existe el recurso con id: " + entrepreneurship_id, HttpStatus.NOT_FOUND);
         }
         else return new ResponseEntity("No tiene permisos para crear un nuevo recurso",HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Guarda un diagnostico para un proyecto
+     * 
+     * @param dto DTODiagnostic que recibe del lado del cliente y se va a enviar al 
+     * servicio para guardar en la base de datos
+     * @return si se tiene los permisos adecuados, devuelve el Diagnostico guardado,
+     * de lo contrario, error 401 UNAUTHORIZED
+     */
+    @PostMapping("/diagnostic")
+    public ResponseEntity<?> saveDiagnostic(@RequestBody DTODiagnostic dto) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Diagnostic diagnostic = ProjectService.saveDiagnostic(dto);
+            if(diagnostic != null) {
+    			return new ResponseEntity<>(diagnostic, HttpStatus.CREATED);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+        }
+        return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+    }
+    
+    /**
+     * Obtiene un Diagnostico de la base de datos mediante su id
+     * que se obtiene por URL
+     * 
+     * @param id identificador del Diagnostico
+     * @return Diagnostico encontrado si se tiene autorizacion,
+     * de lo contrario, error 401 UNAUTHORIZED
+     */
+    @GetMapping("/diagnostic/{id}")
+    public ResponseEntity<?> getDiagnostic(@PathVariable Long id) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Diagnostic diagnostic = ProjectService.getDiagnosticById(id);
+            if(diagnostic != null) {
+    			return new ResponseEntity<>(diagnostic, HttpStatus.OK);
+    		}else {
+    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+    		}
+        }
+        return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
     }
 }
