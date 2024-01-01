@@ -1,16 +1,11 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOActionInsert;
+import com.project.DTO.DTODiagnostic;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
 import com.project.entities.*;
-
-import com.project.entities.Action;
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Entrepreneurship;
-import com.project.entities.Project;
 import com.project.exception.NotFoundException;
 
 import com.project.repository.*;
@@ -51,6 +46,8 @@ public class ProjectServiceImp implements ProjectService {
     private UserRepository userRepository;
     @Autowired
     private NotificationRepository notificationRespository;
+    @Autowired
+    private DiagnosticRepository diagnosticRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
@@ -65,7 +62,7 @@ public class ProjectServiceImp implements ProjectService {
         }
         project.setStage(stageRepository.getStage(id_stage));
         project = projectRepository.save(project);
-        AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
+        AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
         
         Optional<User> userOptional = userRepository.findById(id_ProjectManager);
@@ -203,10 +200,14 @@ public class ProjectServiceImp implements ProjectService {
 		List<DTOProject> listaDTO = new ArrayList<>();
         Iterable<Project> projects = this.projectRepository.findAll();
         for (Project aux: projects) {
-            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
-                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+//                    aux.getStage(), aux.getAdministrador(), aux.getProjectManager(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+        	DTOProject dto = new DTOProject(aux, null, null);
             listaDTO.add(dto);
         }
+        listaDTO.sort((p1, p2) -> p1.getTitle().compareTo(p2.getTitle()));
+
         return listaDTO;
 	}
 
@@ -231,7 +232,7 @@ public class ProjectServiceImp implements ProjectService {
                     aux.getId_Project(),
                     aux.getTitle(),
                     aux.getDescription(),
-                    aux.getStage().getStage_type(),
+                    aux.getStage(),
                     aux.getAdministrador(),
                     aux.getIs_active(),
                     aux.getProjectManager(),
@@ -332,5 +333,33 @@ public class ProjectServiceImp implements ProjectService {
         return project.containsEntrepreneurship(entrepreneurship);
     }
 
+    /**
+     * Guarda un Diagnostico a la base de datos
+     * Crea un AdministrationRecords con la accion Diagnostico
+     * 
+     * @param dto DTODiagnostic que se utiliza para crear un Diagnostico
+     * @return Diagnostico creado
+     */
+    public Diagnostic saveDiagnostic(DTODiagnostic dto) {
+        Project project = projectRepository.findById(dto.getIdProject()).get();
+        if(project != null) {
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
+            ad = administrationRecordsRepository.save(ad);
+            Diagnostic diagnostic = diagnosticRepository.save(new Diagnostic(dto.getDiagnostic(), project, ad.getId_record()));
+            
+            return diagnostic;   
+        }
+        return null;
+    }
+
+    /**
+     * Busca un Diagnostico guardado en la base de datos mediante un id
+     * 
+     * @param id del Diagnostico que se quiere obtener
+     * @return Diagnostico que se encuentra
+     */
+    public Diagnostic getDiagnosticById(Long id) {
+        return diagnosticRepository.findByIdRecord(id).get();
+    }
 
 }

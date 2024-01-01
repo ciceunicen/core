@@ -10,11 +10,13 @@ import org.apache.commons.csv.CSVRecord;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -34,6 +36,10 @@ import java.util.List;
 public class loadDatabase {
     //Auto carga la tabla Project manager
     ProjectManager pm;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Bean
     CommandLineRunner initDatabaseProjectManager(@Qualifier("projectManagerRepository") ProjectManagerRepository projectManagerRepository) throws IOException {
         Iterable<CSVRecord> rows= CSVFormat.DEFAULT.parse(new FileReader("src/main/java/com/project/Files/ProjectManager.csv"));
@@ -91,9 +97,6 @@ public class loadDatabase {
         };
     }
 
-
-
-
     //Auto carga la tabla Project
     @Bean
     CommandLineRunner innitDatabaseProject(@Qualifier("projectServiceImp") ProjectServiceImp projectServiceImp){
@@ -141,7 +144,20 @@ public class loadDatabase {
             log.info("Preloading " + roleRepository.save(r4));
         };
     }
-    
+
+    /**
+     * Auto carga la tabla user con un usuario con rol "Personal del CICE"
+     */
+    @Bean
+    CommandLineRunner initDatabaseUser(
+            @Qualifier("userRepository") UserRepository userRepository){
+        return args -> {
+            User ciceUser = new User("pcice@gmail.com", passwordEncoder.encode("12345678"));
+            ciceUser.addRole(r4); // Añade el rol "Personal del CICE"
+            log.info("Preloading " + userRepository.save(ciceUser));
+        };
+    }
+
     //Auto carga la tabla Entrepreneur 
     
     /*Entrepreneur e1 = new Entrepreneur("jj","kkk","kkk@gmm",20363046845L,1234566,"web",true,3);

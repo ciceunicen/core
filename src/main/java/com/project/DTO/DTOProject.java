@@ -9,6 +9,8 @@ import com.project.entities.File;
 import com.project.entities.Need;
 import com.project.entities.Project;
 import com.project.entities.ProjectManager;
+import com.project.entities.Stage;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +21,7 @@ public class DTOProject {
 	private Long id_Project;
 	private String title;
 	private String description;
-	private String stage;
+	private Stage stage;
 	private Long administrador;
 
 	private Boolean is_active;
@@ -38,7 +40,7 @@ public class DTOProject {
 		this.id_Project = project.getId_Project();
 		this.title = project.getTitle();
 		this.description = project.getDescription();
-		this.stage = project.getStage().getStage_type();
+		this.stage = project.getStage();
 		this.administrador = project.getAdministrador();
 		this.setIs_active(project.getIs_active());
 		this.assistances = project.getAssistances();
@@ -64,25 +66,8 @@ public class DTOProject {
 		this.adminUsername =  null;
 		this.adminEmail = null;
 	}
-
-	public DTOProject(Long id, String title, String description, String stage, Long idAdmin, ProjectManager projectManager,
-                 List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships) {
-      this.id_Project = id;
-      this.title = title;
-      this.description = description;
-      this.stage = stage;
-      this.administrador = idAdmin;
-      this.projectManager = projectManager;
-      this.files = files;
-      this.actions = actions;
-      this.entrepreneurships = entrepreneurships;
-      // Inicializa con el nombre del project manager o null si es null
-      this.projectManagerName = this.projectManager != null ? this.projectManager.getName() : null;
-      this.adminUsername =  null;
-      this.adminEmail = null;
-   }
-
-	public DTOProject(Long id, String title, String description, String stage, Long idAdmin, Boolean is_active, ProjectManager projectManager,
+	
+	public DTOProject(Long id, String title, String description, Stage stage, Long idAdmin, Boolean is_active, ProjectManager projectManager,
 					  List<File> files, List<Action> actions, List<Entrepreneurship> entrepreneurships,
 					  List<Assistance> assistances, List<Need> needs) {
 		this.id_Project = id;
@@ -103,6 +88,4 @@ public class DTOProject {
 		this.adminEmail = null;
 
 	}
-
-
 }
