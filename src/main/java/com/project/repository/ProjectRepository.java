@@ -21,7 +21,10 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 	
 	@Query("SELECT DISTINCT p"
 			+ " FROM Project p"
-			+ " WHERE p.projectManager.id_ProjectManager = :idEntrepreneur")
+			+ " WHERE p.projectManager.id_ProjectManager = :idEntrepreneur"
+			+ " AND NOT EXISTS(SELECT dp"
+				+ "	FROM DeletedProject dp"
+				+ " WHERE dp.project.id_Project = p.id_Project)")
 	Page<Project> findAll(Pageable pageable, Long idEntrepreneur);
 	
 	@Query("SELECT DISTINCT p"
@@ -32,7 +35,10 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 			+ " OR p.stage.stage_type IN :values"
 			+ " OR a.type IN :values"
 			+ " OR n.needType IN :values)"
-			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur"
+			+ " AND NOT EXISTS(SELECT dp"
+				+ "	FROM DeletedProject dp"
+				+ " WHERE dp.project.id_Project = p.id_Project))")
 	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur);
 	
 	@Query("SELECT DISTINCT p"
@@ -45,7 +51,10 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 			+ " OR n.needType IN :values"
 			+ " OR :isActive IS NOT NULL)"
 			+ " AND p.is_active = :isActive"
-			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur)")
+			+ " AND p.projectManager.id_ProjectManager = :idEntrepreneur"
+			+ " AND NOT EXISTS(SELECT dp"
+				+ "	FROM DeletedProject dp"
+				+ " WHERE dp.project.id_Project = p.id_Project))")
 	Page<Project> findAll(List<String> values, Pageable pageable, Long idEntrepreneur, Boolean isActive);
 
     @Query("select p from Project p inner join p.assistances a inner join p.needs n where " +
@@ -69,7 +78,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     @Query(value = "select * from project p where p.id_project in (select project_id_project from project_entrepreneurships where entrepreneurships_id=:id)", nativeQuery = true)
     List<Project> getProjectsThatContainsEntrepreneurship(Long id);
 
-    @Query("select p from Project p where p.projectManager.id_ProjectManager =:id")
+    @Query("select p from Project p where p.projectManager.id_ProjectManager =:id and not exists(select dp from DeletedProject dp where dp.project.id_Project=p.id_Project)")
     List<Project> getProjectsByEntrepreneurId(Long id);
 
     @Query("SELECT p FROM Project p " +

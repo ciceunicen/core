@@ -176,18 +176,21 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		List<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id);
 		if (projects != null) {
 			for (Project aux: projects) {
-				DTOProject dto = new DTOProject(
-						aux.getId_Project(),
-						aux.getTitle(),
-						aux.getDescription(),
-						aux.getStage(),
-						aux.getAdministrador(),
-						aux.getProjectManager(),
-						aux.getFiles(),
-						aux.getActions(),
-						aux.getEntrepreneurships());
+//				DTOProject dto = new DTOProject(
+//						aux.getId_Project(),
+//						aux.getTitle(),
+//						aux.getDescription(),
+//						aux.getStage().getStage_type(),
+//						aux.getAdministrador(),
+//						aux.getIs_active(),
+//						aux.getProjectManager(),
+//						aux.getFiles(),
+//						aux.getActions(),
+//						aux.getEntrepreneurships());
+				
+				DTOProject dto = new DTOProject(aux, null, null);
 
-				dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
+//				dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
 				Optional<User> admin  = userRepository.findById(aux.getAdministrador());
 				if (admin.isPresent()) {
 					dto.setAdminUsername(admin.get().getUsername());

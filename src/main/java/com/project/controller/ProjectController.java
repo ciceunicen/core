@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -46,15 +47,17 @@ public class ProjectController {
     private NeedServiceImp needServiceImp;
     @Autowired
     private FileServiceImp fileServiceImp;
-    @Autowired
-    private ProjectManagerServiceImp projectManagerServiceImp;
     private Mapper mapper;
     @Autowired
     private ActivityService activityService;
     @Autowired
     private EntrepreneurshipService entrepreneurshipService;
     @Autowired
+    private NotificationServiceImp notificationService;
+    @Autowired
     private RoleAuthController roleAuthController;
+    @Autowired
+    private UserServiceImp userService;
     @Autowired
     private ReferentServiceImp referentService;
 
@@ -74,7 +77,7 @@ public class ProjectController {
     public ResponseEntity<?> addProject(@Valid @RequestBody DTOProjectInsert project) { 
     	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2) || roleAuthController.hasPermission(3)) {
     		
-    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistanceType(),project.getNeeds(),project.getId_ProjectManager());
+    		Project saveProject = ProjectService.addProject(mapper.toProject(project),project.getStage(),project.getAssistances(),project.getNeeds(),project.getId_ProjectManager());
     		if(saveProject != null) {
     			 // Now, save the Referent with the project id
                 Referent referent = mapper.toReferent(project);
@@ -215,29 +218,75 @@ public class ProjectController {
     }
 
     /**
-     * Sobreescribe todo el proyecto en la base de datos
+     * Sobreescribe todo el proyecto en la base de datos y envía una notificación al project manager indicando los campos modificados y fecha
      * @param id es el id del proyecto a buscar
      * @param project son los datos de un proyecto a modificar
-     * @return un projecto modificado
+     * @return el DTO de un projecto modificado
      */
     @PutMapping("/{id_project}")
     public ResponseEntity<?> updateProject(@PathVariable ("id_project") Long id, @RequestBody DTOProjectUpdate project){
     	if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
 	    	Project updateProject=ProjectService.getProjectEntity(id);
 	        if (updateProject!=null){
-	            updateProject.setTitle(project.getTitle());
-	            updateProject.setDescription(project.getDescription());
+	        	String fields = ""; 
+	        	
+	        	String newTitle = project.getTitle();
+	        	String newDescription = project.getDescription();
+	        	Integer equalNeeds = 0;
+	        	Integer equalAssistances = 0;
+	        	Integer equalFiles = 0;
+	        	
+	        	if (!updateProject.getTitle().equals(newTitle)) {
+	        		fields += "título, ";
+	        	}
+	        	
+	        	if (!updateProject.getDescription().equals(newDescription)) {
+	        		fields += "descripción, ";
+	        	}
+	        	
+	            updateProject.setTitle(newTitle);
+	            updateProject.setDescription(newDescription);
+	            
 	            List<Need> needs = new ArrayList<>();
 	            for (Long idNeed:project.getNeeds()) {
-	                needs.add(needServiceImp.getNeed(idNeed));
+	            	Need need = needServiceImp.getNeed(idNeed); 
+	                needs.add(need);
+	                
+	                if (updateProject.getNeeds().contains(need)) {
+	            		equalNeeds++;
+	            	}
 	            }
+	            
+	            if (updateProject.getNeeds().size() != equalNeeds || updateProject.getNeeds().size() != needs.size()) {
+	            	fields += "necesidades, ";
+	            }
+	            
 	            updateProject.setNeeds(needs);
+	            
 	            List<Assistance> assistances = new ArrayList<>();
 	            for (Long idAssistance:project.getAssistances()) {
-	                assistances.add(assistanceServiceImp.getAssistance(idAssistance));
+	            	Assistance assistance = assistanceServiceImp.getAssistance(idAssistance); 
+	                assistances.add(assistance);
+	                
+	                if (updateProject.getAssistances().contains(assistance)) {
+	            		equalAssistances++;
+	            	}
 	            }
+	            
+	            if (updateProject.getAssistances().size() != equalAssistances || updateProject.getAssistances().size() != assistances.size()) {
+	            	fields += "asistencias, ";
+	            }
+	            
 	            updateProject.setAssistances(assistances);
-	            updateProject.setStage(stageServiceImp.getStage(project.getStage()));
+	            
+	            Stage stage = stageServiceImp.getStage(project.getStage());
+	            
+	            if (!updateProject.getStage().equals(stage)) {
+	            	fields += "estadio, ";
+	            }
+	            
+	            updateProject.setStage(stage);
+	            
 	            List<File> files = new ArrayList<>();
 	            if(project.getFiles() != null) {
 		            for (Long idFiles:project.getFiles()) {
@@ -247,10 +296,35 @@ public class ProjectController {
 	            if (project.getNewFiles() != null && project.getNewFiles().size()>0){
 	                for (File file:project.getNewFiles()) {
 	                    files.add(fileServiceImp.addFile(file));
+	                    if (updateProject.getFiles().contains(file)) {
+	                    	equalFiles++;
+	                    }
 	                }
 	            }
+	            
+	            if (updateProject.getFiles().size() != equalFiles) {
+	            	fields += "archivos, ";
+	            }
+	            
 	            updateProject.setFiles(files);
-	            Project response = ProjectService.save(updateProject);
+	            
+	            if (updateProject.getIs_active() != project.getIs_active()) {
+	            	fields += "estado, ";
+	            }
+	            
+	            updateProject.setIs_active(project.getIs_active());
+	            
+	            if (!fields.isEmpty()) {
+	            	fields = fields.substring(0, fields.length()-2);
+	            }
+	            String message = String.format("El/Los campo/s %s de tu proyecto '%s' ha/n sido modificado/s por un administrador", fields, project.getTitle());
+	            if (!fields.isEmpty()) {
+	            	notificationService.save(new DTONotificationInsert(message, new Date(System.currentTimeMillis()), updateProject.getProjectManager().getId_ProjectManager()));
+	            }
+	            
+            	// Project manager del proyecto
+	            User projectAdmin = userService.findById(updateProject.getAdministrador());
+	            DTOProject response = new DTOProject(ProjectService.save(updateProject), projectAdmin.getUsername(), projectAdmin.getEmail()); 
 	            return new ResponseEntity<>(response, HttpStatus.OK);
 	        }else {
 	            return new ResponseEntity<String>("404, NOT FOUND", HttpStatus.NOT_FOUND);

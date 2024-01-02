@@ -12,6 +12,7 @@ import com.project.repository.*;
 import com.project.service.ProjectService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,11 +45,14 @@ public class ProjectServiceImp implements ProjectService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private NotificationRepository notificationRespository;
+    @Autowired
     private DiagnosticRepository diagnosticRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
-        project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
+    	ProjectManager projectManager = projectManagerRepository.getByProjectManagerById(id_ProjectManager); 
+        project.setProjectManager(projectManager);
 
         for (Long id:id_needs) {
             project.addNeed(needRepository.getNeed(id));
@@ -60,6 +64,14 @@ public class ProjectServiceImp implements ProjectService {
         project = projectRepository.save(project);
         AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
+        
+        Optional<User> userOptional = userRepository.findById(id_ProjectManager);
+        if (userOptional.isPresent()) {
+        	User user = userOptional.get();
+        	Notification notification = new Notification(String.format("El proyecto '%s' ha sido creado satisfactoriamente", project.getTitle()), new Date(System.currentTimeMillis()), user);
+        	notificationRespository.save(notification);
+        }
+        
         return project;
     }
 
@@ -109,12 +121,25 @@ public class ProjectServiceImp implements ProjectService {
      */
     @Override
 	public Project deleteProject(Long id_project, Long id_admin) {
-    	Optional <Project> project = this.getProjectById(id_project);
+    	Optional <Project> projectOptional = this.getProjectById(id_project);
     	Boolean isRemoved = (deletedProjetcRepository.getDeletedProjectByIdProject(id_project) != null);
-    	if(!project.isEmpty() && !isRemoved) {
+    	if(!projectOptional.isEmpty() && !isRemoved) {
+    		Project project = projectOptional.get();
+    		
     		DeletedProject deleteProject = new DeletedProject();
-    		deleteProject.setProject(project.get());
+    		deleteProject.setProject(project);
     		deleteProject.setId_admin(id_admin);
+    		
+    		Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Tu proyecto '%s' ha sido eliminado por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+    		
     		return deletedProjetcRepository.save(deleteProject).getProject();
     	}
 		return null;
@@ -175,9 +200,10 @@ public class ProjectServiceImp implements ProjectService {
 		List<DTOProject> listaDTO = new ArrayList<>();
         Iterable<Project> projects = this.projectRepository.findAll();
         for (Project aux: projects) {
-            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
-                    aux.getStage(), aux.getAdministrador(), aux.getProjectManager(),
-                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+//                    aux.getStage(), aux.getAdministrador(), aux.getProjectManager(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+        	DTOProject dto = new DTOProject(aux, null, null);
             listaDTO.add(dto);
         }
         listaDTO.sort((p1, p2) -> p1.getTitle().compareTo(p2.getTitle()));
@@ -208,6 +234,7 @@ public class ProjectServiceImp implements ProjectService {
                     aux.getDescription(),
                     aux.getStage(),
                     aux.getAdministrador(),
+                    aux.getIs_active(),
                     aux.getProjectManager(),
                     aux.getFiles(),
                     aux.getActions(),
@@ -318,6 +345,17 @@ public class ProjectServiceImp implements ProjectService {
         if(project != null) {
             AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
             ad = administrationRecordsRepository.save(ad);
+            
+            Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Se ha realizado un diagnóstico de tu proyecto '%s' por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+            
             Diagnostic diagnostic = diagnosticRepository.save(new Diagnostic(dto.getDiagnostic(), project, ad.getId_record()));
             
             return diagnostic;   
