@@ -345,6 +345,17 @@ public class ProjectServiceImp implements ProjectService {
         if(project != null) {
             AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
             ad = administrationRecordsRepository.save(ad);
+            
+            Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Se ha realizado un diagnóstico de tu proyecto '%s' por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+            
             Diagnostic diagnostic = diagnosticRepository.save(new Diagnostic(dto.getDiagnostic(), project, ad.getId_record()));
             
             return diagnostic;   
