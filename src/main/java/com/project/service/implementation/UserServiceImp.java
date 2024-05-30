@@ -1,5 +1,7 @@
 package com.project.service.implementation;
 
+import com.project.DTO.request.DtoUpdateDataUser;
+import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Role;
 import com.project.repository.RoleRepository;
 
@@ -44,6 +46,8 @@ public class UserServiceImp implements UserService {
 		else {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String encodedPassword = passwordEncoder.encode(u.getPassword());
+		System.out.println("La password es " + u.getPassword());
+		System.out.println("La password encryptada es " + encodedPassword);
 		u.setPassword(encodedPassword);
 		Role r = roleRepository.findByType("Defecto");
 		if(r!= null) {
@@ -86,7 +90,59 @@ public class UserServiceImp implements UserService {
 		return userRepo.save(user);//persiste los datos en la base de datos
 
 	}
-	
+
+	/*
+	* A traves de un email busca en la DB los datos
+	* que el usuario puede llegar a editar
+	*/
+	@Override
+	public DTOeditableData getUpdatableData(String email) {
+		Optional<DTOeditableData> response = userRepo.getUpdatableData(email);
+		if(response.isEmpty()){ throw new NotFoundException("No existe ese user con email"); }
+		return response.get();
+    }
+
+	@Override
+	public User updateUserInformation(Long id, DtoUpdateDataUser newDataUser) {
+		System.out.println("La current que ingresamos es: " + newDataUser.currentPassword());
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+		// Traemos los datos actuales del usuario de la DB
+		Optional<User> posibleUser = userRepo.findById(id);
+		if(posibleUser.isEmpty()){throw new NotFoundException("No existe usuario con ese id");}
+
+		User currentDataUser = posibleUser.get();
+		String result;
+
+
+		if(passwordEncoder.matches(newDataUser.currentPassword(), currentDataUser.getPassword())){
+			System.out.println("SON iguales");
+
+			// Verificamos que la new password sea de almenos 8 caracteres y maximo 20 caracteres
+			// if(newDataUser.getNewPassword().matches("/^[\\s\\S]{8,20}$/")){ throw new Exception("La nueva password no tiene entre 8 y 20 caracteres!"); }
+			// if(newDataUser.getNewPassword().matches(newDataUser.getNewPasswordConfirmed())){ throw new Exception("La nueva password no es igual a la confirmacion de la nueva password!"); }
+
+			// Asignamos a la entidad Usuario la nueva contraseña, mail y nombre
+			currentDataUser.setPassword(passwordEncoder.encode(newDataUser.newPassword()));
+			currentDataUser.setName(newDataUser.name());
+			// currentDataUser.setSurname(newDataUser.surname());
+			currentDataUser.setEmail(newDataUser.email());
+			// Actualizamos la informacion en la DB
+			return userRepo.save(currentDataUser);
+		}else{
+			System.out.println("NO son iguales");
+			result = "NO SON IGUALES";
+			return new User();
+		}
+
+
+		// Buscar en repository la current password del usuairo para compararla con la que nos pasaron.
+		// En caso de que coincidan realizar el update del usuario.
+		// En caso de el usuario ingresara una nueva contraseña hay que hashearla antes de guardarla.
+
+		// Caso contrario NO realizar el update (Las passwords no matchean).
+	}
+
 	public Optional<User> findEmail(String email){
 		return userRepo.findByEmail(email);
 	}

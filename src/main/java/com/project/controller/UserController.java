@@ -1,11 +1,16 @@
 package com.project.controller;
 
+import com.project.DTO.request.DtoUpdateDataUser;
+import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Role;
 
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
+import com.project.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,4 +57,17 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.changeRole(id,role));
 	}
 
+
+	@GetMapping("/email/{email}")
+	public ResponseEntity<DTOeditableData> getUpdatableData(@PathVariable @Valid String email){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getUpdatableData(email));
+	}
+
+	/*
+	* Una vez el usuario edita su informacion accede a este endoint
+	* */
+	@PutMapping("/{id}/datos")
+	public ResponseEntity<User> updateUserInformation(@PathVariable Long id, @RequestBody @Valid DtoUpdateDataUser newDataUser){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserInformation(id, newDataUser));
+	}
 }
