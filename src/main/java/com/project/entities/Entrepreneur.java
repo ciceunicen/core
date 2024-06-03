@@ -7,10 +7,12 @@ import javax.validation.constraints.NotEmpty;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 
 @Data
 @Entity
+@Getter
 public class Entrepreneur extends Person {
 
 	@Builder.Default
@@ -33,6 +35,10 @@ public class Entrepreneur extends Person {
 	@Column(name="deleted")
 	private boolean is_deleted = false;
 
+	@Builder.Default
+	@Column(name="aceptada")
+	private boolean aceptada = false;
+
 	public Entrepreneur() {	}
 
 	public Entrepreneur(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email,
@@ -54,4 +60,7 @@ public class Entrepreneur extends Person {
 				", isPF=" + ispf + ", id_User=" + this.getId_user() + "]";
 	}
 
+	public boolean getAceptada() {
+		return this.aceptada;
+	}
 }
