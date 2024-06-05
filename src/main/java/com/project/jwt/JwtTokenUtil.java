@@ -30,13 +30,12 @@ public class JwtTokenUtil {
      
     public String generateAccessToken(User user) {
         return Jwts.builder()
-                .setSubject(String.format("%s,%s", user.getId(), user.getEmail()))
+                .setSubject(String.format("%s,%s,%s", user.getId(), user.getEmail(), user.getRole().getId()))
                 .setIssuer("CiceDev")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
-                 
     }
     
     public boolean validateAccessToken(String token) {

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface ProjectManagerService {
+	ProjectManager getById(Long id);
+	
     ProjectManager getProjectManager(Long id_ProjectManager);
 
     Page<ProjectManager> getAll(Pageable pageable);

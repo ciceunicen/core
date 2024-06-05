@@ -4,15 +4,13 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import java.io.Serializable;
 import java.util.List;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "ProjectManager")
 @Data
@@ -37,7 +35,6 @@ public class ProjectManager implements Serializable{
     @NotFound(action = NotFoundAction.IGNORE)
     @JsonIgnore
     private List<Project> projects;
-
 
     public ProjectManager(String name, String surname, String email, String phone, String linkUnicen, String medioConocimientoCice) {
         this.name = name;

@@ -34,4 +34,11 @@ public class AdministrationRecords implements Serializable {
         this.action = action;
         this.date = new Date();
     }
+
+    public AdministrationRecords(Project project, Long id_admin, String action) {
+        this.project = project;
+        this.id_admin = id_admin;
+        this.action = action;
+        this.date = new Date();
+    }
 }

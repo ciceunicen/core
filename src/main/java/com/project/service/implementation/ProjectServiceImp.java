@@ -1,11 +1,18 @@
 package com.project.service.implementation;
 
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Project;
+import com.project.DTO.DTOActionInsert;
+import com.project.DTO.DTODiagnostic;
+import com.project.DTO.DTOProject;
+import com.project.DTO.DTOProjectInsert;
+import com.project.DTO.DTOProjectUpdate;
+import com.project.entities.*;
+import com.project.exception.NotFoundException;
+
 import com.project.repository.*;
 import com.project.service.ProjectService;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +42,17 @@ public class ProjectServiceImp implements ProjectService {
     private DeletedProjectRepository deletedProjetcRepository;
     @Autowired
     private AdministrationRecordsRepository administrationRecordsRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NotificationRepository notificationRespository;
+    @Autowired
+    private DiagnosticRepository diagnosticRepository;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
-        project.setProjectManager(projectManagerRepository.getByProjectManagerById(id_ProjectManager));
+    	ProjectManager projectManager = projectManagerRepository.getByProjectManagerById(id_ProjectManager); 
+        project.setProjectManager(projectManager);
 
         for (Long id:id_needs) {
             project.addNeed(needRepository.getNeed(id));
@@ -48,8 +62,16 @@ public class ProjectServiceImp implements ProjectService {
         }
         project.setStage(stageRepository.getStage(id_stage));
         project = projectRepository.save(project);
-        AdministrationRecords ar=new AdministrationRecords(project,"creación de proyecto");
+        AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
+        
+        Optional<User> userOptional = userRepository.findById(id_ProjectManager);
+        if (userOptional.isPresent()) {
+        	User user = userOptional.get();
+        	Notification notification = new Notification(String.format("El proyecto '%s' ha sido creado satisfactoriamente", project.getTitle()), new Date(System.currentTimeMillis()), user);
+        	notificationRespository.save(notification);
+        }
+        
         return project;
     }
 
@@ -77,7 +99,20 @@ public class ProjectServiceImp implements ProjectService {
     public Page<Project> getAllByFilters(List<String> filters,Pageable pageable) {
         return projectRepository.findAll(filters,pageable);
     }
+
     
+    
+    public Page<Project> getByFiltersAndEntrepreneur(List<String> filters,Pageable pageable, Long idEntrepreneur, Boolean active) {
+    	if (filters.isEmpty() && active == null) {
+    		return projectRepository.findAll(pageable, idEntrepreneur);
+    	}
+    	if (active == null) {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur);
+    	} else {
+    		return projectRepository.findAll(filters,pageable, idEntrepreneur, active);
+    	}
+    }
+
     /**
      * Realiza eliminado lógico de la base de datos, chequea que el proyecto exist y que ya no haya sido eliminado.
      * @param id_project es el ID del proyecto a eliminar
@@ -86,12 +121,25 @@ public class ProjectServiceImp implements ProjectService {
      */
     @Override
 	public Project deleteProject(Long id_project, Long id_admin) {
-    	Optional <Project> project = this.getProjectById(id_project);
+    	Optional <Project> projectOptional = this.getProjectById(id_project);
     	Boolean isRemoved = (deletedProjetcRepository.getDeletedProjectByIdProject(id_project) != null);
-    	if(!project.isEmpty() && !isRemoved) {
+    	if(!projectOptional.isEmpty() && !isRemoved) {
+    		Project project = projectOptional.get();
+    		
     		DeletedProject deleteProject = new DeletedProject();
-    		deleteProject.setProject(project.get());
+    		deleteProject.setProject(project);
     		deleteProject.setId_admin(id_admin);
+    		
+    		Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Tu proyecto '%s' ha sido eliminado por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+    		
     		return deletedProjetcRepository.save(deleteProject).getProject();
     	}
 		return null;
@@ -131,7 +179,198 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
-    public Project getProject(Long id){
+    public Project getProjectEntity(Long id){
         return projectRepository.getProject(id);
     }
+
+    @Override
+    public DTOProject postProject(DTOProjectInsert cp) {
+    	Project aux = new Project(cp.getTitle(), cp.getDescription(), cp.getId_Admin());
+        aux = projectRepository.save(aux);
+        if (aux != null) {
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+    }
+
+	@Override
+	public Iterable<DTOProject> getProjects() {
+		List<DTOProject> listaDTO = new ArrayList<>();
+        Iterable<Project> projects = this.projectRepository.findAll();
+        for (Project aux: projects) {
+//            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+//                    aux.getStage(), aux.getAdministrador(), aux.getProjectManager(),
+//                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+        	DTOProject dto = new DTOProject(aux, null, null);
+            listaDTO.add(dto);
+        }
+        listaDTO.sort((p1, p2) -> p1.getTitle().compareTo(p2.getTitle()));
+
+        return listaDTO;
+	}
+
+    @Override
+    public DTOProject getProject(Long id) {
+        Optional<Project> o = projectRepository.findById(id);
+        if (o.isPresent()) {
+            Project aux = o.get();
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+    }
+
+    @Override
+    public DTOProject getDTOProjectById(Long id) {
+        Optional<Project> o = projectRepository.findByIdWithAssistancesAndNeeds(id);
+        if (o.isPresent()) {
+            Project aux = o.get();
+            DTOProject dto = new DTOProject(
+                    aux.getId_Project(),
+                    aux.getTitle(),
+                    aux.getDescription(),
+                    aux.getStage(),
+                    aux.getAdministrador(),
+                    aux.getIs_active(),
+                    aux.getProjectManager(),
+                    aux.getFiles(),
+                    aux.getActions(),
+                    aux.getEntrepreneurships(),
+                    aux.getAssistances(),
+                    aux.getNeeds());
+
+            dto.setProjectManagerName(aux.getProjectManager() != null ? aux.getProjectManager().getName() : null);
+            // Busca el administrador
+            Optional<User> admin = userRepository.findById(aux.getAdministrador());
+            if (admin.isPresent()) {
+                dto.setAdminUsername(admin.get().getUsername());
+                dto.setAdminEmail(admin.get().getEmail());
+            } else {
+                dto.setAdminUsername("Administrador sin asignar");
+                dto.setAdminEmail("Administrador sin asignar");
+            }
+            return dto;
+        }
+        return null;
+        //return projectRepository.findByIdWithAssistancesAndNeeds(id);
+    }
+
+	@Override
+	public DTOProject addEntrepreneurship(Long main_project_id, Entrepreneurship e) {
+		Project main_p = this.projectRepository.findById(main_project_id).get();
+        main_p.addEntrepreneurship(e);
+        this.projectRepository.save(main_p);
+        return this.getProject(main_project_id);
+	}
+
+
+	@Override
+	public boolean containsCommonEntrepreneurships(Long main_project_id, Long subproject_id) {
+		return !this.projectRepository.inCommonEntrepreneurships(main_project_id, subproject_id).isEmpty();
+	}
+
+	@Override
+	public DTOProject postProjectAction(DTOActionInsert a, Long id) {
+		Action act = new Action(a.getTitle(), a.getManager(), a.getState(), a.getDeadline());
+        Project aux = this.getProjectEntity(id);
+        if (aux != null) {
+            aux.addAction(act);
+            this.projectRepository.save(aux);
+            DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                    aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+            return dto;
+        }
+        return null;
+	}
+	
+	@Override
+	public List<DTOProject> getProjectsThatContain(Long id) {
+		List<DTOProject> list = new ArrayList<>();
+        List<Project> projects = this.projectRepository.getProjectsThatContainsEntrepreneurship(id);
+        if (projects != null) {
+            for (Project aux: projects) {
+                DTOProject dto = new DTOProject(aux.getId_Project(), aux.getTitle(), aux.getDescription(),
+                        aux.getFiles(), aux.getActions(), aux.getEntrepreneurships());
+                list.add(dto);
+            }
+            return list;
+        }
+        return null;
+	}
+	
+	/**
+     * Obtiene un emprendimiento por su ID desde la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna el emprendimiento si se encuentra en la lista, de lo contrario, retorna null.
+     */
+    @Override
+    public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId) {
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            return project.getEntrepreneurshipById(entrepreneurshipId);
+        }
+
+        return null;
+    }
+
+    /**
+     * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
+     * @param projectId ID del proyecto.
+     * @param entrepreneurshipId ID del emprendimiento.
+     * @return Retorna true si el emprendimiento está contenido, de lo contrario, retorna false.
+     */
+    public boolean containsEntrepreneurship(Project project, Entrepreneurship entrepreneurship) {
+        if (project == null || entrepreneurship == null) {
+            return false;
+        }
+
+        return project.containsEntrepreneurship(entrepreneurship);
+    }
+
+    /**
+     * Guarda un Diagnostico a la base de datos
+     * Crea un AdministrationRecords con la accion Diagnostico
+     * 
+     * @param dto DTODiagnostic que se utiliza para crear un Diagnostico
+     * @return Diagnostico creado
+     */
+    public Diagnostic saveDiagnostic(DTODiagnostic dto) {
+        Project project = projectRepository.findById(dto.getIdProject()).get();
+        if(project != null) {
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
+            ad = administrationRecordsRepository.save(ad);
+            
+            Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
+    		if (userOptional.isPresent()) {
+    			User user = userOptional.get();
+    			Date date =  new Date(System.currentTimeMillis());
+    			String message = String.format("Se ha realizado un diagnóstico de tu proyecto '%s' por un administrador", project.getTitle());
+    			
+    			Notification notification = new Notification(message, date, user);
+    			notificationRespository.save(notification);
+    		}
+            
+            Diagnostic diagnostic = diagnosticRepository.save(new Diagnostic(dto.getDiagnostic(), project, ad.getId_record()));
+            
+            return diagnostic;   
+        }
+        return null;
+    }
+
+    /**
+     * Busca un Diagnostico guardado en la base de datos mediante un id
+     * 
+     * @param id del Diagnostico que se quiere obtener
+     * @return Diagnostico que se encuentra
+     */
+    public Diagnostic getDiagnosticById(Long id) {
+        return diagnosticRepository.findByIdRecord(id).get();
+    }
+
 }
