@@ -7,4 +7,4 @@ public record DtoUpdateDataUser (@NotBlank String name,
                                  @Email String email,
                                  @NotBlank String currentPassword,
                                  String newPassword,
-                                 String newPasswordCorfirmed){}
+                                 String newPasswordConfirmed){}

@@ -30,6 +30,6 @@ public class ExceptionConfig {
 	public ResponseEntity<?> unprocessableContentException(Exception e){
 		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
 	}
-	
+
 
 }

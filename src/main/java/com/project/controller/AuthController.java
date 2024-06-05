@@ -41,21 +41,11 @@ public class AuthController {
         try {
 			System.out.println(request.getEmail());
 			System.out.println(request.getPassword());
-			UsernamePasswordAuthenticationToken upaToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-			System.out.println(1.2);
-			// TODO: El error está acá
-			Authentication aut = authManager.authenticate(upaToken);
-			// TODO: El error está acá
-
-			// TODO: Lo que esta abajo comentado es lo mismo que lo de arriba, solo que todo junto.
-			// Lo separé para ver DONDE era que se generaba el error, y es en el metodo "authenticate(temp)"
-			/*
 			Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(), request.getPassword())
-            );*/
-
-			User user = (User) aut.getPrincipal();
+            );
+			User user = (User) authentication.getPrincipal();
 			String accessToken = jwtUtil.generateAccessToken(user);
 			Object UsuarioResponse = new Object() {
                 public String email = user.getEmail();
@@ -64,7 +54,7 @@ public class AuthController {
                 public String surname = user.getSurname();
             };
             AuthResponse response = new AuthResponse(UsuarioResponse, accessToken);
-            return ResponseEntity.ok().body(response);
+			return ResponseEntity.ok().body(response);
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

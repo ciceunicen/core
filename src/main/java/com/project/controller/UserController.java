@@ -67,7 +67,7 @@ public class UserController {
 	* Una vez el usuario edita su informacion accede a este endoint
 	* */
 	@PutMapping("/{id}/datos")
-	public ResponseEntity<User> updateUserInformation(@PathVariable Long id, @RequestBody @Valid DtoUpdateDataUser newDataUser){
+	public ResponseEntity<User> updateUserInformation(@PathVariable Long id, @RequestBody @Valid DtoUpdateDataUser newDataUser) {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserInformation(id, newDataUser));
 	}
 }

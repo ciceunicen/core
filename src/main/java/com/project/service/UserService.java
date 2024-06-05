@@ -17,5 +17,5 @@ public interface UserService {
 
     DTOeditableData getUpdatableData(String email);
 
-    User updateUserInformation(Long id, DtoUpdateDataUser newDataUser);
+    User updateUserInformation(Long id, DtoUpdateDataUser newDataUser) throws Exception;
 }
