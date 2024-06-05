@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.DTO.DTOUserUpdate;
+import com.project.DTO.request.DtoUpdateDataUser;
 import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Role;
 
@@ -82,7 +83,16 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(updatedUserData);
 	}
-	
+
+	/*
+	 * Una vez el usuario edita su informacion accede a este endpoint
+	 * */
+	@PutMapping("/{id}/datos")
+	public ResponseEntity<User> updateUserInformation(@PathVariable Long id, @RequestBody @Valid DtoUpdateDataUser newDataUser) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserInformation(id, newDataUser));
+	}
+
+
 	/**
 	 * Realiza el borrado lógico de un usuario.
 	 * Solo pueden realizarlo un superAdmin
