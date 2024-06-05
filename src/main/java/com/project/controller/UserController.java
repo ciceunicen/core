@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.DTO.DTOUserUpdate;
+import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Role;
 
 import java.util.List;
@@ -111,5 +112,14 @@ public class UserController {
 			throw new UnauthorizedException();
 		}
 	}
+
+	/*
+	* A traves del mail obtiene la informacion del usuario
+	* */
+	@GetMapping("/email/{email}")
+	public ResponseEntity<DTOeditableData> getUpdatableData(@PathVariable @Valid String email){
+		return ResponseEntity.status(HttpStatus.OK).body(userService.getUpdatableData(email));
+	}
+
 
 }

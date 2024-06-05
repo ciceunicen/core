@@ -1,6 +1,7 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOUserUpdate;
+import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Entrepreneur;
 import com.project.entities.Role;
 import com.project.repository.EntrepreneurRepository;
@@ -197,6 +198,18 @@ public class UserServiceImp implements UserService {
 			throw new NotFoundException(String.format("El usuario con id %s no existe", id));
 		}
 	}
+
+	/*
+	 * A traves de un email busca en la DB los datos
+	 * que el usuario puede llegar a editar
+	 */
+	@Override
+	public DTOeditableData getUpdatableData(String email) {
+		Optional<DTOeditableData> response = userRepo.getUpdatableData(email);
+		if(response.isEmpty()){ throw new NotFoundException("No existe ese user con email"); }
+		return response.get();
+	}
+
 
 	public Iterable<User> getUsersByRole(int id_rol) {
 		return userRepo.findAllByRol(id_rol);
