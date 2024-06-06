@@ -35,10 +35,6 @@ public class Entrepreneur extends Person {
 	@Column(name="deleted")
 	private boolean is_deleted = false;
 
-	@Builder.Default
-	@Column(name="aceptada")
-	private boolean aceptada = false;
-
 	public Entrepreneur() {	}
 
 	public Entrepreneur(@NotEmpty Long dni, @NotEmpty String name, @NotEmpty String surname, String email,
@@ -60,7 +56,4 @@ public class Entrepreneur extends Person {
 				", isPF=" + ispf + ", id_User=" + this.getId_user() + "]";
 	}
 
-	public boolean getAceptada() {
-		return this.aceptada;
-	}
 }

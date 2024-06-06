@@ -213,9 +213,9 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
 		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findAll();
 		for (Entrepreneur e: entrepreneurs) {
-			if(!e.getAceptada()){
+			if(!e.getIs_active()){
 			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
-					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted(),e.getAceptada());
+					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
 			listaDTO.add(dto);
 			}
 		}

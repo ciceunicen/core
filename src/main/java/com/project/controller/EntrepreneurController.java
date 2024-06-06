@@ -32,7 +32,7 @@ public class EntrepreneurController {
 		return entrepreneurService.getEntrepreneurs();
 	}
 
-	//obtiene los usuarios que aun no fueron acceptados como emprendedores
+	//obtiene los usuarios que aun no fueron acceptados como emprendedores aun
 	@GetMapping("/Solicitudes")
 	public ResponseEntity<?> getUsuariosSolicitudes(){
 		try {
