@@ -22,7 +22,7 @@ public abstract class Person implements Serializable {
     @NotEmpty
     private String name;
     @Column(length = 20)
-    @NotEmpty
+    
     private String surname;
     @Column(nullable = true, length=45, unique=true)
     private String email;  // Email de contacto =! al del UserLogin
