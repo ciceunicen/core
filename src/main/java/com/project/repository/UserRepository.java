@@ -3,6 +3,7 @@ package com.project.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.project.DTO.response.DTOeditableData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	@Transactional
 	@Query("DELETE FROM User u WHERE u.email = :email")
 	public void deleteByEmail(String email);
+
+	@Query("""
+       SELECT new com.project.DTO.response.DTOeditableData(u.username, u.email)
+       FROM User u
+       WHERE u.email = :email
+       """)
+	Optional<DTOeditableData> getUpdatableData(String email);
+
 }

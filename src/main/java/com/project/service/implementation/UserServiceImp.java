@@ -1,6 +1,8 @@
 package com.project.service.implementation;
 
 import com.project.DTO.DTOUserUpdate;
+import com.project.DTO.request.DtoUpdateDataUser;
+import com.project.DTO.response.DTOeditableData;
 import com.project.entities.Entrepreneur;
 import com.project.entities.Role;
 import com.project.repository.EntrepreneurRepository;
@@ -198,8 +200,70 @@ public class UserServiceImp implements UserService {
 		}
 	}
 
+	/*
+	 * A traves de un email busca en la DB los datos
+	 * que el usuario puede llegar a editar
+	 */
+	@Override
+	public DTOeditableData getUpdatableData(String email) {
+		Optional<DTOeditableData> response = userRepo.getUpdatableData(email);
+		if(response.isEmpty()){ throw new NotFoundException("No existe ese user con email"); }
+		return response.get();
+	}
+
+
 	public Iterable<User> getUsersByRole(int id_rol) {
 		return userRepo.findAllByRol(id_rol);
 	}
+
+	/*
+	* Dado un id y la nueva informacion del usuario, actualiza los valores en la base de datos
+	* (Si es que todos los campos están en orden, sino tira su excepcion correspondiente)
+	* */
+	@Override
+	public User updateUserInformation(Long id, DtoUpdateDataUser newDataUser) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+		// Traemos los datos actuales del usuario de la DB
+		Optional<User> posibleUser = userRepo.findById(id);
+		if (posibleUser.isEmpty()) {throw new NotFoundException("No existe usuario con ese id");}
+
+		User currentDataUser = posibleUser.get();
+		// Verificamos si el mail que mandaron es el mismo al del usuario guardado en la db
+		// Si no es el mismo debemos de verificar si el nuevo email ya está tomado por otro usuario en la db
+		if(!currentDataUser.getEmail().equals(newDataUser.email()) &&
+				userRepo.findByEmail(newDataUser.email()).isPresent()){
+			throw new ConflictException("Ya existe un usuario con ese mail!");
+		}
+
+
+		// Buscar en repository la current password del usuairo para compararla con la que nos pasaron.
+		// En caso de que coincidan realizar el update del usuario.
+
+		// Caso contrario NO realizar el update (Las passwords no matchean).
+		if(!passwordEncoder.matches(newDataUser.currentPassword(), currentDataUser.getPassword())){
+			throw new BadRequestException("Las passwords ingresadas no matchean!");
+		}
+
+		if(!newDataUser.newPassword().isEmpty()){
+			// Verificamos que la new password sea de almenos 8 caracteres y maximo 20 caracteres
+			if(!(newDataUser.newPassword().matches("^[\\s\\S]{8,20}$"))){
+				throw new BadRequestException("La nueva password no tiene entre 8 y 20 caracteres!");
+			}
+			// Verificamos que las nuevas contraseñas sean iguales
+			if(!(newDataUser.newPassword().matches(newDataUser.newPasswordConfirmed()))){
+				throw new BadRequestException("La nueva password no es igual a la confirmacion de la nueva password!");
+			}
+			currentDataUser.setPassword(passwordEncoder.encode(newDataUser.newPassword()));
+		}
+
+		// Asignamos a la entidad Usuario el nuevo nombre y mail
+		currentDataUser.setUsername(newDataUser.name());
+		// currentDataUser.setSurname(newDataUser.surname());
+		currentDataUser.setEmail(newDataUser.email());
+		// Actualizamos la informacion en la DB
+		return userRepo.save(currentDataUser);
+	}
+
 
 }
