@@ -7,10 +7,12 @@ import javax.validation.constraints.NotEmpty;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 
 @Data
 @Entity
+@Getter
 public class Entrepreneur extends Person {
 
 	@Builder.Default

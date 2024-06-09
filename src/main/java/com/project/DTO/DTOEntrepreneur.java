@@ -20,6 +20,7 @@ public class DTOEntrepreneur {
     private boolean ispf = true;
     private boolean is_deleted = false;
 
+
     public DTOEntrepreneur(Long id, Long dni, String name, String surname, String email, Long id_user, Boolean is_active, Long cuil_cuit, Long phone, String location, String howimetcice, boolean ispf, boolean is_deleted) {
         this.id = id;
         this.dni = dni;
@@ -35,4 +36,5 @@ public class DTOEntrepreneur {
         this.ispf = ispf;
         this.is_deleted = is_deleted;
     }
+
 }

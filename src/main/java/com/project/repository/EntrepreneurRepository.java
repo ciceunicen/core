@@ -30,6 +30,11 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     		+ " AND e.is_active IS TRUE")
     Optional<Entrepreneur> findByIdUserAndIsActive(Long idUser);
 
+    @Query("SELECT e"
+           +" FROM Entrepreneur e"
+           +" WHERE e.is_active IS FALSE")
+    List<Entrepreneur> findByIs_activeAll();
+
     @Modifying
     @Transactional
     @Query("UPDATE Entrepreneur e"

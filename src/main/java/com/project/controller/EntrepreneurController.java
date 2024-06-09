@@ -31,6 +31,17 @@ public class EntrepreneurController {
 	public Iterable<DTOEntrepreneur> getEntrepreneurs() {
 		return entrepreneurService.getEntrepreneurs();
 	}
+
+	//obtiene los usuarios que aun no fueron acceptados como emprendedores aun
+	@GetMapping("/Solicitudes")
+	public ResponseEntity<?> getUsuariosSolicitudes(){
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneursSolicitudes());
+		}
+		catch(Exception e){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	};
 	
 	/**
 	 * Obtiene un entrepreneur pod id

@@ -208,5 +208,19 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		return null;
 	}
 
+	@Override
+	public List<DTOEntrepreneur> getEntrepreneursSolicitudes() {
+		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
+		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll();
+		for (Entrepreneur e: entrepreneurs) {
+			if(!e.getIs_active()){
+			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
+					e.getIs_active(), e.getCuil_cuit(), e.getPhone(), e.getLocation(), e.getHowimetcice(), e.isIspf(), e.is_deleted());
+			listaDTO.add(dto);
+			}
+		}
+		return listaDTO;
+	}
+
 }
 

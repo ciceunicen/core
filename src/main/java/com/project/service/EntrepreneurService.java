@@ -27,4 +27,5 @@ public interface EntrepreneurService {
 
     List<DTOProject> getProjectsByEntrepreneurId(Long id);
 
+    List<DTOEntrepreneur> getEntrepreneursSolicitudes();
 }
