@@ -13,6 +13,9 @@ import com.project.exception.NotFoundException;
 import com.project.exception.UnauthorizedException;
 import com.project.exception.UnprocessableContentException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice(annotations= RestController.class)
 public class ExceptionConfig {
 	@ExceptionHandler(value=DeletedUserException.class)
@@ -25,7 +28,10 @@ public class ExceptionConfig {
 	}
 	@ExceptionHandler(value=NotFoundException.class)
 	public ResponseEntity<?> notFoundException(Exception e){
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		Map<String, String> errorResponse = new HashMap<>();
+		errorResponse.put("error", e.getMessage());
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
 	}
 	@ExceptionHandler(value=ConflictException.class)
 	public ResponseEntity<?> conflictException(Exception e){
