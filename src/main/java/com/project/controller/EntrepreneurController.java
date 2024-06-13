@@ -33,10 +33,19 @@ public class EntrepreneurController {
 	}
 
 	//obtiene los usuarios que aun no fueron acceptados como emprendedores aun
-	@GetMapping("/Solicitudes")
-	public ResponseEntity<?> getUsuariosSolicitudes(){
+	@GetMapping("/Solicitudes/{offset}")
+	public ResponseEntity<?> getUsuariosSolicitudes(@PathVariable Long offset){
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneursSolicitudes());
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneursSolicitudes(offset));
+		}
+		catch(Exception e){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	};
+	@GetMapping("/Solicitudes/totalpages")
+	public ResponseEntity<?> getTotalpages(){
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getTotalPages());
 		}
 		catch(Exception e){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

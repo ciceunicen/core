@@ -35,7 +35,7 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private RoleRepository roleRepository;
 	@Autowired
 	private ProjectRepository projectRepository;
-
+    private Double limitpages=10.0;
 
 	@Override
 	public DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id) {
@@ -209,9 +209,9 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	}
 
 	@Override
-	public List<DTOEntrepreneur> getEntrepreneursSolicitudes() {
+	public List<DTOEntrepreneur> getEntrepreneursSolicitudes(Long offset) {
 		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
-		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll();
+		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll(offset);
 		for (Entrepreneur e: entrepreneurs) {
 			if(!e.getIs_active()){
 			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
@@ -221,6 +221,14 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		}
 		return listaDTO;
 	}
+	@Override
+	public int getTotalPages(){
+		Optional<Double> optional= this.entrepreneurRepository.getTotalpages();
+		if(optional.isPresent()){
+			return (int) Math.ceil(optional.get()/limitpages);
+		}
+        return 0;
+    }
 
 }
 
