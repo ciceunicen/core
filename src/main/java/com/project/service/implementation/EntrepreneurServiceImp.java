@@ -44,13 +44,17 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	public DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id) {
 		Entrepreneur aux = mapper.toEntrepreneur(e);
 
+		// Si soy un defaultUser
 		if (currentUser_id != null) {
-			User user = userRepository.findById(currentUser_id).get();
-			if (user.is_deleted()) {
-				throw new DeletedUserException();
-			}
+			Optional<User> posibleUser = userRepository.findById(currentUser_id);
+
+			// Validaciones
+			if(posibleUser.isEmpty()){ throw new NotFoundException("No existe usuario con el id " + currentUser_id + "!"); }
+			if (posibleUser.get().is_deleted()) { throw new DeletedUserException();}
+
 			aux.setId_user(currentUser_id);
 		}
+
 		aux = entrepreneurRepository.save(aux);
 
 		return mapper.toDTOEntrepreneur(aux);
