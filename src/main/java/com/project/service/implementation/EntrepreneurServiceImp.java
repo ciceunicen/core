@@ -6,6 +6,7 @@ import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
 import com.project.entities.Project;
 import com.project.entities.Role;
+import com.project.exception.NotFoundException;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import com.project.repository.ProjectRepository;
@@ -220,6 +221,15 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 			}
 		}
 		return listaDTO;
+	}
+
+	@Override
+	public Entrepreneur getEntrepreneurSolicitud(Long idUsuario) {
+		Optional<Entrepreneur> posibleEntrepeneurRequest = this.entrepreneurRepository.findByIdUser(idUsuario);
+		// Verificamos que no esté vacio
+		if(posibleEntrepeneurRequest.isEmpty()) { throw new NotFoundException("El usuario no ha enviado ninguna solicitud!"); }
+
+		return posibleEntrepeneurRequest.get();
 	}
 
 }

@@ -43,4 +43,10 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     		+ " AND e.is_active IS NOT TRUE")
 	void deleteByIdUserAndNoActive(Long idUser);
 
+    @Query("""
+            SELECT e
+            FROM Entrepreneur e
+            WHERE e.id_user = :idUsuario
+            """)
+    Optional<Entrepreneur> findByIdUser(Long idUsuario);
 }
