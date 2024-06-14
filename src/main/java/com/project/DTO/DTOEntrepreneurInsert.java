@@ -20,7 +20,6 @@ public class DTOEntrepreneurInsert {
     private String email;
 
     private Long cuil_cuit;
-    @Max(value = 20, message = "El numero de telefono debe contener como maximo 20 digitos")
     private Long phone;
     private String location;
     private String howimetcice;
