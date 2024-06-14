@@ -212,7 +212,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	@Override
 	public List<DTOEntrepreneur> getEntrepreneursSolicitudes(Long offset) {
 		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
-		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll(offset);
+		Long limit= (long) Math.floor(limitpages) ;
+		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll(offset,limit);
 		for (Entrepreneur e: entrepreneurs) {
 			if(!e.getIs_active()){
 			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),

@@ -34,8 +34,8 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     @Query(value="SELECT *"
            +" FROM Entrepreneur e"
            +" WHERE e.active IS FALSE"
-            +" LIMIT 10 OFFSET :offset" ,nativeQuery = true)
-    List<Entrepreneur> findByIs_activeAll(@Param("offset") Long offset);
+            +" LIMIT :limit OFFSET :offset" ,nativeQuery = true)
+    List<Entrepreneur> findByIs_activeAll(@Param("offset") Long offset, @Param("limit") Long limit);
 
     @Modifying
     @Transactional
