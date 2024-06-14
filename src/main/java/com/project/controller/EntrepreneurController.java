@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -85,7 +86,7 @@ public class EntrepreneurController {
 	 */
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DTOEntrepreneur> postEntrepreneur(@RequestBody DTOEntrepreneurInsert e) {
+	public ResponseEntity<DTOEntrepreneur> postEntrepreneur(@Valid @RequestBody DTOEntrepreneurInsert e) {
 		if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepreneur(e, null));
 		}
