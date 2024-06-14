@@ -1,5 +1,6 @@
 package com.project.service.implementation;
 
+import com.project.Mapper.Mapper;
 import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
@@ -36,12 +37,12 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private RoleRepository roleRepository;
 	@Autowired
 	private ProjectRepository projectRepository;
+	private final Mapper mapper;
 
-
+	public EntrepreneurServiceImp(){ this.mapper = new Mapper(); }
 	@Override
 	public DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id) {
-		Entrepreneur aux = new Entrepreneur(e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getCuil_cuit(), e.getPhone(),
-				e.getLocation(), e.getHowimetcice(), e.isIspf());
+		Entrepreneur aux = mapper.toEntrepreneur(e);
 
 		if (currentUser_id != null) {
 			User user = userRepository.findById(currentUser_id).get();
@@ -52,10 +53,7 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		}
 		aux = entrepreneurRepository.save(aux);
 
-		DTOEntrepreneur dto = new DTOEntrepreneur(aux.getId(), aux.getDni(), aux.getName(), aux.getSurname(), aux.getEmail(),
-			aux.getId_user(), aux.getIs_active(), aux.getCuil_cuit(), aux.getPhone(), aux.getLocation(), aux.getHowimetcice(),
-				aux.isIspf(), aux.is_deleted());
-		return dto;
+		return mapper.toDTOEntrepreneur(aux);
 	}
 
 	/**
