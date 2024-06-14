@@ -4,6 +4,7 @@ import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
+import com.project.entities.Entrepreneur;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,13 @@ public class EntrepreneurController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	};
-	
+
+	//Obtiene la peticion de un usuario default de ser entrepeneur
+	@GetMapping("/solicitudes/usuario/{idUsuario}")
+	public ResponseEntity<Entrepreneur> getUsuarioSolicitud(@PathVariable Long idUsuario){
+		return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneurSolicitud(idUsuario));
+	};
+
 	/**
 	 * Obtiene un entrepreneur pod id
 	 * @param ID id_entrepreneur

@@ -4,6 +4,7 @@ import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
+import com.project.entities.Entrepreneur;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,7 +28,11 @@ public interface EntrepreneurService {
 
     List<DTOProject> getProjectsByEntrepreneurId(Long id);
 
+
     List<DTOEntrepreneur> getEntrepreneursSolicitudes(Long offset);
 
     int getTotalPages();
+
+
+    Entrepreneur getEntrepreneurSolicitud(Long idUsuario);
 }
