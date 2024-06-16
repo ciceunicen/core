@@ -71,12 +71,11 @@ public class NotificationServiceImp implements NotificationService {
 	@Override
 	public Notification save(DTONotificationInsert request) {
 		Optional<User> userOptional = userRepository.findById(request.getUserId());
-		if (userOptional.isPresent()) {
-			Notification notification = new Notification(request, userOptional.get());
-			return repository.save(notification);
-		} else {
-			throw new NotFoundException("No existe un project manager con el id " + request.getUserId());
-		}
+		// Validamos que exista el usuario al cual se le va a enviar la notificacion
+		if (userOptional.isEmpty()) { throw new NotFoundException("No existe el usuario con el id " + request.getUserId()); }
+
+		Notification notification = new Notification(request, userOptional.get());
+		return repository.save(notification);
 	}
 	
 	public DTONotificationsAndReadQuantity setNotificationsAsReadeadByUser(Long userId) {
