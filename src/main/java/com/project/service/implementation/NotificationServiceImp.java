@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.DTO.DTONotificationsAndReadQuantity;
-import com.project.DTO.DTONotificationInsert;
 import com.project.entities.Notification;
 import com.project.entities.User;
 import com.project.exception.NotFoundException;
@@ -69,12 +68,12 @@ public class NotificationServiceImp implements NotificationService {
 	}
 	
 	@Override
-	public Notification save(DTONotificationInsert request) {
-		Optional<User> userOptional = userRepository.findById(request.getUserId());
+	public Notification save(String message, Long userId) {
+		Optional<User> userOptional = userRepository.findById(userId);
 		// Validamos que exista el usuario al cual se le va a enviar la notificacion
-		if (userOptional.isEmpty()) { throw new NotFoundException("No existe el usuario con el id " + request.getUserId()); }
+		if (userOptional.isEmpty()) { throw new NotFoundException("No existe el usuario con el id " + userId); }
 
-		Notification notification = new Notification(request, userOptional.get());
+		Notification notification = new Notification(message, userOptional.get());
 		return repository.save(notification);
 	}
 	

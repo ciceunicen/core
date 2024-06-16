@@ -4,19 +4,14 @@ import com.project.DTO.DTOEntrepreneur;
 import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
-import com.project.entities.Project;
-import com.project.entities.Role;
+import com.project.entities.*;
 import com.project.exception.NotFoundException;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import com.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.project.entities.Entrepreneur;
-import com.project.entities.User;
 import com.project.exception.DeletedUserException;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
@@ -36,6 +31,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private RoleRepository roleRepository;
 	@Autowired
 	private ProjectRepository projectRepository;
+	@Autowired
+	private NotificationServiceImp notificationServiceImp;
 
 
 	@Override
@@ -73,6 +70,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 					User userAux = userRepository.findById(e.get().getId_user()).get();
 					userAux.addRole(r);
 					userRepository.save(userAux);
+					// Se crea la notificacion referenciando al usuario
+					notificationServiceImp.save("Su solicitud como emprendedor ha sido aceptada!", e.get().getId_user());
 				} else {
 					Role r = roleRepository.findByType("Defecto");
 					User userAux = userRepository.findById(e.get().getId_user()).get();
