@@ -66,10 +66,10 @@ public class UserServiceImp implements UserService {
 	}
 
 	public User findById(Long id) {
-		if(!userRepo.existsById(id)) {
-			throw new NotFoundException("No existe ese user con ese" +id);
-		}
-		return userRepo.findById(id).get();
+		Optional<User> posibleUser = userRepo.findById(id);
+		if(posibleUser.isEmpty()) { throw new NotFoundException("No existe ese user con el id: " + id); }
+
+		return posibleUser.get();
 	}
 
 	@Override
