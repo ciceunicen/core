@@ -51,6 +51,8 @@ public class ProjectServiceImp implements ProjectService {
 
     @Autowired
     private NotificationServiceImp notificationServiceImp;
+    @Autowired
+    private UserServiceImp userServiceImp;
 
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
@@ -64,8 +66,15 @@ public class ProjectServiceImp implements ProjectService {
             project.addAssistance(assistanceRepository.getAssistance(id));
         }
         project.setStage(stageRepository.getStage(id_stage));
+
+        // Validamos que el administrador asignado sea valido
+        // (en caso de que no sea valido el metodo de userServiceImp va a tirar una excepcion)
+        userServiceImp.findById(project.getAdministrador());
+
         project = projectRepository.save(project);
         AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
+        // Se envia la notificacion una vez ya creado el proyecto, ya que de esta forma tambien tenemos el id del proyecto.
+        notificationServiceImp.save("Haz sido asignado como administrador del proyecto '" + project.getTitle() + "' - ID: " + project.getId_Project(), project.getAdministrador());
         administrationRecordsRepository.save(ar);
 
         Optional<User> userOptional = userRepository.findById(id_ProjectManager);
