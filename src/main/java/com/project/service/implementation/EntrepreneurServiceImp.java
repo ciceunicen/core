@@ -7,6 +7,7 @@ import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
 import com.project.entities.Project;
 import com.project.entities.Role;
+import com.project.exception.BadRequestException;
 import com.project.exception.NotFoundException;
 import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
@@ -51,11 +52,11 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 			// Las validaciones las realiza el metodo en UserServiceImp
 			User user = userServiceImp.findById(currentUser_id);
 			if (user.is_deleted()) { throw new DeletedUserException();}
-
+			if(this.didSubmitForm(currentUser_id)){ throw new BadRequestException("Este usuario ya ha enviado una solicitud para ser emprendedor, espere a que sea aceptada!"); }
 
 			aux.setId_user(currentUser_id);
 		}
-
+		// Hay unas notas en la clase abstracta persona, asi que está bien que no se valide nada si "currentUser_id" es null
 		aux = entrepreneurRepository.save(aux);
 
 		return mapper.toDTOEntrepreneur(aux);
@@ -233,6 +234,16 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		if(posibleEntrepeneurRequest.isEmpty()) { throw new NotFoundException("El usuario no ha enviado ninguna solicitud!"); }
 
 		return posibleEntrepeneurRequest.get();
+	}
+
+	/*
+	* Dado un ID devuelve true o false respecto si hay una peticion con dicho id
+	* (No verifica si el usuario en si existe), eso se tiene que hacer POR FUERA,
+	* ANTES DE LLAMAR A ESTA FUNCION
+	* */
+	@Override
+	public Boolean didSubmitForm(Long idUsuario) {
+		return this.entrepreneurRepository.findByIdUser(idUsuario).isPresent();
 	}
 
 }
