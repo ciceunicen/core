@@ -37,6 +37,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private RoleRepository roleRepository;
 	@Autowired
 	private ProjectRepository projectRepository;
+	@Autowired
+	private UserServiceImp userServiceImp;
 	private final Mapper mapper;
 
 	public EntrepreneurServiceImp(){ this.mapper = new Mapper(); }
@@ -46,11 +48,10 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 
 		// Si soy un defaultUser
 		if (currentUser_id != null) {
-			Optional<User> posibleUser = userRepository.findById(currentUser_id);
+			// Las validaciones las realiza el metodo en UserServiceImp
+			User user = userServiceImp.findById(currentUser_id);
+			if (user.is_deleted()) { throw new DeletedUserException();}
 
-			// Validaciones
-			if(posibleUser.isEmpty()){ throw new NotFoundException("No existe usuario con el id " + currentUser_id + "!"); }
-			if (posibleUser.get().is_deleted()) { throw new DeletedUserException();}
 
 			aux.setId_user(currentUser_id);
 		}
