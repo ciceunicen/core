@@ -79,7 +79,7 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> getProjectsThatContainsEntrepreneurship(Long id);
 
     @Query("select p from Project p where p.projectManager.id_ProjectManager =:id and not exists(select dp from DeletedProject dp where dp.project.id_Project=p.id_Project)")
-    List<Project> getProjectsByEntrepreneurId(Long id);
+    Page<Project> getProjectsByEntrepreneurId(Long id, Pageable pageable);
 
     @Query("SELECT p FROM Project p " +
             " JOIN  p.assistances " +

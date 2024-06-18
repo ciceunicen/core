@@ -11,8 +11,7 @@ import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import com.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.project.entities.Entrepreneur;
@@ -168,13 +167,19 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 
 	/**
 	 * Obtiene todos los proyectos asociados a un emprendedor por su ID
-	 * @param id El ID del emprendedor
+	 *
+	 * @param id   El ID del emprendedor
+	 * @param page
 	 * @return Una lista de proyectos asociados al emprendedor
 	 */
 	@Override
-	public List<DTOProject> getProjectsByEntrepreneurId(Long id) {
+	public Page<DTOProject> getProjectsByEntrepreneurId(Long id, Integer page) {
 		List<DTOProject> list = new ArrayList<>();
-		List<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id);
+		Integer indexPage = page - 1;
+		String sortAttribute = "title";
+		Integer cantProjects=10;
+		Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+		Page<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id,pageable);
 		if (projects != null) {
 			for (Project aux: projects) {
 //				DTOProject dto = new DTOProject(
@@ -204,7 +209,7 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 
 				list.add(dto);
 			}
-			return list;
+			return new PageImpl<>(list, pageable, projects.getTotalElements());
 		}
 		return null;
 	}

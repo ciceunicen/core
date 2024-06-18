@@ -20,7 +20,7 @@ public class ProjectManagerController {
     @Autowired
     private ProjectManagerServiceImp projectManagerServiceImp;
     private Mapper mapper;
-
+    private  Integer cantProjects = 10;
     public ProjectManagerController() {
         this.mapper = new Mapper();
     }
@@ -47,7 +47,6 @@ public class ProjectManagerController {
         //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
         Integer indexPage = page - 1;
         //cantidad de objetos por página
-        Integer cantProjects = 15;
         //Atributo por el cual se ordena
         String sortAttribute = "surname";
         Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
@@ -67,7 +66,6 @@ public class ProjectManagerController {
         //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
         Integer indexPage = page - 1;
         //cantidad de objetos por página
-        Integer cantProjects = 15;
         //Atributo por el cual se ordena
         String sortAttribute = "title";
         Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));

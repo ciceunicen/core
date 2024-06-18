@@ -60,7 +60,7 @@ public class ProjectController {
     private UserServiceImp userService;
     @Autowired
     private ReferentServiceImp referentService;
-
+    private Integer cantProjects=10;
     public ProjectController() {
         this.mapper = new Mapper();
     }
@@ -133,7 +133,7 @@ public class ProjectController {
     	 //Así la url queda más funcional. De la página 1 en adelante, no desde la 0.
     	 Integer indexPage = page - 1;
     	 //cantidad de objetos por página
-    	 Integer cantProjects = 15;
+//    	 Integer cantProjects = 10;
     	 //Atributo por el cual se ordena
     	 String sortAttribute = "title";
     	 Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
@@ -149,7 +149,6 @@ public class ProjectController {
      @GetMapping(value = "/filters/page/{page}",params="filters")
     public Page<Project> getAllProjectsByFiler(@PathVariable("page") Integer page,@RequestParam(value = "filters") List<String> datos ){
          Integer indexPage = page - 1;
-         Integer cantProjects = 15;
          String sortAttribute = "title";
          Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
          return ProjectService.getAllByFilters(datos,pageable);
@@ -169,7 +168,6 @@ public class ProjectController {
     		 Long idEntrepreneur = roleAuthController.getCurrentUserId();
     		 
     		 Integer indexPage = page - 1;
-             Integer cantProjects = 15;
              String sortAttribute = "title";
              Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
              
@@ -211,7 +209,6 @@ public class ProjectController {
     @GetMapping("removed/page/{page}")
     public Page<DeletedProject> getAllProjectsRemoved(@PathVariable ("page") Integer page){
         Integer indexPage = page - 1;
-        Integer cantProjects = 15;
         String sortAttribute = "project.title";
         Pageable pageable = PageRequest.of(indexPage, cantProjects,Sort.by(sortAttribute));
         return ProjectService.getAllRemoved(pageable);

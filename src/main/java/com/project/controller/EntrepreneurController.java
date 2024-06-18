@@ -7,6 +7,7 @@ import com.project.DTO.DTOProject;
 import com.project.entities.Entrepreneur;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -183,10 +184,9 @@ public class EntrepreneurController {
 	 * Obtiene todos los proyectos del emprendedor logueado.
 	 * @return Retorna una lista de proyectos del emprendedor logueado
 	 */
-	@GetMapping("/{ID}/mis_proyectos")
-	public ResponseEntity<List<DTOProject>> getMyProjects(@PathVariable Long ID) {
-
-		List<DTOProject> myProjects = entrepreneurService.getProjectsByEntrepreneurId(ID);
+	@GetMapping("/{ID}/mis_proyectos/page/{page}")
+	public ResponseEntity<Page<DTOProject>> getMyProjects(@PathVariable("page") Integer page, @PathVariable Long ID) {
+		Page<DTOProject> myProjects = entrepreneurService.getProjectsByEntrepreneurId(ID,page);
 		return new ResponseEntity<>(myProjects, HttpStatus.OK);
 	}
 
