@@ -11,8 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.project.DTO.DTONotificationInsert;
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +27,7 @@ public class Notification implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
+	@NotBlank(message = "El mensaje no puede estar vacio!")
 	private String message;
 	@Column(nullable = false)
 	private Date date;
@@ -38,20 +38,9 @@ public class Notification implements Serializable {
 	@JoinColumn(name = "id_administrator")
 	private User user;
 	
-	public Notification(DTONotificationInsert request) {
-		this(request, null);
-	}
-	
-	public Notification(DTONotificationInsert request, User user) {
-		this.message = request.getMessage();
-		this.date = request.getDate();
-		this.isRead = false;
-		this.user = user;
-	}
-	
-	public Notification(String message, Date date, User user) {
+	public Notification(String message, User user) {
 		this.message = message;
-		this.date = date;
+		this.date = new Date(System.currentTimeMillis());
 		this.isRead = false;
 		this.user = user;
 	}

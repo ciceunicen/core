@@ -49,6 +49,9 @@ public class ProjectServiceImp implements ProjectService {
     @Autowired
     private DiagnosticRepository diagnosticRepository;
 
+    @Autowired
+    private NotificationServiceImp notificationServiceImp;
+
     @Override
     public Project addProject(Project project,Long id_stage,List<Long> id_assitances,List<Long> id_needs, Long id_ProjectManager) {
     	ProjectManager projectManager = projectManagerRepository.getByProjectManagerById(id_ProjectManager); 
@@ -64,12 +67,11 @@ public class ProjectServiceImp implements ProjectService {
         project = projectRepository.save(project);
         AdministrationRecords ar = new AdministrationRecords(project,"creación de proyecto");
         administrationRecordsRepository.save(ar);
-        
+
         Optional<User> userOptional = userRepository.findById(id_ProjectManager);
         if (userOptional.isPresent()) {
-        	User user = userOptional.get();
-        	Notification notification = new Notification(String.format("El proyecto '%s' ha sido creado satisfactoriamente", project.getTitle()), new Date(System.currentTimeMillis()), user);
-        	notificationRespository.save(notification);
+            // Creamos la notificacion
+            notificationServiceImp.save(String.format("El proyecto '%s' ha sido creado satisfactoriamente", project.getTitle()), userOptional.get().getId());
         }
         
         return project;
@@ -133,10 +135,9 @@ public class ProjectServiceImp implements ProjectService {
     		Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
     		if (userOptional.isPresent()) {
     			User user = userOptional.get();
-    			Date date =  new Date(System.currentTimeMillis());
     			String message = String.format("Tu proyecto '%s' ha sido eliminado por un administrador", project.getTitle());
     			
-    			Notification notification = new Notification(message, date, user);
+    			Notification notification = new Notification(message, user);
     			notificationRespository.save(notification);
     		}
     		
@@ -349,10 +350,9 @@ public class ProjectServiceImp implements ProjectService {
             Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
     		if (userOptional.isPresent()) {
     			User user = userOptional.get();
-    			Date date =  new Date(System.currentTimeMillis());
     			String message = String.format("Se ha realizado un diagnóstico de tu proyecto '%s' por un administrador", project.getTitle());
     			
-    			Notification notification = new Notification(message, date, user);
+    			Notification notification = new Notification(message, user);
     			notificationRespository.save(notification);
     		}
             
