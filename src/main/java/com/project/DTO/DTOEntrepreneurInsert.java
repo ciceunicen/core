@@ -1,13 +1,22 @@
 package com.project.DTO;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.*;
 
 @Data
 public class DTOEntrepreneurInsert {
-
+    @Min(value = 7, message = "El dni debe contener como minimo 7 digitos")
+    @Max(value = 20, message = "El dni debe contener como maximo 20 digitos")
     private Long dni;
+    @NotBlank(message = "El nombre es obligatorio")
+    @Length(max = 20, message = "El nombre debe contener como maximo 20 caracteres")
     private String name;
+    @Length(max = 20, message = "El apellido debe contener como maximo 20 caracteres")
     private String surname;
+    @Email(message = "El email enviado no es valido")
+    @Length(max = 45, message = "El email debe contener como maximo 45 caracteres")
     private String email;
 
     private Long cuil_cuit;

@@ -31,4 +31,6 @@ public interface EntrepreneurService {
     List<DTOEntrepreneur> getEntrepreneursSolicitudes();
 
     Entrepreneur getEntrepreneurSolicitud(Long idUsuario);
+
+    Boolean didSubmitForm(Long idUsuario);
 }

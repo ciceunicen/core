@@ -5,12 +5,14 @@ import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
 import com.project.entities.Entrepreneur;
+import com.project.exception.UnauthorizedException;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -84,16 +86,16 @@ public class EntrepreneurController {
 	 */
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DTOEntrepreneur> postEntrepreneur(@RequestBody DTOEntrepreneurInsert e) {
+	public ResponseEntity<DTOEntrepreneur> postEntrepreneur(@Valid @RequestBody DTOEntrepreneurInsert e) {
 		if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-			DTOEntrepreneur dto = entrepreneurService.postEntrepreneur(e, null);
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
+			return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepreneur(e, null));
 		}
+
 		if (roleAuthController.hasPermission(4)) {
-			DTOEntrepreneur dto = entrepreneurService.postEntrepreneur(e, roleAuthController.getCurrentUserId());
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
+			return ResponseEntity.status(HttpStatus.CREATED).body(entrepreneurService.postEntrepreneur(e, roleAuthController.getCurrentUserId()));
 		}
-		else return new ResponseEntity("No tiene permisos para realizar esta acción", HttpStatus.UNAUTHORIZED);
+
+		throw new UnauthorizedException();
 	}
 
 	@PutMapping("/{ID}/validado")
