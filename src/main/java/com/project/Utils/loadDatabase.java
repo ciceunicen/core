@@ -97,33 +97,6 @@ public class loadDatabase {
         };
     }
 
-    //Auto carga la tabla Project
-    @Bean
-    CommandLineRunner innitDatabaseProject(@Qualifier("projectServiceImp") ProjectServiceImp projectServiceImp){
-        return args -> {
-            Project p;
-            JSONParser jsonParser = new JSONParser();
-            FileReader reader = new FileReader("src/main/java/com/project/Files/Project.json");
-            Object obj = jsonParser.parse(reader);
-            JSONArray projectsList = (JSONArray) obj;
-            for (Object project:projectsList) {
-                JSONObject proyecto = (JSONObject)project;
-                JSONArray listNeeds = (JSONArray) proyecto.get("needs");
-                List<Long>needs = new ArrayList<>();
-                for (Object valor:listNeeds) {
-                    needs.add((Long) valor);
-                }
-
-                JSONArray listAssistances = (JSONArray) proyecto.get("assistances");
-                List<Long> assistances = new ArrayList<>();
-                for (Object valor:listAssistances) {
-                    assistances.add((Long) valor);
-                }
-                p = new Project(proyecto.get("title").toString(),proyecto.get("description").toString(), (Long) proyecto.get("administrador"));
-                log.info("Preloading " + projectServiceImp.addProject(p, (Long) proyecto.get("stage"), assistances,needs, (Long) proyecto.get("id_ProjectManager")));
-            }
-        };
-    }
    /*User  user1 = new User("ahsdhasdb", "hhhd","juan", "cortes");
    User user2= new User("felipe", "hhhd","juan", "cortes");
 
@@ -155,6 +128,34 @@ public class loadDatabase {
             User ciceUser = new User("pcice@gmail.com", passwordEncoder.encode("12345678"));
             ciceUser.addRole(r4); // Añade el rol "Personal del CICE"
             log.info("Preloading " + userRepository.save(ciceUser));
+        };
+    }
+
+    //Auto carga la tabla Project
+    @Bean
+    CommandLineRunner innitDatabaseProject(@Qualifier("projectServiceImp") ProjectServiceImp projectServiceImp){
+        return args -> {
+            Project p;
+            JSONParser jsonParser = new JSONParser();
+            FileReader reader = new FileReader("src/main/java/com/project/Files/Project.json");
+            Object obj = jsonParser.parse(reader);
+            JSONArray projectsList = (JSONArray) obj;
+            for (Object project:projectsList) {
+                JSONObject proyecto = (JSONObject)project;
+                JSONArray listNeeds = (JSONArray) proyecto.get("needs");
+                List<Long>needs = new ArrayList<>();
+                for (Object valor:listNeeds) {
+                    needs.add((Long) valor);
+                }
+
+                JSONArray listAssistances = (JSONArray) proyecto.get("assistances");
+                List<Long> assistances = new ArrayList<>();
+                for (Object valor:listAssistances) {
+                    assistances.add((Long) valor);
+                }
+                p = new Project(proyecto.get("title").toString(),proyecto.get("description").toString(), (Long) proyecto.get("administrador"));
+                log.info("Preloading " + projectServiceImp.addProject(p, (Long) proyecto.get("stage"), assistances,needs, (Long) proyecto.get("id_ProjectManager")));
+            }
         };
     }
 
