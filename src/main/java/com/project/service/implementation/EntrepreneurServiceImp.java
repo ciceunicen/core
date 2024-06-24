@@ -14,12 +14,11 @@ import com.project.repository.RoleRepository;
 import com.project.repository.UserRepository;
 import com.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
 import com.project.exception.DeletedUserException;
 import com.project.repository.EntrepreneurRepository;
 import com.project.service.EntrepreneurService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +41,8 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 	private final Mapper mapper;
 
 	public EntrepreneurServiceImp(){ this.mapper = new Mapper(); }
+    private Double limitpages=10.0;
+
 	@Override
 	public DTOEntrepreneur postEntrepreneur(DTOEntrepreneurInsert e, Long currentUser_id) {
 		Entrepreneur aux = mapper.toEntrepreneur(e);
@@ -173,13 +174,19 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 
 	/**
 	 * Obtiene todos los proyectos asociados a un emprendedor por su ID
-	 * @param id El ID del emprendedor
+	 *
+	 * @param id   El ID del emprendedor
+	 * @param page
 	 * @return Una lista de proyectos asociados al emprendedor
 	 */
 	@Override
-	public List<DTOProject> getProjectsByEntrepreneurId(Long id) {
+	public Page<DTOProject> getProjectsByEntrepreneurId(Long id, Integer page) {
 		List<DTOProject> list = new ArrayList<>();
-		List<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id);
+		Integer indexPage = page - 1;
+		String sortAttribute = "title";
+		Integer cantProjects=10;
+		Pageable pageable = PageRequest.of(indexPage, cantProjects, Sort.by(sortAttribute));
+		Page<Project> projects = this.projectRepository.getProjectsByEntrepreneurId(id,pageable);
 		if (projects != null) {
 			for (Project aux: projects) {
 //				DTOProject dto = new DTOProject(
@@ -209,15 +216,16 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 
 				list.add(dto);
 			}
-			return list;
+			return new PageImpl<>(list, pageable, projects.getTotalElements());
 		}
 		return null;
 	}
 
 	@Override
-	public List<DTOEntrepreneur> getEntrepreneursSolicitudes() {
+	public List<DTOEntrepreneur> getEntrepreneursSolicitudes(Long offset) {
 		List<DTOEntrepreneur> listaDTO = new ArrayList<>();
-		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll();
+		Long limit= (long) Math.floor(limitpages) ;
+		Iterable<Entrepreneur> entrepreneurs = this.entrepreneurRepository.findByIs_activeAll(offset,limit);
 		for (Entrepreneur e: entrepreneurs) {
 			if(!e.getIs_active()){
 			DTOEntrepreneur dto = new DTOEntrepreneur(e.getId(), e.getDni(), e.getName(), e.getSurname(), e.getEmail(), e.getId_user(),
@@ -227,6 +235,16 @@ public class EntrepreneurServiceImp  implements EntrepreneurService{
 		}
 		return listaDTO;
 	}
+	@Override
+	public int getTotalPages(){
+		Optional<Double> optional= this.entrepreneurRepository.getTotalpages();
+		if(optional.isPresent()){
+			return (int) Math.ceil(optional.get()/limitpages);
+		}
+        return 0;
+    }
+
+
 
 	@Override
 	public Entrepreneur getEntrepreneurSolicitud(Long idUsuario) {

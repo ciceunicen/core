@@ -5,6 +5,7 @@ import com.project.DTO.DTOEntrepreneurInsert;
 import com.project.DTO.DTOEntrepreneurUpdate;
 import com.project.DTO.DTOProject;
 import com.project.entities.Entrepreneur;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,9 +27,13 @@ public interface EntrepreneurService {
 
     List<DTOEntrepreneur> getAllByFilters(List<String> filters,boolean deleted);
 
-    List<DTOProject> getProjectsByEntrepreneurId(Long id);
+    Page<DTOProject> getProjectsByEntrepreneurId(Long id, Integer page);
 
-    List<DTOEntrepreneur> getEntrepreneursSolicitudes();
+
+    List<DTOEntrepreneur> getEntrepreneursSolicitudes(Long offset);
+
+    int getTotalPages();
+
 
     Entrepreneur getEntrepreneurSolicitud(Long idUsuario);
 

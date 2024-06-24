@@ -3,6 +3,7 @@ package com.project.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.entities.Entrepreneur;
@@ -30,10 +31,11 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     		+ " AND e.is_active IS TRUE")
     Optional<Entrepreneur> findByIdUserAndIsActive(Long idUser);
 
-    @Query("SELECT e"
+    @Query(value="SELECT *"
            +" FROM Entrepreneur e"
-           +" WHERE e.is_active IS FALSE")
-    List<Entrepreneur> findByIs_activeAll();
+           +" WHERE e.active IS FALSE"
+            +" LIMIT :limit OFFSET :offset" ,nativeQuery = true)
+    List<Entrepreneur> findByIs_activeAll(@Param("offset") Long offset, @Param("limit") Long limit);
 
     @Modifying
     @Transactional
@@ -43,10 +45,15 @@ public interface EntrepreneurRepository extends JpaRepository<Entrepreneur, Long
     		+ " AND e.is_active IS NOT TRUE")
 	void deleteByIdUserAndNoActive(Long idUser);
 
+
+    @Query(value = "select COUNT(*) as total from entrepreneur where active is false",nativeQuery = true)
+    Optional<Double> getTotalpages();
+
     @Query("""
             SELECT e
             FROM Entrepreneur e
             WHERE e.id_user = :idUsuario
             """)
     Optional<Entrepreneur> findByIdUser(Long idUsuario);
+
 }

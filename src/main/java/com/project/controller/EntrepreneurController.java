@@ -8,6 +8,7 @@ import com.project.entities.Entrepreneur;
 import com.project.exception.UnauthorizedException;
 import com.project.service.EntrepreneurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,10 +37,19 @@ public class EntrepreneurController {
 	}
 
 	//obtiene los usuarios que aun no fueron acceptados como emprendedores aun
-	@GetMapping("/Solicitudes")
-	public ResponseEntity<?> getUsuariosSolicitudes(){
+	@GetMapping("/Solicitudes/{offset}")
+	public ResponseEntity<?> getUsuariosSolicitudes(@PathVariable Long offset){
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneursSolicitudes());
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getEntrepreneursSolicitudes(offset));
+		}
+		catch(Exception e){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	};
+	@GetMapping("/Solicitudes/totalpages")
+	public ResponseEntity<?> getTotalpages(){
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(entrepreneurService.getTotalPages());
 		}
 		catch(Exception e){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -176,10 +186,9 @@ public class EntrepreneurController {
 	 * Obtiene todos los proyectos del emprendedor logueado.
 	 * @return Retorna una lista de proyectos del emprendedor logueado
 	 */
-	@GetMapping("/{ID}/mis_proyectos")
-	public ResponseEntity<List<DTOProject>> getMyProjects(@PathVariable Long ID) {
-
-		List<DTOProject> myProjects = entrepreneurService.getProjectsByEntrepreneurId(ID);
+	@GetMapping("/{ID}/mis_proyectos/page/{page}")
+	public ResponseEntity<Page<DTOProject>> getMyProjects(@PathVariable("page") Integer page, @PathVariable Long ID) {
+		Page<DTOProject> myProjects = entrepreneurService.getProjectsByEntrepreneurId(ID,page);
 		return new ResponseEntity<>(myProjects, HttpStatus.OK);
 	}
 
