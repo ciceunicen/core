@@ -81,9 +81,12 @@ public class ProjectController {
     		if(saveProject != null) {
     			 // Now, save the Referent with the project id
                 Referent referent = mapper.toReferent(project);
-                if (referent != null) {
+                if (referent != null&&referent.getId_user()!=null) {
                     referent.setProjectId(saveProject.getId_Project());
                     this.referentService.addReferent(referent);
+                }
+                else{
+                    return new ResponseEntity<>("Nombre del referente incompleto", HttpStatus.NOT_FOUND);
                 }
     			return new ResponseEntity<>(saveProject, HttpStatus.CREATED);
     		}else {
