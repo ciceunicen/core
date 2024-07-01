@@ -329,6 +329,18 @@ public class ProjectServiceImp implements ProjectService {
         return null;
     }
 
+    @Override
+    public Diagnostic editDiagnostic(DTODiagnostic dto_diagnostico_editado) {
+        // Verificamos que el diagnostico exista
+        Diagnostic diagnostico = this.getDiagnosticById(dto_diagnostico_editado.getIdProject());
+
+        // Setteamos los nuevos valores del diagnostico (por el momento solo se puede cambiar el texto)
+        diagnostico.setDiagnostic(dto_diagnostico_editado.getDiagnostic());
+
+        // Actualizamos la informacion del diagnostico
+        return this.diagnosticRepository.save(diagnostico);
+    }
+
     /**
      * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
      * @param projectId ID del proyecto.
@@ -379,7 +391,10 @@ public class ProjectServiceImp implements ProjectService {
      * @return Diagnostico que se encuentra
      */
     public Diagnostic getDiagnosticById(Long id) {
-        return diagnosticRepository.findByIdRecord(id).get();
+        Optional<Diagnostic> diagnostic =  diagnosticRepository.findByIdRecord(id);
+        if(diagnostic.isEmpty()){ throw new NotFoundException("No existe un diagnostico con id '" + id + "'"); }
+
+        return diagnostic.get();
     }
 
 }

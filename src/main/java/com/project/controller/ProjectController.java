@@ -519,7 +519,20 @@ public class ProjectController {
         }
         return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
     }
-    
+
+    @PutMapping("/diagnostic")
+    public ResponseEntity<?> editDiagnostic(@Valid @RequestBody DTODiagnostic dto) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            Diagnostic diagnostic = ProjectService.editDiagnostic(dto);
+            if(diagnostic != null) {
+                return new ResponseEntity<>(diagnostic, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>("No tiene permisos para editar este recurso", HttpStatus.UNAUTHORIZED);
+    }
+
     /**
      * Obtiene un Diagnostico de la base de datos mediante su id
      * que se obtiene por URL
@@ -531,12 +544,7 @@ public class ProjectController {
     @GetMapping("/diagnostic/{id}")
     public ResponseEntity<?> getDiagnostic(@PathVariable Long id) {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
-            Diagnostic diagnostic = ProjectService.getDiagnosticById(id);
-            if(diagnostic != null) {
-    			return new ResponseEntity<>(diagnostic, HttpStatus.OK);
-    		}else {
-    			return new ResponseEntity<>("404, NOT FOUND", HttpStatus.NOT_FOUND);
-    		}
+            return new ResponseEntity<>(ProjectService.getDiagnosticById(id), HttpStatus.OK);
         }
         return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
     }
