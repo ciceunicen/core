@@ -13,4 +13,6 @@ public interface ReferentService {
 
 
 	DTOReferent findByIdproject(Long iDproject);
+
+	DTOReferent UpdateReferent(DTOReferent referentDto,Long id_project);
 }

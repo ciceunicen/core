@@ -27,7 +27,7 @@ public class Referent {
     private String conocimiento;
     private String organizacion;
 
-    protected Referent() {}
+    public Referent() {}
 
     public Referent(String userId, String telefono, String localidad, String mail, String ocupacion,
                     String vinculacion, String facultad, String conocimiento, String organizacion) {
