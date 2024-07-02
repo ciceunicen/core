@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.DTO.*;
+import com.project.DTO.request.DTOEditarDiagnostico;
 import com.project.entities.*;
 
 import java.util.List;
@@ -50,5 +51,5 @@ public interface ProjectService {
 
 	public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId);
 
-    Diagnostic editDiagnostic(DTODiagnostic dto);
+    Diagnostic editDiagnostic(DTOEditarDiagnostico dto);
 }

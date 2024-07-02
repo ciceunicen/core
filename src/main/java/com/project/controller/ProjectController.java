@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.DTO.request.DTOEditarDiagnostico;
 import com.project.Mapper.Mapper;
 import com.project.entities.*;
 import com.project.service.ActivityService;
@@ -521,7 +522,8 @@ public class ProjectController {
     }
 
     @PutMapping("/diagnostic")
-    public ResponseEntity<?> editDiagnostic(@Valid @RequestBody DTODiagnostic dto) {
+    public ResponseEntity<?> editDiagnostic(@Valid @RequestBody DTOEditarDiagnostico dto) {
+        System.out.println("1");
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             Diagnostic diagnostic = ProjectService.editDiagnostic(dto);
             if(diagnostic != null) {
@@ -546,6 +548,14 @@ public class ProjectController {
         if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
             return new ResponseEntity<>(ProjectService.getDiagnosticById(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>("No tiene permisos para crear un nuevo recurso", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("No tiene permisos para obtener este recurso", HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/diagnostic/administrationRecord/{idRecord}")
+    public ResponseEntity<?> getDiagnosticByIdRecord(@PathVariable Long idRecord) {
+        if (roleAuthController.hasPermission(1) || roleAuthController.hasPermission(2)) {
+            return new ResponseEntity<>(ProjectService.getDiagnosticByIdRecord(idRecord), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("No tiene permisos para obtener este recurso", HttpStatus.UNAUTHORIZED);
     }
 }
