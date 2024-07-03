@@ -1,13 +1,8 @@
 package com.project.service;
 
-import com.project.DTO.DTOActionInsert;
-import com.project.DTO.DTOProject;
-import com.project.DTO.DTOProjectInsert;
-import com.project.DTO.DTOProjectUpdate;
-import com.project.entities.AdministrationRecords;
-import com.project.entities.DeletedProject;
-import com.project.entities.Entrepreneurship;
-import com.project.entities.Project;
+import com.project.DTO.*;
+import com.project.DTO.request.DTOEditarDiagnostico;
+import com.project.entities.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,4 +50,6 @@ public interface ProjectService {
     public DTOProject postProjectAction(DTOActionInsert a, Long id);
 
 	public Entrepreneurship getEntrepreneurshipByIdFromProject(Long projectId, Long entrepreneurshipId);
+
+    Diagnostic editDiagnostic(DTOEditarDiagnostico dto);
 }
