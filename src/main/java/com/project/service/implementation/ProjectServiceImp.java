@@ -5,6 +5,7 @@ import com.project.DTO.DTODiagnostic;
 import com.project.DTO.DTOProject;
 import com.project.DTO.DTOProjectInsert;
 import com.project.DTO.DTOProjectUpdate;
+import com.project.DTO.request.DTOEditarDiagnostico;
 import com.project.entities.*;
 import com.project.exception.NotFoundException;
 
@@ -329,6 +330,23 @@ public class ProjectServiceImp implements ProjectService {
         return null;
     }
 
+    @Override
+    public Diagnostic editDiagnostic(DTOEditarDiagnostico dto_diagnostico_editado) {
+        // Verificamos que el diagnostico exista
+        Diagnostic diagnostico = this.getDiagnosticByIdRecord(dto_diagnostico_editado.idRecord());
+        // Setteamos los nuevos valores del diagnostico (por el momento solo se puede cambiar el texto)
+        diagnostico.setDiagnostic(dto_diagnostico_editado.diagnostic());
+        // Actualizamos la informacion del diagnostico
+        this.diagnosticRepository.save(diagnostico);
+
+        // Generamos un registro de que se editó un diagnostico
+        Project proyecto = this.getProjectEntity(dto_diagnostico_editado.idProject());
+        AdministrationRecords ad = new AdministrationRecords(proyecto, dto_diagnostico_editado.idAdmin(), "Editar diagnostico");
+        administrationRecordsRepository.save(ad);
+
+        return diagnostico;
+    }
+
     /**
      * Verifica si un emprendimiento está contenido en la lista de emprendimientos de un proyecto.
      * @param projectId ID del proyecto.
@@ -353,7 +371,7 @@ public class ProjectServiceImp implements ProjectService {
     public Diagnostic saveDiagnostic(DTODiagnostic dto) {
         Project project = projectRepository.findById(dto.getIdProject()).get();
         if(project != null) {
-            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Diagnostico");
+            AdministrationRecords ad = new AdministrationRecords(project, dto.getIdAdmin(), "Crear diagnostico");
             ad = administrationRecordsRepository.save(ad);
             
             Optional<User> userOptional = userRepository.findById(project.getProjectManager().getId_ProjectManager());
@@ -379,7 +397,15 @@ public class ProjectServiceImp implements ProjectService {
      * @return Diagnostico que se encuentra
      */
     public Diagnostic getDiagnosticById(Long id) {
-        return diagnosticRepository.findByIdRecord(id).get();
+        Optional<Diagnostic> diagnostic =  diagnosticRepository.findById(id);
+        if(diagnostic.isEmpty()){ throw new NotFoundException("No existe un diagnostico con id '" + id + "'"); }
+        return diagnostic.get();
+    }
+
+    public Diagnostic getDiagnosticByIdRecord(Long idRecord) {
+        Optional<Diagnostic> diagnostic =  diagnosticRepository.findByIdRecord(idRecord);
+        if(diagnostic.isEmpty()){ throw new NotFoundException("No existe un diagnostico con idRecord '" + idRecord + "'"); }
+        return diagnostic.get();
     }
 
 }
